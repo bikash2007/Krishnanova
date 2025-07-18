@@ -4,7 +4,7 @@ import TextBox from "../UI/TextBox";
 const NameCard = ({ name, meaning, bgColor }) => {
   return (
     <div
-      className={`name-card scroll-reveal gradient-wave-box p-8 rounded-2xl text-center transition-all duration-300 relative hover:-translate-y-1 hover:scale-105 ${
+      className={`name-card backdrop-blur-lg scroll-reveal gradient-wave-box p-8 rounded-2xl text-center transition-all duration-300 relative hover:-translate-y-1 hover:scale-105 ${
         bgColor === "pink" ? "bg-pink-500/10" : "bg-cyan-400/10"
       }`}
     >

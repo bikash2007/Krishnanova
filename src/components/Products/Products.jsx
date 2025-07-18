@@ -1,12 +1,13 @@
 import React from "react";
 import SectionTitle from "../UI/SectionTitle";
 import ProductCard from "./ProductCard";
-
+import krishnakeychain from "../../Media/krishnakeychain.png";
+import bagwatgita from "../../Media/bagwatkeychain.png";
 const Products = () => {
   const products = [
     {
       id: 1,
-      icon: "🔑",
+      icon: krishnakeychain,
       title: "Mini Krishna Keychain",
       description:
         "A sacred companion carrying Krishna's divine presence. Each keychain connects you to a global spiritual community through QR technology, allowing you to name your Krishna and find fellow devotees nearby.",
@@ -35,7 +36,7 @@ const Products = () => {
     },
     {
       id: 2,
-      icon: "📖",
+      icon: bagwatgita,
       title: "Mini Bhagavad Gita Book/Keychain",
       description:
         "Carry eternal wisdom wherever you go. This beautifully crafted mini Bhagavad Gita doubles as both a sacred keychain and a source of divine guidance, connecting you to our GPT Gita wisdom portal.",
@@ -54,7 +55,7 @@ const Products = () => {
   ];
 
   return (
-    <section id="products" className="section py-24">
+    <section id="products" className="section py-24 backdrop-blur-am">
       <div className="container max-w-7xl mx-auto px-8">
         <SectionTitle>Sacred Products</SectionTitle>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-20">

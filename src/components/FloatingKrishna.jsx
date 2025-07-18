@@ -7,7 +7,7 @@ export default function FloatingKrishna() {
   const teaseMessages = [
     "Too slow! 🐢",
     "Try harder 😏",
-    "Haha 😂",
+    "Heheha 😂",
     "You can’t catch me 🪷",
     "Not today! 👋",
     "😜 Missed me!",
@@ -66,7 +66,7 @@ export default function FloatingKrishna() {
 
   return (
     <>
-      <audio ref={laughRef} src="/laugh.mp3" />
+      <audio ref={laughRef} src={`${import.meta.env.BASE_URL}/laugh.mp3`} />
       <div
         ref={containerRef}
         style={{
@@ -86,17 +86,17 @@ export default function FloatingKrishna() {
             fontWeight: "bold",
             fontSize: "1rem",
             textShadow: "0 0 5px black",
-            marginBottom: "5px",
+            marginBottom: "0px",
             animation: "talking 0.4s infinite alternate",
           }}
         >
           {teaseText}
         </div>
         <img
-          src="/krishna.png"
+          src={`${import.meta.env.BASE_URL}/krishna.png`}
           alt="Lord Krishna"
           style={{
-            width: "150px",
+            width: "300px",
             height: "auto",
             pointerEvents: "auto",
           }}

@@ -9,19 +9,30 @@ const Button = ({
   ...props
 }) => {
   const baseClasses =
-    "inline-block font-semibold transition-all duration-300 hover:-translate-y-1 hover:scale-105 shadow-lg";
+    "inline-block font-bold transition-all duration-300 hover:-translate-y-1 hover:scale-105 shadow-xl relative overflow-hidden";
 
   const variants = {
-    primary:
-      "bg-gradient-to-r from-yellow-400 to-pink-500 text-white rounded-full border-2 border-transparent hover:border-cyan-400 hover:shadow-xl hover:shadow-pink-500/50",
-    secondary:
-      "bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full",
+    primary: `
+      bg-gradient-to-r from-yellow-400 via-purple-500 to-blue-600 
+      text-white 
+      rounded-full 
+      border-2 border-transparent 
+      hover:shadow-[0_0_25px_#8a2be2] 
+      before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:rounded-full before:blur-sm
+    `,
+    secondary: `
+      bg-gradient-to-r from-cyan-400 to-blue-500 
+      text-white 
+      rounded-full 
+      border-2 border-cyan-300 
+      hover:shadow-[0_0_20px_#00bfff]
+    `,
   };
 
   const sizes = {
     small: "px-6 py-3 text-sm",
-    medium: "px-10 py-5 text-xl",
-    large: "px-12 py-6 text-2xl",
+    medium: "px-10 py-5 text-lg",
+    large: "px-12 py-6 text-xl",
   };
 
   return (
@@ -30,7 +41,7 @@ const Button = ({
       onClick={onClick}
       {...props}
     >
-      {children}
+      <span className="relative z-10">{children}</span>
     </button>
   );
 };

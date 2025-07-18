@@ -52,12 +52,18 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app">
+    <div className="app  ">
       <MusicPlayer />
       <Navigation />
       <Hero />
-      <Mission />
-      <Products />
+      <div className="relative bg-black w-full flex flex-col overflow-hidden">
+        <div className="absolute inset-0 secondbg z-0"></div>
+        <div className="relative z-10">
+          <Mission />
+          <Products />
+        </div>
+      </div>
+
       <KrishnaNames />
       <WisdomPortal />
       <Community />
