@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 const TextBox = ({
   children,
@@ -18,9 +18,39 @@ const TextBox = ({
     krishnaBreath: "gradient-wave-box krishna-breath",
   };
 
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const handleMouseMove = (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      card.style.setProperty("--mouse-x", `${x}px`);
+      card.style.setProperty("--mouse-y", `${y}px`);
+    };
+
+    card.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      card.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   return (
     <div
-      className={`text-3d-box ${variants[variant]} ${scrollAnimation} ${baseClasses} ${className}`}
+      ref={cardRef}
+      className={`text-3d-box font-semibold backdrop-blur-xl ${variants[variant]} ${scrollAnimation} ${baseClasses} ${className}`}
+      style={{
+        background: `radial-gradient(
+          960px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          rgba(59, 248, 251, 0.3),
+          transparent 40%
+        )`,
+      }}
       {...props}
     >
       {children}
