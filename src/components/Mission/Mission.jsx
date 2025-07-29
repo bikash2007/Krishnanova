@@ -4,7 +4,7 @@ import TextBox from "../UI/TextBox";
 
 const Mission = () => {
   return (
-    <section className="section py-24 relative z-10 ">
+    <section className="section py-24 relative z-10 bg-gray-100/10 ">
       <div className="container max-w-7xl mx-auto px-8">
         <SectionTitle>Our Divine Mission</SectionTitle>
         <TextBox scrollAnimation="scroll-slide-left">

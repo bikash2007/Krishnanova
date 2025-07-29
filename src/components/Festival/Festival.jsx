@@ -28,7 +28,7 @@ const Festival = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch(`${baseUrl}/events`);
+      const res = await fetch(`${baseUrl}/api/events`);
       const data = await res.json();
       setEvents(data);
     };
@@ -95,7 +95,7 @@ const Festival = () => {
           <div
             key={currentDate}
             onClick={() => eventForDay && setModalEvent(eventForDay)}
-            className={`flex items-center justify-center h-14  text-sm font-medium rounded-md transition
+            className={`flex items-center justify-center h-14 cursor-pointer text-sm font-medium rounded-md transition
               ${!isCurrentMonth ? "text-gray-400" : ""}
               ${isToday ? "bg-blue-500 text-white" : ""}
               ${
@@ -146,12 +146,13 @@ const Festival = () => {
       {/* animated blobs */}
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse z-0"></div>
       <div className="absolute top-20 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-ping z-0"></div>
-      <div className="relative z-10 max-w-xl mx-auto  bg-white/50 backdrop-blur-2xl rounded-lg overflow-hidden">
+
+      <div className="relative z-10 max-w-xl mx-auto overflow-hidden bg-white/50 backdrop-blur-2xl rounded-lg ">
         <div
           ref={calendarRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="px-4 py-4"
+          className=" p-4"
           style={{
             background: mousePos
               ? `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, rgba(59, 248, 251, 0.25), transparent 80%)`
@@ -217,7 +218,6 @@ const Festival = () => {
           </div>
         </div>
       </div>
-
       {/* Modal */}
       {modalEvent && (
         <div

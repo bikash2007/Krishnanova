@@ -165,7 +165,7 @@
 }
 .app {
   font-family: 'Inter', sans-serif;
-    background: url('./Media/kanha.jpg');
+    /* background: url('./Media/kanha.jpg'); */
     /* background: linear-gradient(135deg, var(--deep-space-blue) 0%, var(--royal-krishna-blue) 50%, var(--cosmic-purple) 100%); */
       background-size: cover;
       background-position: center;

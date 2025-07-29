@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import kpng from "../Media/krishna.png";
+import laugh from "../Audio/laugh.mp3";
 const lessons = [
   "Do your duty, but don’t concern yourself with the results.",
   "Calmness, gentleness, silence, self-restraint — these are virtues.",
@@ -74,7 +75,7 @@ const LuckyKrishna = () => {
   return (
     <div>
       {/* Audio */}
-      <audio ref={audioRef} src={`${import.meta.env.BASE_URL}/laugh.mp3`} />
+      <audio ref={audioRef} src={laugh} />
 
       {/* Krishna */}
       <div
@@ -85,11 +86,7 @@ const LuckyKrishna = () => {
           left: position.left,
         }}
       >
-        <img
-          src={`${import.meta.env.BASE_URL}/krishna.png`}
-          alt="Lord Krishna"
-          className="w-24 mx-auto"
-        />
+        <img src={kpng} alt="Lord Krishna" className="w-24 mx-auto" />
         <div className="text-white font-bold mt-1 drop-shadow-lg animate-pulse">
           {tease}
         </div>

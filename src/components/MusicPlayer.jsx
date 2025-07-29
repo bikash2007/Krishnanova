@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import bgMusic from "../Audio/bg.mp3";
 export default function MusicPlayer() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -34,7 +34,7 @@ export default function MusicPlayer() {
   return (
     <div className="flex items-center gap-2 p-4">
       <audio ref={audioRef} loop>
-        <source src={`${import.meta.env.BASE_URL}/bg.mp3`} type="audio/mpeg" />
+        <source src={bgMusic} type="audio/mpeg" />
       </audio>
 
       <button

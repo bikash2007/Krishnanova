@@ -10,7 +10,7 @@ import Hero from "./components/Hero/Hero";
 import Mission from "./components/Mission/Mission";
 import Products from "./components/Products/Products";
 import KrishnaNames from "./components/KrishnaNames/KrishnaNames";
-import WisdomPortal from "./components/WisdomPortal/WisdomPortal";
+
 import Community from "./components/Community/Community";
 import Festival from "./components/Festival/Festival";
 import Meditation from "./components/Meditation/Meditation";
@@ -24,6 +24,8 @@ import {
   LotusSVG,
   PeacockFeatherSVG,
 } from "./components/UI/Svg";
+import { useLocation } from "react-router-dom";
+import WisdomPortalPath from "./components/WisdomPortal/WisdomPortalPath";
 
 const App = () => {
   useScrollAnimation();
@@ -57,6 +59,27 @@ const App = () => {
       clearInterval(particleInterval);
     };
   }, []);
+  const location = useLocation();
+
+  // Handle scrolling after navigation from other routes
+  useEffect(() => {
+    if (location.state?.scrollToId) {
+      const targetId = location.state.scrollToId;
+
+      // Small delay to ensure the page has fully rendered
+      const timer = setTimeout(() => {
+        const section = document.getElementById(targetId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        // Optional: Clear the state to prevent re-scrolling on page refresh
+        window.history.replaceState({}, document.title);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location]);
 
   return (
     <div className="app">
@@ -68,24 +91,19 @@ const App = () => {
       <div id="home">
         <Hero />
       </div>
-      <div className=" ">
+      <div className="min-h-screen bg-gradient-to-br from-[#01abfd] via-[#a78bfa] to-[#60a5fa] relative pb-12  overflow-hidden">
+        <div id="products">
+          <Products />
+        </div>
+
         <div id="mission">
           <Mission />
         </div>
 
-        <div id="products">
-          <Products />
+        <div id="krishna-names">
+          <KrishnaNames />
         </div>
-      </div>
 
-      <div id="krishna-names">
-        <KrishnaNames />
-      </div>
-
-      <div
-        id="wisdom"
-        className="min-h-screen bg-gradient-to-br from-[#01abfd] via-[#a78bfa] to-[#60a5fa] relative py-12   overflow-hidden"
-      >
         {/* 🎨 Decorative background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           {/* Animated radial glow */}
@@ -108,9 +126,9 @@ const App = () => {
         </div>
 
         {/* 🌟 Main Content */}
-        <div className="relative z-10 space-y-20">
+        <div id="wisdom" className="relative z-10 space-y-20">
           <LotusSVG className="absolute w-32 opacity-8 bottom-15 left-1/4 animate-float-slow" />
-          <WisdomPortal />
+          <WisdomPortalPath />
           <div id="community">
             <PeacockFeatherSVG className="absolute w-48 opacity-8 top-1/3 right-1/3 animate-float-slower" />
             <Community />
