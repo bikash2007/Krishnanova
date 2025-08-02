@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useAuth } from "../../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useApi } from "../../Context/baseUrl";
 import Navigation from "../Navigation/Navigation";
 import axios from "axios";
@@ -28,31 +34,155 @@ import {
   FaWhatsapp,
   FaCrown,
   FaPray,
+  FaReply,
+  FaPaperPlane,
+  FaThumbsUp,
+  FaRegThumbsUp,
+  FaQuoteLeft,
+  FaFeatherAlt,
+  FaGem,
+  FaSun,
+  FaMoon,
+  FaStar,
+  FaCircle,
+  FaLeaf,
+  FaFire,
+  FaMagic,
+  FaUserPlus,
+  FaUserMinus,
+  FaInfoCircle,
+  FaTicketAlt,
+  FaHandsHelping,
+  FaMusic,
+  FaOm,
+  FaLightbulb,
+  FaBook,
+  FaHourglass,
+  FaCheckCircle,
+  FaExclamationCircle,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const API = import.meta.env.VITE_API_URL;
-
-// Badge Component
-const UserBadge = ({ user }) => {
-  if (user?.role === "admin") {
-    return (
-      <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full">
-        <FaCrown size={10} />
-        <span>ADMIN</span>
-      </div>
-    );
-  }
-
+// Floating Sacred Elements Component
+const FloatingSacredElements = () => {
   return (
-    <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold rounded-full">
-      <FaPray size={10} />
-      <span>DEVOTEE</span>
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {/* Animated Background Patterns */}
+      <motion.div
+        animate={{
+          rotate: 360,
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="absolute top-1/4 left-1/4 w-64 h-64 opacity-10"
+      >
+        <div className="w-full h-full bg-gradient-to-r from-orange-400 to-pink-500 rounded-full blur-3xl"></div>
+      </motion.div>
+
+      <motion.div
+        animate={{
+          rotate: -360,
+          scale: [1.2, 1, 1.2],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="absolute bottom-1/4 right-1/4 w-48 h-48 opacity-15"
+      >
+        <div className="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-2xl"></div>
+      </motion.div>
+
+      {/* Floating Sacred Symbols */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-orange-300/20 text-4xl"
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 10, -10, 0],
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{
+            duration: 8 + i * 2,
+            repeat: Infinity,
+            delay: i * 1.5,
+          }}
+          style={{
+            left: `${10 + i * 12}%`,
+            top: `${20 + i * 8}%`,
+          }}
+        >
+          {i % 4 === 0 ? "🕉️" : i % 4 === 1 ? "🪷" : i % 4 === 2 ? "✨" : "🙏"}
+        </motion.div>
+      ))}
+
+      {/* Sacred Geometric Patterns */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-purple-50/20 to-blue-50/30"></div>
+
+      {/* Mandala-like Background */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        className="absolute top-0 left-0 w-full h-full opacity-5"
+        style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, #f97316 0%, transparent 50%), 
+                           radial-gradient(circle at 75% 75%, #8b5cf6 0%, transparent 50%), 
+                           radial-gradient(circle at 75% 25%, #06b6d4 0%, transparent 50%), 
+                           radial-gradient(circle at 25% 75%, #ec4899 0%, transparent 50%)`,
+        }}
+      />
     </div>
   );
 };
 
-// Avatar Component with proper URL handling
-const Avatar = ({ user, size = "w-10 h-10", baseUrl }) => {
+// Enhanced Badge Component
+const UserBadge = ({ user, size = "md" }) => {
+  const sizeClasses = {
+    sm: "px-2 py-0.5 text-xs",
+    md: "px-2 py-1 text-xs",
+    lg: "px-3 py-1.5 text-sm",
+  };
+
+  if (user?.role === "admin") {
+    return (
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        animate={{
+          boxShadow: [
+            "0 0 20px rgba(251, 191, 36, 0.5)",
+            "0 0 30px rgba(251, 191, 36, 0.8)",
+            "0 0 20px rgba(251, 191, 36, 0.5)",
+          ],
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className={`flex items-center space-x-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
+      >
+        <FaCrown size={size === "sm" ? 8 : 10} />
+        <span>ADMIN</span>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.1 }}
+      className={`flex items-center space-x-1 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
+    >
+      <FaPray size={size === "sm" ? 8 : 10} />
+      <span>DEVOTEE</span>
+    </motion.div>
+  );
+};
+
+// Enhanced Avatar Component
+const Avatar = ({ user, size = "w-10 h-10", baseUrl, artistic = false }) => {
   const getAvatarUrl = () => {
     if (!user?.avatar) return "/user-avatar.png";
     if (user.avatar.startsWith("http")) return user.avatar;
@@ -60,932 +190,1078 @@ const Avatar = ({ user, size = "w-10 h-10", baseUrl }) => {
   };
 
   return (
-    <img
-      src={getAvatarUrl()}
-      alt={user?.name || "User"}
-      className={`${size} rounded-full object-cover border-2 border-white shadow-lg`}
-      onError={(e) => {
-        e.target.src = "/user-avatar.png";
-      }}
-    />
-  );
-};
-
-// Event Card Component
-const EventCard = ({ event, user, onJoin, onLeave, baseUrl, index }) => {
-  const [showDetails, setShowDetails] = useState(false);
-  const [showParticipants, setShowParticipants] = useState(false);
-
-  const isJoined =
-    user && event.participants.some((p) => p.user._id === user._id);
-  const isOrganizer = user && event.organizer._id === user._id;
-  const isFull =
-    event.maxParticipants && event.participants.length >= event.maxParticipants;
-  const isPast = new Date(event.dateTime) < new Date();
-
-  const formatDateTime = (date) => {
-    return new Date(date).toLocaleString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const formatDuration = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
-  };
-
-  const getEventTypeColor = (type) => {
-    const colors = {
-      meditation: "from-green-500 to-teal-600",
-      prayer: "from-blue-500 to-indigo-600",
-      discourse: "from-purple-500 to-pink-600",
-      festival: "from-yellow-500 to-orange-600",
-      community_service: "from-red-500 to-pink-600",
-      other: "from-gray-500 to-gray-600",
-    };
-    return colors[type] || colors.other;
-  };
-
-  const getEventTypeIcon = (type) => {
-    const icons = {
-      meditation: "🧘",
-      prayer: "🙏",
-      discourse: "📖",
-      festival: "🎉",
-      community_service: "🤝",
-      other: "📅",
-    };
-    return icons[type] || icons.other;
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300"
-    >
-      {/* Event Header */}
-      <div className="relative">
-        {event.image && (
-          <img
-            src={
-              event.image.startsWith("http")
-                ? event.image
-                : baseUrl + event.image
-            }
-            alt="Event"
-            className="w-full h-48 object-cover"
-          />
-        )}
-        <div
-          className={`absolute top-4 left-4 px-3 py-1 bg-gradient-to-r ${getEventTypeColor(
-            event.eventType
-          )} text-white text-sm font-bold rounded-full flex items-center space-x-1`}
+    <div className="relative">
+      <motion.div
+        whileHover={{ scale: 1.1, rotate: artistic ? 5 : 0 }}
+        className={`${
+          artistic
+            ? "p-1 bg-gradient-to-tr from-orange-400 via-pink-500 to-purple-500 rounded-full"
+            : ""
+        }`}
+      >
+        <img
+          src={getAvatarUrl()}
+          alt={user?.name || "User"}
+          className={`${size} rounded-full object-cover border-3 ${
+            artistic
+              ? "border-white shadow-2xl ring-4 ring-orange-200/50"
+              : "border-white/50 shadow-lg"
+          }`}
+          onError={(e) => {
+            e.target.src = "/user-avatar.png";
+          }}
+        />
+      </motion.div>
+      {artistic && (
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400"
         >
-          <span>{getEventTypeIcon(event.eventType)}</span>
-          <span>{event.eventType.replace("_", " ").toUpperCase()}</span>
-        </div>
-        {isFull && (
-          <div className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-sm font-bold rounded-full">
-            FULL
-          </div>
-        )}
-        {isPast && (
-          <div className="absolute top-4 right-4 px-3 py-1 bg-gray-500 text-white text-sm font-bold rounded-full">
-            PAST
-          </div>
-        )}
-      </div>
-
-      {/* Event Content */}
-      <div className="p-6">
-        {/* Organizer Info */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <Avatar user={event.organizer} baseUrl={baseUrl} />
-            <div>
-              <div className="flex items-center space-x-2">
-                <h4 className="font-bold text-gray-900">
-                  {event.organizer.name}
-                </h4>
-                <UserBadge user={event.organizer} />
-              </div>
-              <p className="text-gray-500 text-sm">Event Organizer</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Event Details */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">{event.title}</h2>
-
-        <div className="space-y-3 mb-4">
-          <div className="flex items-center space-x-3 text-gray-600">
-            <FaCalendarAlt className="text-blue-500" />
-            <span className="font-medium">
-              {formatDateTime(event.dateTime)}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-3 text-gray-600">
-            <FaClock className="text-green-500" />
-            <span>{formatDuration(event.duration)}</span>
-          </div>
-
-          <div className="flex items-center space-x-3 text-gray-600">
-            <FaMapMarkerAlt className="text-red-500" />
-            <span>
-              {event.location.address}, {event.location.city}
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-3 text-gray-600">
-            <FaUsers className="text-purple-500" />
-            <span>
-              {event.participants.length} joined
-              {event.maxParticipants && ` / ${event.maxParticipants} max`}
-            </span>
-          </div>
-        </div>
-
-        <p className="text-gray-700 mb-6 leading-relaxed">
-          {showDetails
-            ? event.description
-            : `${event.description.substring(0, 150)}...`}
-          {event.description.length > 150 && (
-            <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="text-blue-600 hover:text-blue-800 font-medium ml-2"
-            >
-              {showDetails ? "Show less" : "Read more"}
-            </button>
-          )}
-        </p>
-
-        {/* Requirements */}
-        {event.requirements && event.requirements.length > 0 && (
-          <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-            <h4 className="font-semibold text-yellow-800 mb-2">
-              Requirements:
-            </h4>
-            <ul className="text-yellow-700 text-sm space-y-1">
-              {event.requirements.map((req, idx) => (
-                <li key={idx}>• {req}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Participants Preview */}
-        {event.participants.length > 0 && (
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-semibold text-gray-800">Participants</h4>
-              <button
-                onClick={() => setShowParticipants(!showParticipants)}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                {showParticipants ? "Hide" : "View all"}
-              </button>
-            </div>
-
-            <div className="flex -space-x-2">
-              {event.participants.slice(0, 5).map((participant, idx) => (
-                <Avatar
-                  key={idx}
-                  user={participant.user}
-                  size="w-8 h-8"
-                  baseUrl={baseUrl}
-                />
-              ))}
-              {event.participants.length > 5 && (
-                <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-600">
-                  +{event.participants.length - 5}
-                </div>
-              )}
-            </div>
-
-            {showParticipants && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="mt-3 space-y-2 max-h-40 overflow-y-auto"
-              >
-                {event.participants.map((participant, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg"
-                  >
-                    <Avatar
-                      user={participant.user}
-                      size="w-6 h-6"
-                      baseUrl={baseUrl}
-                    />
-                    <span className="text-sm font-medium">
-                      {participant.user.name}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Joined{" "}
-                      {new Date(participant.joinedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
-            )}
-          </div>
-        )}
-
-        {/* Contact Information */}
-        {event.contactDetails &&
-          Object.keys(event.contactDetails).length > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-semibold text-blue-800 mb-2">
-                Contact Organizer:
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {event.contactDetails.phone && (
-                  <a
-                    href={`tel:${event.contactDetails.phone}`}
-                    className="flex items-center space-x-1 px-2 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600"
-                  >
-                    <FaPhone size={10} />
-                    <span>Call</span>
-                  </a>
-                )}
-                {event.contactDetails.email && (
-                  <a
-                    href={`mailto:${event.contactDetails.email}`}
-                    className="flex items-center space-x-1 px-2 py-1 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
-                  >
-                    <FaEnvelope size={10} />
-                    <span>Email</span>
-                  </a>
-                )}
-                {event.contactDetails.telegram && (
-                  <a
-                    href={`https://t.me/${event.contactDetails.telegram}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-1 px-2 py-1 bg-blue-400 text-white text-xs rounded-full hover:bg-blue-500"
-                  >
-                    <FaTelegram size={10} />
-                    <span>Telegram</span>
-                  </a>
-                )}
-                {event.contactDetails.whatsapp && (
-                  <a
-                    href={`https://wa.me/${event.contactDetails.whatsapp}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-1 px-2 py-1 bg-green-600 text-white text-xs rounded-full hover:bg-green-700"
-                  >
-                    <FaWhatsapp size={10} />
-                    <span>WhatsApp</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div className="flex items-center space-x-3">
-            {!isPast && !isOrganizer && user && (
-              <>
-                {isJoined ? (
-                  <button
-                    onClick={() => onLeave(event._id)}
-                    className="px-6 py-2 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition-colors duration-200"
-                  >
-                    Leave Event
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => onJoin(event._id)}
-                    disabled={isFull}
-                    className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                  >
-                    {isFull ? "Event Full" : "Join Event"}
-                  </button>
-                )}
-              </>
-            )}
-
-            {isOrganizer && (
-              <span className="px-4 py-2 bg-green-100 text-green-800 rounded-full font-semibold text-sm">
-                Your Event
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <button className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all duration-200">
-              <FaShareAlt size={16} />
-            </button>
-            <button className="p-2 text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 rounded-full transition-all duration-200">
-              <FaBookmark size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// Enhanced Post Card with Badge
-const PostCard = ({
-  post,
-  user,
-  onLike,
-  onShare,
-  onEdit,
-  onDelete,
-  baseUrl,
-  index,
-}) => {
-  const [showFullContent, setShowFullContent] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-
-  const isLiked = user && post.likes.includes(user._id);
-  const isOwner = user && post.author._id === user._id;
-
-  const formatTimeAgo = (date) => {
-    const now = new Date();
-    const postDate = new Date(date);
-    const diffInHours = Math.floor((now - postDate) / (1000 * 60 * 60));
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
-    return postDate.toLocaleDateString();
-  };
-
-  const shouldTruncate = post.content.length > 200;
-  const displayContent =
-    shouldTruncate && !showFullContent
-      ? post.content.substring(0, 200) + "..."
-      : post.content;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 group"
-    >
-      {/* Post Header */}
-      <div className="p-6 pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Avatar user={post.author} baseUrl={baseUrl} />
-            <div>
-              <div className="flex items-center space-x-2 mb-1">
-                <h3 className="font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
-                  {post.author.name}
-                </h3>
-                <UserBadge user={post.author} />
-              </div>
-              <div className="flex items-center space-x-2 text-gray-500 text-sm">
-                <span>{formatTimeAgo(post.createdAt)}</span>
-                <span>•</span>
-                <FaGlobe size={12} />
-              </div>
-            </div>
-          </div>
-
-          {/* Action Menu */}
-          <div className="flex items-center space-x-2">
-            {isOwner && (
-              <>
-                <button
-                  onClick={() => onEdit(post)}
-                  className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all duration-200"
-                  title="Edit post"
-                >
-                  <FaEdit size={14} />
-                </button>
-                <button
-                  onClick={() => onDelete(post)}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
-                  title="Delete post"
-                >
-                  <FaTrash size={14} />
-                </button>
-              </>
-            )}
-            <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
-              className="p-2 text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 rounded-full transition-all duration-200"
-              title="Bookmark"
-            >
-              {isBookmarked ? (
-                <FaBookmark size={14} />
-              ) : (
-                <FaRegBookmark size={14} />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Post Content */}
-      <div className="px-6 pb-4">
-        <h2 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-          {post.title}
-        </h2>
-
-        <div className="text-gray-700 leading-relaxed">
-          <p className="whitespace-pre-wrap">{displayContent}</p>
-          {shouldTruncate && (
-            <button
-              onClick={() => setShowFullContent(!showFullContent)}
-              className="text-blue-600 hover:text-blue-800 font-medium text-sm mt-2 transition-colors duration-200"
-            >
-              {showFullContent ? "Show less" : "Read more"}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Post Image */}
-      {post.image && (
-        <div className="relative overflow-hidden">
-          <img
-            src={
-              post.image.startsWith("http") ? post.image : baseUrl + post.image
-            }
-            alt="Post content"
-            className="w-full max-h-96 object-cover hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
+          <FaSun />
+        </motion.div>
       )}
-
-      {/* Post Actions */}
-      <div className="p-6 pt-4 border-t border-gray-50">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <motion.button
-              onClick={() => onLike(post._id)}
-              disabled={!user}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-200 ${
-                isLiked
-                  ? "text-red-500 bg-red-50 hover:bg-red-100"
-                  : "text-gray-600 hover:text-red-500 hover:bg-red-50"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.div
-                animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
-                transition={{ duration: 0.3 }}
-              >
-                {isLiked ? <FaHeart size={18} /> : <FaRegHeart size={18} />}
-              </motion.div>
-              <span className="font-semibold">{post.likes.length}</span>
-            </motion.button>
-
-            <button className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-blue-500 hover:bg-blue-50 transition-all duration-200">
-              <FaComment size={16} />
-              <span className="font-semibold">0</span>
-            </button>
-
-            <button
-              onClick={() => onShare(post)}
-              className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-green-500 hover:bg-green-50 transition-all duration-200"
-            >
-              <FaShareAlt size={16} />
-              <span className="font-semibold text-sm">Share</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+    </div>
   );
 };
 
-// Create Event Component
-const CreateEvent = ({ user, onSubmit, baseUrl }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    eventType: "meditation",
-    address: "",
-    city: "",
-    dateTime: "",
-    duration: 60,
-    maxParticipants: "",
-    requirements: [],
-    contactDetails: {
-      phone: "",
-      email: "",
-      telegram: "",
-      whatsapp: "",
-    },
-  });
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [posting, setPosting] = useState(false);
-  const [newRequirement, setNewRequirement] = useState("");
-
-  const eventTypes = [
+// Ultra Cool Tab Navigation Component
+const TabNavigation = ({ activeTab, setActiveTab }) => {
+  const tabs = [
     {
-      value: "meditation",
-      label: "🧘 Meditation Session",
-      color: "from-green-500 to-teal-600",
+      id: "posts",
+      label: "Sacred Posts",
+      icon: FaFeatherAlt,
+      color: "from-orange-400 to-red-500",
     },
     {
-      value: "prayer",
-      label: "🙏 Prayer Meeting",
-      color: "from-blue-500 to-indigo-600",
-    },
-    {
-      value: "discourse",
-      label: "📖 Spiritual Discourse",
-      color: "from-purple-500 to-pink-600",
-    },
-    {
-      value: "festival",
-      label: "🎉 Festival Celebration",
-      color: "from-yellow-500 to-orange-600",
-    },
-    {
-      value: "community_service",
-      label: "🤝 Community Service",
-      color: "from-red-500 to-pink-600",
-    },
-    {
-      value: "other",
-      label: "📅 Other Event",
-      color: "from-gray-500 to-gray-600",
+      id: "events",
+      label: "Divine Events",
+      icon: FaCalendarAlt,
+      color: "from-purple-400 to-pink-500",
     },
   ];
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleContactChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      contactDetails: { ...prev.contactDetails, [field]: value },
-    }));
-  };
-
-  const addRequirement = () => {
-    if (newRequirement.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        requirements: [...prev.requirements, newRequirement.trim()],
-      }));
-      setNewRequirement("");
-    }
-  };
-
-  const removeRequirement = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      requirements: prev.requirements.filter((_, i) => i !== index),
-    }));
-  };
-
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-    setPreview(file ? URL.createObjectURL(file) : null);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.address ||
-      !formData.city ||
-      !formData.dateTime
-    ) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    setPosting(true);
-    await onSubmit({ ...formData, image });
-
-    // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      eventType: "meditation",
-      address: "",
-      city: "",
-      dateTime: "",
-      duration: 60,
-      maxParticipants: "",
-      requirements: [],
-      contactDetails: { phone: "", email: "", telegram: "", whatsapp: "" },
-    });
-    setImage(null);
-    setPreview(null);
-    setIsExpanded(false);
-    setPosting(false);
-  };
-
-  const resetForm = () => {
-    setFormData({
-      title: "",
-      description: "",
-      eventType: "meditation",
-      address: "",
-      city: "",
-      dateTime: "",
-      duration: 60,
-      maxParticipants: "",
-      requirements: [],
-      contactDetails: { phone: "", email: "", telegram: "", whatsapp: "" },
-    });
-    setImage(null);
-    setPreview(null);
-    setIsExpanded(false);
-    setNewRequirement("");
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8"
-    >
-      <div className="p-6">
-        <div className="flex items-center space-x-4 mb-4">
-          <Avatar user={user} baseUrl={baseUrl} />
-          <button
-            onClick={() => setIsExpanded(true)}
-            className="flex-1 text-left px-4 py-3 bg-gradient-to-r from-orange-50 to-yellow-50 hover:from-orange-100 hover:to-yellow-100 rounded-full text-orange-600 transition-colors duration-200 font-medium border border-orange-200"
-          >
-            🎉 Organize a spiritual event for the community...
-          </button>
-        </div>
+    <div className="relative mb-12">
+      {/* Background Glow Effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-300/20 via-purple-300/20 to-pink-300/20 blur-3xl"></div>
 
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.form
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
-              {/* Basic Information */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Event title *"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange("title", e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-lg font-medium"
-                  required
-                />
+      <div className="relative flex justify-center">
+        <motion.div
+          className="bg-white/10 backdrop-blur-xl rounded-full p-1.5 shadow-2xl border border-white/20"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="relative flex items-center">
+            {/* Sliding Background */}
+            <motion.div
+              className={`absolute inset-y-0 bg-gradient-to-r ${
+                activeTab === "posts" ? tabs[0].color : tabs[1].color
+              } rounded-full shadow-lg`}
+              layoutId="activeTabBg"
+              initial={false}
+              animate={{
+                x: activeTab === "posts" ? 0 : "100%",
+                width: "50%",
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+            />
 
-                <select
-                  value={formData.eventType}
-                  onChange={(e) =>
-                    handleInputChange("eventType", e.target.value)
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+
+              return (
+                <motion.button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`relative z-10 px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center space-x-3 ${
+                    isActive
+                      ? "text-white"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {eventTypes.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <textarea
-                placeholder="Describe your event, its purpose, and what participants can expect... *"
-                value={formData.description}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-                className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 min-h-[120px] resize-none"
-                required
-              />
-
-              {/* Location */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  placeholder="Full address *"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange("address", e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
-                />
-
-                <input
-                  type="text"
-                  placeholder="City *"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
-                />
-              </div>
-
-              {/* Date and Duration */}
-              <div className="grid md:grid-cols-3 gap-4">
-                <input
-                  type="datetime-local"
-                  value={formData.dateTime}
-                  onChange={(e) =>
-                    handleInputChange("dateTime", e.target.value)
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
-                />
-
-                <input
-                  type="number"
-                  placeholder="Duration (minutes)"
-                  value={formData.duration}
-                  onChange={(e) =>
-                    handleInputChange("duration", parseInt(e.target.value))
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  min="15"
-                />
-
-                <input
-                  type="number"
-                  placeholder="Max participants (optional)"
-                  value={formData.maxParticipants}
-                  onChange={(e) =>
-                    handleInputChange("maxParticipants", e.target.value)
-                  }
-                  className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  min="1"
-                />
-              </div>
-
-              {/* Requirements */}
-              <div className="space-y-3">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Requirements (What should participants bring/know?)
-                </label>
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    placeholder="Add a requirement..."
-                    value={newRequirement}
-                    onChange={(e) => setNewRequirement(e.target.value)}
-                    className="flex-1 px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    onKeyPress={(e) =>
-                      e.key === "Enter" &&
-                      (e.preventDefault(), addRequirement())
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={addRequirement}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200"
+                  <motion.div
+                    animate={{
+                      rotate: isActive ? 360 : 0,
+                      scale: isActive ? 1.2 : 1,
+                    }}
+                    transition={{ duration: 0.5 }}
                   >
-                    Add
-                  </button>
-                </div>
-                {formData.requirements.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {formData.requirements.map((req, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center space-x-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                      >
-                        <span>{req}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeRequirement(index)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <FaTimes size={12} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    <Icon size={20} />
+                  </motion.div>
+                  <span className="text-sm md:text-base">{tab.label}</span>
 
-              {/* Contact Details */}
-              <div className="space-y-3">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Contact Information (How can participants reach you?)
-                </label>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <input
-                    type="tel"
-                    placeholder="Phone number"
-                    value={formData.contactDetails.phone}
-                    onChange={(e) =>
-                      handleContactChange("phone", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={formData.contactDetails.email}
-                    onChange={(e) =>
-                      handleContactChange("email", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Telegram username"
-                    value={formData.contactDetails.telegram}
-                    onChange={(e) =>
-                      handleContactChange("telegram", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <input
-                    type="text"
-                    placeholder="WhatsApp number"
-                    value={formData.contactDetails.whatsapp}
-                    onChange={(e) =>
-                      handleContactChange("whatsapp", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Image Upload */}
-              <div className="space-y-3">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Event Image (Optional)
-                </label>
-                {preview && (
-                  <div className="relative">
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="w-full max-h-64 object-cover rounded-2xl"
+                  {/* Active Indicator Dot */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeDot"
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full shadow-lg"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500 }}
                     />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImage(null);
-                        setPreview(null);
-                      }}
-                      className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
-                    >
-                      <FaTimes size={12} />
-                    </button>
-                  </div>
-                )}
-                <label className="flex items-center justify-center space-x-2 px-4 py-3 text-blue-600 hover:bg-blue-50 rounded-2xl cursor-pointer transition-colors duration-200 border-2 border-dashed border-blue-300">
-                  <FaImage size={20} />
-                  <span className="font-medium">Upload Event Image</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImage}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-full font-medium transition-colors duration-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={posting}
-                  className="px-8 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-full font-semibold hover:from-orange-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  {posting ? "Creating Event..." : "Create Event"}
-                </button>
-              </div>
-            </motion.form>
-          )}
-        </AnimatePresence>
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </motion.div>
       </div>
-    </motion.div>
+
+      {/* Decorative Elements */}
+      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+        <motion.div
+          animate={{
+            y: [0, -10, 0],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="text-4xl"
+        >
+          {activeTab === "posts" ? "✍️" : "🎉"}
+        </motion.div>
+      </div>
+    </div>
   );
 };
 
-// Create Post Component (simplified version of the original)
+// Comment Component with Enhanced Features
+const CommentItem = React.memo(
+  ({
+    comment,
+    postId,
+    baseUrl,
+    user,
+    onReply,
+    onLike,
+    onEdit,
+    onDelete,
+    level = 0,
+    onCommentUpdate,
+  }) => {
+    const [showReplyForm, setShowReplyForm] = useState(false);
+    const [replyContent, setReplyContent] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
+    const [editContent, setEditContent] = useState(comment.content);
+    const [isLiked, setIsLiked] = useState(
+      user && comment.likes?.includes(user._id)
+    );
+    const [likesCount, setLikesCount] = useState(comment.likes?.length || 0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const formatTimeAgo = useCallback((date) => {
+      const now = new Date();
+      const commentDate = new Date(date);
+      const diffInMinutes = Math.floor((now - commentDate) / (1000 * 60));
+
+      if (diffInMinutes < 1) return "now";
+      if (diffInMinutes < 60) return `${diffInMinutes}m`;
+      if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
+      return `${Math.floor(diffInMinutes / 1440)}d`;
+    }, []);
+
+    const handleReply = async () => {
+      if (!replyContent.trim() || isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        await onReply(comment._id, replyContent);
+        setReplyContent("");
+        setShowReplyForm(false);
+      } catch (error) {
+        console.error("Error replying:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    const handleLike = async () => {
+      if (!user || isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        const result = await onLike(comment._id);
+        if (result) {
+          setIsLiked(result.liked);
+          setLikesCount(result.likes);
+        }
+      } catch (error) {
+        console.error("Error liking comment:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    const handleEdit = async () => {
+      if (!editContent.trim() || isSubmitting) return;
+      setIsSubmitting(true);
+      try {
+        await onEdit(comment._id, editContent);
+        setIsEditing(false);
+        onCommentUpdate();
+      } catch (error) {
+        console.error("Error editing comment:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    const handleDelete = async () => {
+      if (
+        !window.confirm("Are you sure you want to delete this comment?") ||
+        isSubmitting
+      )
+        return;
+      setIsSubmitting(true);
+      try {
+        await onDelete(comment._id);
+        onCommentUpdate();
+      } catch (error) {
+        console.error("Error deleting comment:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
+
+    const isOwner = user && comment.author._id === user._id;
+    const isAdmin = user?.role === "admin";
+    const canDelete = isOwner || isAdmin;
+    const canReply = level < 2 && user;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`${level > 0 ? "ml-8 mt-4" : "mb-6"}`}
+      >
+        <div className="relative">
+          {/* Sacred Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-orange-50/30 to-purple-50/20 backdrop-blur-sm rounded-2xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-purple-500/5 to-blue-500/5 rounded-2xl"></div>
+
+          {/* Floating Decorative Elements */}
+          <motion.div
+            animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-2 -right-2 w-4 h-4 text-orange-300 opacity-60"
+          >
+            <FaGem />
+          </motion.div>
+
+          <div className="relative p-4 border border-white/40 rounded-2xl shadow-lg backdrop-blur-sm">
+            {/* Comment Header */}
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center space-x-3">
+                <Avatar
+                  user={comment.author}
+                  size="w-10 h-10"
+                  baseUrl={baseUrl}
+                  artistic={comment.author?.role === "admin"}
+                />
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <h5 className="font-semibold text-gray-900 text-sm">
+                      {comment.author?.name}
+                    </h5>
+                    <UserBadge user={comment.author} size="sm" />
+                  </div>
+                  <span className="text-gray-500 text-xs flex items-center space-x-1">
+                    <FaClock size={10} />
+                    <span>{formatTimeAgo(comment.createdAt)}</span>
+                  </span>
+                </div>
+              </div>
+
+              {canDelete && (
+                <div className="flex items-center space-x-2">
+                  {isOwner && (
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setIsEditing(true)}
+                      disabled={isSubmitting}
+                      className="text-gray-400 hover:text-blue-500 transition-colors duration-200 disabled:opacity-50"
+                    >
+                      <FaEdit size={12} />
+                    </motion.button>
+                  )}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleDelete}
+                    disabled={isSubmitting}
+                    className="text-gray-400 hover:text-red-500 transition-colors duration-200 disabled:opacity-50"
+                  >
+                    <FaTrash size={12} />
+                  </motion.button>
+                </div>
+              )}
+            </div>
+
+            {/* Comment Content */}
+            <div className="mb-3">
+              {isEditing ? (
+                <div className="space-y-3">
+                  <div className="relative">
+                    <FaQuoteLeft className="absolute -top-2 -left-2 text-orange-200/50 text-lg" />
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full p-3 pl-6 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none bg-white/80 backdrop-blur-sm"
+                      rows="3"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleEdit}
+                      disabled={isSubmitting}
+                      className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-200 disabled:opacity-50"
+                    >
+                      {isSubmitting ? "Saving..." : "Save"}
+                    </motion.button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditContent(comment.content);
+                      }}
+                      disabled={isSubmitting}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors duration-200 disabled:opacity-50"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative">
+                  <FaQuoteLeft className="absolute -top-2 -left-2 text-orange-200/50 text-lg" />
+                  <p className="text-gray-700 text-sm leading-relaxed pl-6">
+                    {comment.content}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Comment Actions */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleLike}
+                  disabled={!user || isSubmitting}
+                  className={`flex items-center space-x-1 text-sm transition-colors duration-200 ${
+                    isLiked
+                      ? "text-red-500"
+                      : "text-gray-500 hover:text-red-500"
+                  } disabled:opacity-50`}
+                >
+                  <motion.div
+                    animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {isLiked ? (
+                      <FaThumbsUp size={14} />
+                    ) : (
+                      <FaRegThumbsUp size={14} />
+                    )}
+                  </motion.div>
+                  <span>{likesCount}</span>
+                </motion.button>
+
+                {canReply && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => setShowReplyForm(!showReplyForm)}
+                    disabled={isSubmitting}
+                    className="flex items-center space-x-1 text-sm text-gray-500 hover:text-orange-500 transition-colors duration-200 disabled:opacity-50"
+                  >
+                    <FaReply size={12} />
+                    <span>Reply</span>
+                  </motion.button>
+                )}
+              </div>
+            </div>
+
+            {/* Reply Form */}
+            <AnimatePresence>
+              {showReplyForm && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 pt-4 border-t border-orange-200/50"
+                >
+                  <div className="flex space-x-3">
+                    <Avatar
+                      user={user}
+                      size="w-8 h-8"
+                      baseUrl={baseUrl}
+                      artistic={false}
+                    />
+                    <div className="flex-1">
+                      <div className="relative">
+                        <FaQuoteLeft className="absolute top-2 left-2 text-orange-200/50 text-sm" />
+                        <textarea
+                          value={replyContent}
+                          onChange={(e) => setReplyContent(e.target.value)}
+                          placeholder="Write a thoughtful reply..."
+                          className="w-full p-3 pl-8 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none bg-white/80 backdrop-blur-sm"
+                          rows="2"
+                        />
+                      </div>
+                      <div className="flex items-center justify-end space-x-2 mt-2">
+                        <button
+                          onClick={() => setShowReplyForm(false)}
+                          disabled={isSubmitting}
+                          className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleReply}
+                          disabled={!replyContent.trim() || isSubmitting}
+                          className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
+                        >
+                          {isSubmitting ? (
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
+                              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                            />
+                          ) : (
+                            <FaPaperPlane size={12} />
+                          )}
+                          <span>{isSubmitting ? "Posting..." : "Reply"}</span>
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Replies */}
+          {comment.replies && comment.replies.length > 0 && (
+            <div className="mt-4">
+              {comment.replies.map((reply) => (
+                <CommentItem
+                  key={reply._id}
+                  comment={reply}
+                  postId={postId}
+                  baseUrl={baseUrl}
+                  user={user}
+                  onReply={onReply}
+                  onLike={onLike}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onCommentUpdate={onCommentUpdate}
+                  level={level + 1}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    );
+  }
+);
+
+// Comment Form Component
+const CommentForm = React.memo(({ user, baseUrl, onSubmit, postId }) => {
+  const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!content.trim() || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      await onSubmit(content);
+      setContent("");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-orange-50/30 to-purple-50/20 backdrop-blur-sm rounded-2xl"></div>
+        <div className="relative p-6 border border-white/40 rounded-2xl shadow-lg backdrop-blur-sm text-center">
+          <FaQuoteLeft className="text-orange-300 text-4xl mx-auto mb-4" />
+          <p className="text-gray-600 mb-4">
+            Please log in to join the divine discussion
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => (window.location.href = "/login")}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-lg"
+          >
+            <FaSun className="mr-2" />
+            <span>Sign In</span>
+          </motion.button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <motion.form
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      onSubmit={handleSubmit}
+      className="relative"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-orange-50/30 to-purple-50/20 backdrop-blur-sm rounded-2xl"></div>
+      <div className="relative p-6 border border-white/40 rounded-2xl shadow-lg backdrop-blur-sm">
+        <div className="flex space-x-4">
+          <Avatar
+            user={user}
+            size="w-12 h-12"
+            baseUrl={baseUrl}
+            artistic={user?.role === "admin"}
+          />
+          <div className="flex-1">
+            <div className="relative">
+              <FaQuoteLeft className="absolute top-3 left-3 text-orange-200/50 text-xl" />
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Share your spiritual insights and wisdom..."
+                className="w-full p-4 pl-12 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none bg-white/80 backdrop-blur-sm"
+                rows="4"
+                maxLength={500}
+              />
+            </div>
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <FaFeatherAlt size={12} />
+                <span>{content.length}/500 characters</span>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                disabled={!content.trim() || isSubmitting}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white rounded-full font-semibold hover:from-orange-600 hover:via-red-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2 shadow-lg"
+              >
+                {isSubmitting ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                  />
+                ) : (
+                  <FaPaperPlane size={14} />
+                )}
+                <span>{isSubmitting ? "Sharing..." : "Share Wisdom"}</span>
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.form>
+  );
+});
+
+// Enhanced Post Card with Comments
+const PostCard = React.memo(
+  ({ post, user, onLike, onShare, onEdit, onDelete, baseUrl, index }) => {
+    const [showFullContent, setShowFullContent] = useState(false);
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [showComments, setShowComments] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [commentsLoading, setCommentsLoading] = useState(false);
+    const [commentsCount, setCommentsCount] = useState(0);
+    const isFetchingRef = useRef(false);
+
+    const isLiked = user && post.likes.includes(user._id);
+    const isOwner = user && post.author._id === user._id;
+
+    const formatTimeAgo = useCallback((date) => {
+      const now = new Date();
+      const postDate = new Date(date);
+      const diffInHours = Math.floor((now - postDate) / (1000 * 60 * 60));
+
+      if (diffInHours < 1) return "Just now";
+      if (diffInHours < 24) return `${diffInHours}h ago`;
+      if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
+      return postDate.toLocaleDateString();
+    }, []);
+    // Add this useEffect in PostCard component
+    useEffect(() => {
+      // Fetch comment count on mount
+      const fetchCommentCount = async () => {
+        try {
+          const res = await axios.get(`${API}/comments/post/${post._id}/count`);
+          setCommentsCount(res.data.count);
+        } catch (error) {
+          console.error("Error fetching comment count:", error);
+        }
+      };
+
+      fetchCommentCount();
+    }, [post._id]);
+
+    const fetchComments = useCallback(async () => {
+      if (isFetchingRef.current || commentsLoading) return;
+
+      isFetchingRef.current = true;
+      setCommentsLoading(true);
+
+      try {
+        const res = await axios.get(`${API}/comments/post/${post._id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const allComments = res.data || [];
+
+        // Filter only top-level comments (no parentComment)
+        const topLevelComments = allComments.filter(
+          (comment) => !comment.parentComment
+        );
+
+        // Build nested structure
+        const commentsWithReplies = topLevelComments.map((comment) => {
+          const replies = allComments.filter(
+            (reply) => reply.parentComment === comment._id
+          );
+          return { ...comment, replies };
+        });
+
+        setComments(commentsWithReplies);
+        setCommentsCount(allComments.length);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+        setComments([]);
+        setCommentsCount(0);
+      } finally {
+        setCommentsLoading(false);
+        isFetchingRef.current = false;
+      }
+    }, [post._id]);
+
+    const handleCommentSubmit = useCallback(
+      async (content) => {
+        try {
+          const response = await axios.post(
+            `${API}/comments`,
+            { postId: post._id, content },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.status === 201) {
+            await fetchComments();
+          }
+        } catch (error) {
+          console.error("Error posting comment:", error);
+          alert("Failed to post comment. Please try again.");
+        }
+      },
+      [post._id, fetchComments]
+    );
+
+    const handleCommentReply = useCallback(
+      async (parentCommentId, content) => {
+        try {
+          const response = await axios.post(
+            `${API}/comments`,
+            {
+              postId: post._id,
+              content,
+              parentComment: parentCommentId,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.status === 201) {
+            await fetchComments();
+          }
+        } catch (error) {
+          console.error("Error posting reply:", error);
+          alert("Failed to post reply. Please try again.");
+        }
+      },
+      [post._id, fetchComments]
+    );
+
+    useEffect(() => {
+      if (showComments && comments.length === 0 && !commentsLoading) {
+        fetchComments();
+      }
+    }, [showComments]);
+
+    const handleShowComments = useCallback(() => {
+      setShowComments((prev) => !prev);
+    }, []);
+
+    const handleCommentLike = useCallback(
+      async (commentId) => {
+        if (!user) return null;
+
+        try {
+          const res = await axios.post(
+            `${API}/comments/${commentId}/like`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          fetchComments();
+          return res.data;
+        } catch (error) {
+          console.error("Error liking comment:", error);
+          return null;
+        }
+      },
+      [user, fetchComments]
+    );
+
+    const handleCommentEdit = useCallback(
+      async (commentId, content) => {
+        try {
+          await axios.put(
+            `${API}/comments/${commentId}`,
+            { content },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          fetchComments();
+        } catch (error) {
+          console.error("Error editing comment:", error);
+        }
+      },
+      [fetchComments]
+    );
+
+    const handleCommentDelete = useCallback(
+      async (commentId) => {
+        try {
+          await axios.delete(`${API}/comments/${commentId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          fetchComments();
+        } catch (error) {
+          console.error("Error deleting comment:", error);
+        }
+      },
+      [fetchComments]
+    );
+
+    const shouldTruncate = post.content.length > 200;
+    const displayContent = useMemo(() => {
+      return shouldTruncate && !showFullContent
+        ? post.content.substring(0, 200) + "..."
+        : post.content;
+    }, [post.content, shouldTruncate, showFullContent]);
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1, duration: 0.5 }}
+        className="relative group"
+      >
+        {/* Sacred Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-orange-50/30 to-purple-50/20 backdrop-blur-sm rounded-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-purple-500/5 to-blue-500/5 rounded-3xl group-hover:from-orange-500/10 group-hover:via-purple-500/10 group-hover:to-blue-500/10 transition-all duration-500"></div>
+
+        {/* Floating Decorative Elements */}
+        <motion.div
+          animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-4 -right-4 w-8 h-8 text-orange-300 opacity-60"
+        >
+          <FaGem />
+        </motion.div>
+
+        <div className="relative border border-white/40 rounded-3xl shadow-2xl backdrop-blur-sm overflow-hidden hover:shadow-3xl transition-all duration-300">
+          {/* Post Header */}
+          <div className="p-6 pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Avatar
+                  user={post.author}
+                  baseUrl={baseUrl}
+                  artistic={post.author?.role === "admin"}
+                />
+                <div>
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h3 className="font-bold text-gray-900 hover:text-orange-600 cursor-pointer transition-colors duration-200">
+                      {post.author.name}
+                    </h3>
+                    <UserBadge user={post.author} />
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-500 text-sm">
+                    <FaClock size={12} />
+                    <span>{formatTimeAgo(post.createdAt)}</span>
+                    <span>•</span>
+                    <FaGlobe size={12} />
+                    <span>Public</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Menu */}
+              <div className="flex items-center space-x-2">
+                {isOwner && (
+                  <>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => onEdit(post)}
+                      className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all duration-200"
+                      title="Edit post"
+                    >
+                      <FaEdit size={14} />
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => onDelete(post)}
+                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
+                      title="Delete post"
+                    >
+                      <FaTrash size={14} />
+                    </motion.button>
+                  </>
+                )}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className="p-2 text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 rounded-full transition-all duration-200"
+                  title="Bookmark"
+                >
+                  {isBookmarked ? (
+                    <FaBookmark size={14} />
+                  ) : (
+                    <FaRegBookmark size={14} />
+                  )}
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+          {/* Post Content */}
+          <div className="px-6 pb-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+              {post.title}
+            </h2>
+
+            <div className="relative">
+              <FaQuoteLeft className="absolute -top-2 -left-2 text-orange-200/50 text-xl" />
+              <div className="text-gray-700 leading-relaxed pl-6">
+                <p className="whitespace-pre-wrap">{displayContent}</p>
+                {shouldTruncate && (
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowFullContent(!showFullContent);
+                      }}
+                      className="text-orange-600 hover:text-orange-800 font-medium text-sm mt-2"
+                    >
+                      {showFullContent ? "Show less" : "Preview"}
+                    </button>
+                    <Link
+                      to={`/blog/${post._id}`}
+                      className="text-purple-600 hover:text-purple-800 font-medium text-sm mt-2 flex items-center space-x-1"
+                    >
+                      <span>Read Full Post</span>
+                      <FaArrowRight size={12} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Post Image */}
+          {post.image && (
+            <div className="relative overflow-hidden mx-6 mb-4 rounded-2xl">
+              <img
+                src={
+                  post.image.startsWith("http")
+                    ? post.image
+                    : baseUrl + post.image
+                }
+                alt="Post content"
+                className="w-full max-h-96 object-cover hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+          )}
+
+          {/* Post Actions */}
+          <div className="p-6 pt-4 border-t border-orange-100/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-6">
+                <motion.button
+                  onClick={() => onLike(post._id)}
+                  disabled={!user}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-200 ${
+                    isLiked
+                      ? "text-red-500 bg-red-50 hover:bg-red-100"
+                      : "text-gray-600 hover:text-red-500 hover:bg-red-50"
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div
+                    animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {isLiked ? <FaHeart size={18} /> : <FaRegHeart size={18} />}
+                  </motion.div>
+                  <span className="font-semibold">{post.likes.length}</span>
+                </motion.button>
+
+                <motion.button
+                  onClick={handleShowComments}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaComment size={16} />
+                  <span className="font-semibold">{commentsCount}</span>
+                </motion.button>
+
+                <motion.button
+                  onClick={() => onShare(post)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-green-500 hover:bg-green-50 transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaShareAlt size={16} />
+                  <span className="font-semibold text-sm">Share</span>
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+          {/* Comments Section */}
+          <AnimatePresence>
+            {showComments && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="border-t border-orange-100/50 bg-gradient-to-br from-orange-50/30 to-purple-50/20"
+              >
+                <div className="p-6">
+                  {/* Comment Form */}
+                  <div className="mb-6">
+                    <CommentForm
+                      user={user}
+                      baseUrl={baseUrl}
+                      onSubmit={handleCommentSubmit}
+                      postId={post._id}
+                    />
+                  </div>
+
+                  {/* Comments List */}
+                  <div className="space-y-4">
+                    {commentsLoading ? (
+                      <div className="text-center py-8">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                          className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full mx-auto"
+                        />
+                        <p className="text-gray-500 mt-2">
+                          Loading sacred discussions...
+                        </p>
+                      </div>
+                    ) : comments.length === 0 ? (
+                      <div className="text-center py-12">
+                        <FaQuoteLeft className="text-orange-300 text-4xl mx-auto mb-4" />
+                        <h4 className="text-xl font-bold text-gray-700 mb-2">
+                          No discussions yet
+                        </h4>
+                        <p className="text-gray-500">
+                          Be the first to share your spiritual insights!
+                        </p>
+                      </div>
+                    ) : (
+                      <AnimatePresence mode="wait">
+                        {comments.map((comment) => (
+                          <CommentItem
+                            key={comment._id}
+                            comment={comment}
+                            postId={post._id}
+                            baseUrl={baseUrl}
+                            user={user}
+                            onReply={handleCommentReply}
+                            onLike={handleCommentLike}
+                            onEdit={handleCommentEdit}
+                            onDelete={handleCommentDelete}
+                            onCommentUpdate={fetchComments}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    );
+  }
+);
+
+// Create Post Component
 const CreatePost = ({ user, onSubmit, baseUrl }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [title, setTitle] = useState("");
@@ -1027,99 +1303,1019 @@ const CreatePost = ({ user, onSubmit, baseUrl }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8"
+      className="relative mb-8"
     >
-      <div className="p-6">
-        <div className="flex items-center space-x-4 mb-4">
-          <Avatar user={user} baseUrl={baseUrl} />
-          <button
-            onClick={() => setIsExpanded(true)}
-            className="flex-1 text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 transition-colors duration-200"
-          >
-            What's on your mind, {user?.name?.split(" ")[0]}?
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.form
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-4"
+      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-orange-50/30 to-purple-50/20 backdrop-blur-sm rounded-3xl"></div>
+      <div className="relative border border-white/40 rounded-3xl shadow-xl backdrop-blur-sm overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-center space-x-4 mb-4">
+            <Avatar
+              user={user}
+              baseUrl={baseUrl}
+              artistic={user?.role === "admin"}
+            />
+            <button
+              onClick={() => setIsExpanded(true)}
+              className="flex-1 text-left px-4 py-3 bg-gradient-to-r from-orange-50 to-purple-50 hover:from-orange-100 hover:to-purple-100 rounded-full text-orange-600 transition-colors duration-200 font-medium border border-orange-200"
             >
-              <input
-                type="text"
-                placeholder="Give your post a catchy title..."
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-lg font-medium"
-                required
-              />
+              What sacred wisdom would you like to share,{" "}
+              {user?.name?.split(" ")[0]}?
+            </button>
+          </div>
 
-              <textarea
-                placeholder="Share your thoughts, stories, or wisdom with the community..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 min-h-[120px] resize-none"
-                required
-              />
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.form
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                onSubmit={handleSubmit}
+                className="space-y-4"
+              >
+                <input
+                  type="text"
+                  placeholder="Give your wisdom a meaningful title..."
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-3 border border-orange-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 text-lg font-medium bg-white/80"
+                  required
+                />
 
-              {preview && (
                 <div className="relative">
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-full max-h-64 object-cover rounded-2xl"
+                  <FaQuoteLeft className="absolute top-3 left-3 text-orange-200/50 text-xl" />
+                  <textarea
+                    placeholder="Share your spiritual thoughts, experiences, or wisdom with the community..."
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full px-4 py-3 pl-12 border border-orange-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 min-h-[120px] resize-none bg-white/80"
+                    required
                   />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImage(null);
-                      setPreview(null);
-                    }}
-                    className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
+                </div>
+
+                {preview && (
+                  <div className="relative">
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="w-full max-h-64 object-cover rounded-2xl"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImage(null);
+                        setPreview(null);
+                      }}
+                      className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
+                    >
+                      <FaTimes size={12} />
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <label className="flex items-center space-x-2 px-4 py-2 text-orange-600 hover:bg-orange-50 rounded-full cursor-pointer transition-colors duration-200">
+                      <FaImage size={16} />
+                      <span className="font-medium">Add Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImage}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-full font-medium transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="submit"
+                      disabled={!title || !content || posting}
+                      className="px-8 py-2 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white rounded-full font-semibold hover:from-orange-600 hover:via-red-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      {posting ? "Sharing..." : "Share Wisdom"}
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Enhanced Community Event Card Component
+const EventCard = React.memo(
+  ({ event, user, onJoin, onLeave, onEdit, onDelete, baseUrl, index }) => {
+    const isOrganizer = user && event.organizer._id === user._id;
+    const isAdmin = user?.role === "admin";
+    const hasJoined =
+      user && event.participants.some((p) => p.user._id === user._id);
+    const [showDetails, setShowDetails] = useState(false);
+
+    const formatEventDate = (date) => {
+      return new Date(date).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    };
+
+    const getEventTypeIcon = (type) => {
+      const iconMap = {
+        kirtan: <FaMusic className="text-orange-500" />,
+        satsang: <FaUsers className="text-purple-500" />,
+        seva: <FaHandsHelping className="text-green-500" />,
+        festival: <FaStar className="text-yellow-500" />,
+        meditation: <FaOm className="text-indigo-500" />,
+        workshop: <FaLightbulb className="text-blue-500" />,
+        retreat: <FaLeaf className="text-teal-500" />,
+        other: <FaCalendarAlt className="text-gray-500" />,
+      };
+      return iconMap[type] || iconMap["other"];
+    };
+
+    const getEventTypeColor = (type) => {
+      const colorMap = {
+        kirtan: "from-orange-400 to-red-500",
+        satsang: "from-purple-400 to-pink-500",
+        seva: "from-green-400 to-teal-500",
+        festival: "from-yellow-400 to-orange-500",
+        meditation: "from-indigo-400 to-purple-500",
+        workshop: "from-blue-400 to-cyan-500",
+        retreat: "from-teal-400 to-green-500",
+        other: "from-gray-400 to-slate-500",
+      };
+      return colorMap[type] || colorMap["other"];
+    };
+
+    const getEventStatus = () => {
+      const eventDate = new Date(event.dateTime);
+      const now = new Date();
+
+      if (eventDate < now) {
+        return {
+          text: "Completed",
+          color: "text-gray-500",
+          icon: <FaCheckCircle />,
+        };
+      } else if (eventDate - now < 24 * 60 * 60 * 1000) {
+        return {
+          text: "Starting Soon",
+          color: "text-orange-500",
+          icon: <FaExclamationCircle />,
+        };
+      } else {
+        return { text: "Upcoming", color: "text-green-500", icon: <FaClock /> };
+      }
+    };
+
+    const eventStatus = getEventStatus();
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1, duration: 0.5 }}
+        className="relative group"
+      >
+        {/* Sacred Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-purple-50/30 to-pink-50/20 backdrop-blur-sm rounded-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-orange-500/5 rounded-3xl group-hover:from-purple-500/10 group-hover:via-pink-500/10 group-hover:to-orange-500/10 transition-all duration-500"></div>
+
+        {/* Floating Event Type Icon */}
+        <motion.div
+          animate={{
+            rotate: 360,
+            scale: [1, 1.1, 1],
+            y: [0, -5, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center"
+        >
+          {getEventTypeIcon(event.eventType)}
+        </motion.div>
+
+        <div className="relative border border-white/40 rounded-3xl shadow-2xl backdrop-blur-sm overflow-hidden hover:shadow-3xl transition-all duration-300">
+          {/* Event Image */}
+          {event.image && (
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={
+                  event.image.startsWith("http")
+                    ? event.image
+                    : baseUrl + event.image
+                }
+                alt={event.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+              {/* Event Status Badge */}
+              <div
+                className={`absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full flex items-center space-x-2 ${eventStatus.color}`}
+              >
+                {eventStatus.icon}
+                <span className="text-sm font-semibold">
+                  {eventStatus.text}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Event Header */}
+          <div className="p-6 pb-4">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {event.title}
+                </h3>
+
+                <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center space-x-1">
+                    <span
+                      className={`px-3 py-1 bg-gradient-to-r ${getEventTypeColor(
+                        event.eventType
+                      )} text-white rounded-full text-xs font-semibold capitalize`}
+                    >
+                      {event.eventType}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <FaHourglass size={12} />
+                    <span>{event.duration} mins</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <FaUsers size={12} />
+                    <span>
+                      {event.participants.length}/{event.maxParticipants}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Organizer Info */}
+                <div className="flex items-center space-x-3 mb-4">
+                  <Avatar
+                    user={event.organizer}
+                    size="w-8 h-8"
+                    baseUrl={baseUrl}
+                    artistic={event.organizer.role === "admin"}
+                  />
+                  <div>
+                    <p className="text-sm text-gray-600">Organized by</p>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-semibold text-gray-900">
+                        {event.organizer.name}
+                      </span>
+                      <UserBadge user={event.organizer} size="sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Menu */}
+              {(isOrganizer || isAdmin) && (
+                <div className="flex items-center space-x-2">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => onEdit(event)}
+                    className="p-2 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-all duration-200"
+                    title="Edit event"
                   >
-                    <FaTimes size={12} />
-                  </button>
+                    <FaEdit size={14} />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => onDelete(event)}
+                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
+                    title="Delete event"
+                  >
+                    <FaTrash size={14} />
+                  </motion.button>
                 </div>
               )}
+            </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <label className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-full cursor-pointer transition-colors duration-200">
+            {/* Event Details */}
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 text-gray-700">
+                <FaCalendarAlt
+                  className="text-orange-500 flex-shrink-0"
+                  size={16}
+                />
+                <span className="font-medium">
+                  {formatEventDate(event.dateTime)}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-3 text-gray-700">
+                <FaMapMarkerAlt
+                  className="text-red-500 flex-shrink-0"
+                  size={16}
+                />
+                <span>
+                  {event.location.address}, {event.location.city}
+                </span>
+              </div>
+
+              <p className="text-gray-600 leading-relaxed line-clamp-3">
+                {event.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Participants Preview */}
+          {event.participants.length > 0 && (
+            <div className="px-6 pb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-gray-700">
+                  Devotees Attending
+                </span>
+                <span className="text-xs text-gray-500">
+                  {event.participants.length} joined
+                </span>
+              </div>
+              <div className="flex items-center -space-x-2">
+                {event.participants.slice(0, 8).map((participant, idx) => (
+                  <Avatar
+                    key={participant._id}
+                    user={participant.user}
+                    size="w-8 h-8"
+                    baseUrl={baseUrl}
+                    artistic={false}
+                  />
+                ))}
+                {event.participants.length > 8 && (
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg"
+                  >
+                    +{event.participants.length - 8}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Event Actions */}
+          <div className="p-6 pt-4 border-t border-purple-100/50">
+            <div className="flex items-center justify-between">
+              <motion.button
+                onClick={() => setShowDetails(!showDetails)}
+                className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 font-medium"
+                whileHover={{ scale: 1.05 }}
+              >
+                <FaInfoCircle size={16} />
+                <span>{showDetails ? "Hide" : "View"} Details</span>
+              </motion.button>
+
+              {user && event.status === "upcoming" && (
+                <motion.button
+                  onClick={() =>
+                    hasJoined ? onLeave(event._id) : onJoin(event._id)
+                  }
+                  disabled={
+                    !hasJoined &&
+                    event.participants.length >= event.maxParticipants
+                  }
+                  className={`flex items-center space-x-2 px-6 py-2 rounded-full font-semibold transition-all duration-200 ${
+                    hasJoined
+                      ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      : event.participants.length >= event.maxParticipants
+                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl"
+                  }`}
+                  whileHover={{
+                    scale:
+                      event.participants.length >= event.maxParticipants
+                        ? 1
+                        : 1.05,
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {hasJoined ? (
+                    <>
+                      <FaUserMinus size={16} />
+                      <span>Leave Event</span>
+                    </>
+                  ) : event.participants.length >= event.maxParticipants ? (
+                    <>
+                      <FaUsers size={16} />
+                      <span>Event Full</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaUserPlus size={16} />
+                      <span>Join Event</span>
+                    </>
+                  )}
+                </motion.button>
+              )}
+            </div>
+          </div>
+
+          {/* Expanded Details */}
+          <AnimatePresence>
+            {showDetails && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="border-t border-purple-100/50 bg-gradient-to-br from-purple-50/30 to-pink-50/20"
+              >
+                <div className="p-6 space-y-6">
+                  {/* Requirements */}
+                  {event.requirements && event.requirements.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
+                        <FaExclamationCircle className="text-orange-500" />
+                        <span>Requirements</span>
+                      </h4>
+                      <ul className="space-y-2">
+                        {event.requirements.map((req, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-start space-x-2 text-gray-700"
+                          >
+                            <FaCheckCircle
+                              className="text-green-500 mt-0.5 flex-shrink-0"
+                              size={14}
+                            />
+                            <span className="text-sm">{req}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Contact Information */}
+                  {(event.contactDetails.email ||
+                    event.contactDetails.phone) && (
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">
+                        Contact Information
+                      </h4>
+                      <div className="space-y-2">
+                        {event.contactDetails.email && (
+                          <div className="flex items-center space-x-2 text-gray-700">
+                            <FaEnvelope className="text-orange-500" size={14} />
+                            <a
+                              href={`mailto:${event.contactDetails.email}`}
+                              className="hover:text-orange-600 text-sm"
+                            >
+                              {event.contactDetails.email}
+                            </a>
+                          </div>
+                        )}
+                        {event.contactDetails.phone && (
+                          <div className="flex items-center space-x-2 text-gray-700">
+                            <FaPhone className="text-green-500" size={14} />
+                            <a
+                              href={`tel:${event.contactDetails.phone}`}
+                              className="hover:text-green-600 text-sm"
+                            >
+                              {event.contactDetails.phone}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Share Event */}
+                  <div className="pt-4 border-t border-purple-100">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 font-medium">
+                        Share Event:
+                      </span>
+                      <div className="flex items-center space-x-3">
+                        {event.contactDetails.whatsapp && (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            className="p-2 text-green-600 hover:bg-green-50 rounded-full transition-all duration-200"
+                            onClick={() =>
+                              window.open(
+                                `https://wa.me/${
+                                  event.contactDetails.whatsapp
+                                }?text=${encodeURIComponent(
+                                  `Join us for ${
+                                    event.title
+                                  } on ${formatEventDate(event.dateTime)} at ${
+                                    event.location.address
+                                  }, ${event.location.city}`
+                                )}`,
+                                "_blank"
+                              )
+                            }
+                          >
+                            <FaWhatsapp size={20} />
+                          </motion.button>
+                        )}
+                        {event.contactDetails.telegram && (
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200"
+                            onClick={() =>
+                              window.open(
+                                `https://t.me/${event.contactDetails.telegram}`,
+                                "_blank"
+                              )
+                            }
+                          >
+                            <FaTelegram size={20} />
+                          </motion.button>
+                        )}
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          className="p-2 text-purple-600 hover:bg-purple-50 rounded-full transition-all duration-200"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${event.title} - ${formatEventDate(
+                                event.dateTime
+                              )} at ${event.location.address}, ${
+                                event.location.city
+                              }`
+                            );
+                            alert("Event details copied to clipboard!");
+                          }}
+                        >
+                          <FaShareAlt size={18} />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    );
+  }
+);
+
+// Create Event Component
+const CreateEvent = ({ user, onSubmit, baseUrl }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [eventData, setEventData] = useState({
+    title: "",
+    eventType: "satsang",
+    description: "",
+    dateTime: "",
+    duration: 60,
+    location: {
+      address: "",
+      city: "",
+    },
+    maxParticipants: 50,
+    requirements: [""],
+    contactDetails: {
+      email: "",
+      phone: "",
+      whatsapp: "",
+      telegram: "",
+    },
+    image: null,
+  });
+  const [preview, setPreview] = useState(null);
+  const [creating, setCreating] = useState(false);
+
+  const eventTypes = [
+    { value: "kirtan", label: "Kirtan", icon: FaMusic },
+    { value: "satsang", label: "Satsang", icon: FaUsers },
+    { value: "seva", label: "Seva", icon: FaHandsHelping },
+    { value: "festival", label: "Festival", icon: FaStar },
+    { value: "meditation", label: "Meditation", icon: FaOm },
+    { value: "workshop", label: "Workshop", icon: FaLightbulb },
+    { value: "retreat", label: "Retreat", icon: FaLeaf },
+    { value: "other", label: "Other", icon: FaCalendarAlt },
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !eventData.title ||
+      !eventData.description ||
+      !eventData.dateTime ||
+      !eventData.location.address ||
+      !eventData.location.city
+    )
+      return;
+
+    setCreating(true);
+
+    // Filter out empty requirements
+    const filteredData = {
+      ...eventData,
+      requirements: eventData.requirements.filter((req) => req.trim() !== ""),
+    };
+
+    await onSubmit(filteredData);
+
+    // Reset form
+    setEventData({
+      title: "",
+      eventType: "satsang",
+      description: "",
+      dateTime: "",
+      duration: 60,
+      location: {
+        address: "",
+        city: "",
+      },
+      maxParticipants: 50,
+      requirements: [""],
+      contactDetails: {
+        email: "",
+        phone: "",
+        whatsapp: "",
+        telegram: "",
+      },
+      image: null,
+    });
+    setPreview(null);
+    setIsExpanded(false);
+    setCreating(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setEventData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value,
+        },
+      }));
+    } else {
+      setEventData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setEventData((prev) => ({ ...prev, image: file }));
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRequirementChange = (index, value) => {
+    const newRequirements = [...eventData.requirements];
+    newRequirements[index] = value;
+    setEventData((prev) => ({ ...prev, requirements: newRequirements }));
+  };
+
+  const addRequirement = () => {
+    setEventData((prev) => ({
+      ...prev,
+      requirements: [...prev.requirements, ""],
+    }));
+  };
+
+  const removeRequirement = (index) => {
+    const newRequirements = eventData.requirements.filter(
+      (_, i) => i !== index
+    );
+    setEventData((prev) => ({ ...prev, requirements: newRequirements }));
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative mb-8"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-purple-50/30 to-pink-50/20 backdrop-blur-sm rounded-3xl"></div>
+      <div className="relative border border-white/40 rounded-3xl shadow-xl backdrop-blur-sm overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-center space-x-4 mb-4">
+            <Avatar
+              user={user}
+              baseUrl={baseUrl}
+              artistic={user?.role === "admin"}
+            />
+            <button
+              onClick={() => setIsExpanded(true)}
+              className="flex-1 text-left px-4 py-3 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-full text-purple-600 transition-colors duration-200 font-medium border border-purple-200"
+            >
+              Organize a divine gathering, {user?.name?.split(" ")[0]}...
+            </button>
+          </div>
+
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.form
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
+                    <FaInfoCircle className="text-purple-500" />
+                    <span>Event Information</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Event title..."
+                      value={eventData.title}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+
+                    <select
+                      name="eventType"
+                      value={eventData.eventType}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                    >
+                      {eventTypes.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <textarea
+                    name="description"
+                    placeholder="Describe the divine event..."
+                    value={eventData.description}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 min-h-[120px] resize-none bg-white/80"
+                    required
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input
+                      type="datetime-local"
+                      name="dateTime"
+                      value={eventData.dateTime}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+
+                    <input
+                      type="number"
+                      name="duration"
+                      placeholder="Duration (minutes)"
+                      value={eventData.duration}
+                      onChange={handleChange}
+                      min="15"
+                      max="480"
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+
+                    <input
+                      type="number"
+                      name="maxParticipants"
+                      placeholder="Max participants"
+                      value={eventData.maxParticipants}
+                      onChange={handleChange}
+                      min="1"
+                      max="1000"
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
+                    <FaMapMarkerAlt className="text-red-500" />
+                    <span>Location</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      name="location.address"
+                      placeholder="Street address..."
+                      value={eventData.location.address}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+
+                    <input
+                      type="text"
+                      name="location.city"
+                      placeholder="City..."
+                      value={eventData.location.city}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Requirements */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
+                    <FaExclamationCircle className="text-orange-500" />
+                    <span>Requirements (Optional)</span>
+                  </h3>
+
+                  {eventData.requirements.map((req, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        placeholder="Add a requirement..."
+                        value={req}
+                        onChange={(e) =>
+                          handleRequirementChange(index, e.target.value)
+                        }
+                        className="flex-1 px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                      />
+                      {eventData.requirements.length > 1 && (
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => removeRequirement(index)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
+                        >
+                          <FaTimes size={16} />
+                        </motion.button>
+                      )}
+                    </div>
+                  ))}
+
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={addRequirement}
+                    className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 font-medium"
+                  >
+                    <FaPlus size={14} />
+                    <span>Add Requirement</span>
+                  </motion.button>
+                </div>
+
+                {/* Contact Details */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
+                    <FaPhone className="text-green-500" />
+                    <span>Contact Information (Optional)</span>
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input
+                      type="email"
+                      name="contactDetails.email"
+                      placeholder="Contact email..."
+                      value={eventData.contactDetails.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                    />
+
+                    <input
+                      type="tel"
+                      name="contactDetails.phone"
+                      placeholder="Contact phone..."
+                      value={eventData.contactDetails.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                    />
+
+                    <input
+                      type="text"
+                      name="contactDetails.whatsapp"
+                      placeholder="WhatsApp number..."
+                      value={eventData.contactDetails.whatsapp}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                    />
+
+                    <input
+                      type="text"
+                      name="contactDetails.telegram"
+                      placeholder="Telegram username..."
+                      value={eventData.contactDetails.telegram}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-purple-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200 bg-white/80"
+                    />
+                  </div>
+                </div>
+
+                {/* Event Image */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-gray-900 flex items-center space-x-2">
+                    <FaImage className="text-blue-500" />
+                    <span>Event Image (Optional)</span>
+                  </h3>
+
+                  {preview && (
+                    <div className="relative">
+                      <img
+                        src={preview}
+                        alt="Event preview"
+                        className="w-full h-48 object-cover rounded-2xl"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEventData((prev) => ({ ...prev, image: null }));
+                          setPreview(null);
+                        }}
+                        className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors duration-200"
+                      >
+                        <FaTimes size={12} />
+                      </button>
+                    </div>
+                  )}
+
+                  <label className="flex items-center space-x-2 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-full cursor-pointer transition-colors duration-200 w-fit">
                     <FaImage size={16} />
-                    <span className="font-medium">Photo</span>
+                    <span className="font-medium">Choose Image</span>
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleImage}
+                      onChange={handleImageChange}
                       className="hidden"
                     />
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                {/* Submit Buttons */}
+                <div className="flex items-center justify-end space-x-3 pt-4 border-t border-purple-100">
                   <button
                     type="button"
-                    onClick={resetForm}
+                    onClick={() => {
+                      setIsExpanded(false);
+                      setEventData({
+                        title: "",
+                        eventType: "satsang",
+                        description: "",
+                        dateTime: "",
+                        duration: 60,
+                        location: {
+                          address: "",
+                          city: "",
+                        },
+                        maxParticipants: 50,
+                        requirements: [""],
+                        contactDetails: {
+                          email: "",
+                          phone: "",
+                          whatsapp: "",
+                          telegram: "",
+                        },
+                        image: null,
+                      });
+                      setPreview(null);
+                    }}
                     className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-full font-medium transition-colors duration-200"
                   >
                     Cancel
                   </button>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     type="submit"
-                    disabled={!title || !content || posting}
-                    className="px-8 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                    disabled={creating}
+                    className="px-8 py-2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white rounded-full font-semibold hover:from-purple-600 hover:via-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
-                    {posting ? "Posting..." : "Post"}
-                  </button>
+                    {creating ? "Creating Event..." : "Create Divine Event"}
+                  </motion.button>
                 </div>
-              </div>
-            </motion.form>
-          )}
-        </AnimatePresence>
+              </motion.form>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.div>
   );
@@ -1132,136 +2328,83 @@ export default function CommunityBlog() {
   const baseUrl = useApi();
   const [posts, setPosts] = useState([]);
   const [events, setEvents] = useState([]);
-  const [activeTab, setActiveTab] = useState("posts"); // 'posts' or 'events'
-  const [editPost, setEditPost] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("posts");
 
-  useEffect(() => {
-    if (!loading && !user) navigate("/login?redirect=/communityblog");
-    else {
-      fetchPosts();
-      fetchEvents();
-    }
-    // eslint-disable-next-line
-  }, [user, loading]);
-
-  const fetchPosts = async () => {
+  // Fetch posts
+  const fetchPosts = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/blog`);
       setPosts(res.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
-  };
+  }, []);
 
-  const fetchEvents = async () => {
+  // Fetch events
+  const fetchEvents = useCallback(async () => {
     try {
-      const res = await axios.get(`${API}/community-events`); // Changed endpoint
+      const res = await axios.get(`${API}/community-events`);
       setEvents(res.data);
     } catch (error) {
       console.error("Error fetching events:", error);
     }
-  };
+  }, []);
 
-  const handleCreatePost = async ({ title, content, image }) => {
-    const form = new FormData();
-    form.append("title", title);
-    form.append("content", content);
-    if (image) form.append("image", image);
-
-    await axios.post(`${API}/blog`, form, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    fetchPosts();
-  };
-
-  const handleCreateEvent = async (eventData) => {
-    const form = new FormData();
-
-    // Append all form fields
-    Object.keys(eventData).forEach((key) => {
-      if (key === "image" && eventData[key]) {
-        form.append("image", eventData[key]);
-      } else if (key === "requirements" || key === "contactDetails") {
-        form.append(key, JSON.stringify(eventData[key]));
-      } else if (
-        eventData[key] !== "" &&
-        eventData[key] !== null &&
-        eventData[key] !== undefined
-      ) {
-        form.append(key, eventData[key]);
-      }
-    });
-
-    try {
-      await axios.post(`${API}/community-events`, form, {
-        // Changed endpoint
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      fetchEvents();
-    } catch (error) {
-      console.error("Error creating event:", error);
-      alert("Failed to create event. Please try again.");
-    }
-  };
-
-  const handleJoinEvent = async (eventId) => {
-    try {
-      await axios.post(
-        `${API}/community-events/${eventId}/join`, // Changed endpoint
-        {},
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      fetchEvents();
-    } catch (error) {
-      console.error("Error joining event:", error);
-      alert(error.response?.data?.message || "Failed to join event");
-    }
-  };
-
-  const handleLeaveEvent = async (eventId) => {
-    try {
-      await axios.post(
-        `${API}/community-events/${eventId}/leave`, // Changed endpoint
-        {},
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      fetchEvents();
-    } catch (error) {
-      console.error("Error leaving event:", error);
-      alert("Failed to leave event");
-    }
-  };
-
-  const handleLike = async (id) => {
-    if (!user) return navigate("/login?redirect=/communityblog");
-
-    try {
-      await axios.post(
-        `${API}/blog/${id}/like`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login?redirect=/communityblog");
+    } else if (user) {
       fetchPosts();
-    } catch (error) {
-      console.error("Error liking post:", error);
+      fetchEvents();
     }
-  };
+  }, [user, loading, navigate, fetchPosts, fetchEvents]);
 
-  const handleShare = (post) => {
+  // Post handlers
+  const handleCreatePost = useCallback(
+    async ({ title, content, image }) => {
+      const form = new FormData();
+      form.append("title", title);
+      form.append("content", content);
+      if (image) form.append("image", image);
+
+      try {
+        await axios.post(`${API}/blog`, form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        fetchPosts();
+      } catch (error) {
+        console.error("Error creating post:", error);
+      }
+    },
+    [fetchPosts]
+  );
+
+  const handleLike = useCallback(
+    async (id) => {
+      if (!user) return navigate("/login?redirect=/communityblog");
+
+      try {
+        await axios.post(
+          `${API}/blog/${id}/like`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        fetchPosts();
+      } catch (error) {
+        console.error("Error liking post:", error);
+      }
+    },
+    [user, navigate, fetchPosts]
+  );
+
+  const handleShare = useCallback((post) => {
     if (navigator.share) {
       navigator
         .share({
@@ -1274,186 +2417,280 @@ export default function CommunityBlog() {
       navigator.clipboard.writeText(window.location.href + "#" + post._id);
       alert("Post link copied to clipboard!");
     }
-  };
+  }, []);
 
-  const handleEdit = (post) => {
-    setEditPost(post);
-    setShowEditModal(true);
-  };
+  const handleEditPost = useCallback((post) => {
+    console.log("Edit post:", post);
+    // TODO: Implement edit functionality
+  }, []);
 
-  const handleDelete = async (post) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
+  const handleDeletePost = useCallback(
+    async (post) => {
+      if (!window.confirm("Are you sure you want to delete this post?")) return;
 
-    try {
-      await axios.delete(`${API}/blog/${post._id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      try {
+        await axios.delete(`${API}/blog/${post._id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        fetchPosts();
+      } catch (error) {
+        console.error("Error deleting post:", error);
+      }
+    },
+    [fetchPosts]
+  );
+
+  // Event handlers
+  const handleCreateEvent = useCallback(
+    async (eventData) => {
+      const formData = new FormData();
+
+      // Append all fields to FormData
+      Object.keys(eventData).forEach((key) => {
+        if (key === "location" || key === "contactDetails") {
+          formData.append(key, JSON.stringify(eventData[key]));
+        } else if (key === "requirements") {
+          formData.append(key, JSON.stringify(eventData[key]));
+        } else if (key === "image" && eventData[key]) {
+          formData.append("image", eventData[key]);
+        } else if (key !== "image") {
+          formData.append(key, eventData[key]);
+        }
       });
-      fetchPosts();
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
-  };
+
+      try {
+        await axios.post(`${API}/community-events`, formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        fetchEvents();
+      } catch (error) {
+        console.error("Error creating event:", error);
+        alert("Failed to create event. Please try again.");
+      }
+    },
+    [fetchEvents]
+  );
+
+  const handleJoinEvent = useCallback(
+    async (eventId) => {
+      if (!user) return navigate("/login?redirect=/communityblog");
+
+      try {
+        await axios.post(
+          `${API}/community-events/${eventId}/join`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        fetchEvents();
+      } catch (error) {
+        console.error("Error joining event:", error);
+      }
+    },
+    [user, navigate, fetchEvents]
+  );
+
+  const handleLeaveEvent = useCallback(
+    async (eventId) => {
+      try {
+        await axios.post(
+          `${API}/community-events/${eventId}/leave`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        fetchEvents();
+      } catch (error) {
+        console.error("Error leaving event:", error);
+      }
+    },
+    [fetchEvents]
+  );
+
+  const handleEditEvent = useCallback((event) => {
+    console.log("Edit event:", event);
+    // TODO: Implement edit functionality
+  }, []);
+
+  const handleDeleteEvent = useCallback(
+    async (event) => {
+      if (!window.confirm("Are you sure you want to delete this event?"))
+        return;
+
+      try {
+        await axios.delete(`${API}/community-events/${event._id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        fetchEvents();
+      } catch (error) {
+        console.error("Error deleting event:", error);
+      }
+    },
+    [fetchEvents]
+  );
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading community...</p>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-purple-50 to-blue-50 flex items-center justify-center">
+        <FloatingSacredElements />
+        <div className="relative z-10 text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <p className="text-gray-600 text-lg">Loading sacred community...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-purple-50 to-blue-50">
       <Navigation />
-
-      {/* Floating Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-blue-300/20 to-purple-300/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 -left-8 w-96 h-96 bg-gradient-to-br from-pink-300/20 to-blue-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-gradient-to-br from-purple-300/20 to-pink-300/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
-      </div>
+      <FloatingSacredElements />
 
       <div className="relative z-10 max-w-2xl mx-auto pt-24 px-4 pb-8">
-        {/* Header */}
+        {/* Enhanced Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            ✨ Krishna Community
-          </h1>
+          <motion.h1
+            whileHover={{ scale: 1.05 }}
+            className="text-5xl font-bold bg-gradient-to-r from-orange-600 via-red-500 to-pink-600 bg-clip-text text-transparent mb-2"
+          >
+            🕉️ Krishna Community
+          </motion.h1>
           <p className="text-gray-600 text-lg">
-            Share wisdom, organize events, and connect with fellow devotees
+            {activeTab === "posts"
+              ? "Share divine wisdom and connect with fellow devotees"
+              : "Join sacred gatherings and spiritual events"}
           </p>
         </motion.div>
 
         {/* Tab Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center mb-8"
-        >
-          <div className="bg-white rounded-2xl p-2 shadow-lg border border-gray-100">
-            <button
-              onClick={() => setActiveTab("posts")}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                activeTab === "posts"
-                  ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              📝 Posts & Discussions
-            </button>
-            <button
-              onClick={() => setActiveTab("events")}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                activeTab === "events"
-                  ? "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              🎉 Events & Gatherings
-            </button>
-          </div>
-        </motion.div>
+        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* Content based on active tab */}
-        {user && (
-          <>
-            {activeTab === "posts" && (
-              <CreatePost
-                user={user}
-                onSubmit={handleCreatePost}
-                baseUrl={baseUrl}
-              />
-            )}
-            {activeTab === "events" && (
-              <CreateEvent
-                user={user}
-                onSubmit={handleCreateEvent}
-                baseUrl={baseUrl}
-              />
-            )}
-          </>
-        )}
-
-        {/* Posts/Events Feed */}
-        <div className="space-y-6">
-          {activeTab === "posts" && (
-            <>
-              {posts.map((post, index) => (
-                <PostCard
-                  key={post._id}
-                  post={post}
+        <AnimatePresence mode="wait">
+          {activeTab === "posts" ? (
+            <motion.div
+              key="posts"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Create Post */}
+              {user && (
+                <CreatePost
                   user={user}
-                  onLike={handleLike}
-                  onShare={handleShare}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
+                  onSubmit={handleCreatePost}
                   baseUrl={baseUrl}
-                  index={index}
                 />
-              ))}
-
-              {posts.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16"
-                >
-                  <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
-                    <FaPlus className="text-gray-400" size={48} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    No posts yet
-                  </h3>
-                  <p className="text-gray-600 mb-8">
-                    Be the first to inspire the community with your wisdom!
-                  </p>
-                </motion.div>
               )}
-            </>
-          )}
 
-          {activeTab === "events" && (
-            <>
-              {events.map((event, index) => (
-                <EventCard
-                  key={event._id}
-                  event={event}
+              {/* Posts Feed */}
+              <div className="space-y-8">
+                <AnimatePresence>
+                  {posts.map((post, index) => (
+                    <PostCard
+                      key={post._id}
+                      post={post}
+                      user={user}
+                      onLike={handleLike}
+                      onShare={handleShare}
+                      onEdit={handleEditPost}
+                      onDelete={handleDeletePost}
+                      baseUrl={baseUrl}
+                      index={index}
+                    />
+                  ))}
+                </AnimatePresence>
+
+                {posts.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-16"
+                  >
+                    <FaQuoteLeft className="text-orange-300 text-6xl mx-auto mb-6" />
+                    <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                      No sacred wisdom shared yet
+                    </h3>
+                    <p className="text-gray-600 mb-8">
+                      Be the first to illuminate the community with divine
+                      insights!
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="events"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Create Event */}
+              {user && (
+                <CreateEvent
                   user={user}
-                  onJoin={handleJoinEvent}
-                  onLeave={handleLeaveEvent}
+                  onSubmit={handleCreateEvent}
                   baseUrl={baseUrl}
-                  index={index}
                 />
-              ))}
-
-              {events.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16"
-                >
-                  <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-orange-100 to-red-200 rounded-full flex items-center justify-center">
-                    <FaCalendarAlt className="text-orange-400" size={48} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    No events yet
-                  </h3>
-                  <p className="text-gray-600 mb-8">
-                    Be the first to organize a spiritual gathering for the
-                    community!
-                  </p>
-                </motion.div>
               )}
-            </>
+
+              {/* Events Feed */}
+              <div className="space-y-8">
+                <AnimatePresence>
+                  {events.map((event, index) => (
+                    <EventCard
+                      key={event._id}
+                      event={event}
+                      user={user}
+                      onJoin={handleJoinEvent}
+                      onLeave={handleLeaveEvent}
+                      onEdit={handleEditEvent}
+                      onDelete={handleDeleteEvent}
+                      baseUrl={baseUrl}
+                      index={index}
+                    />
+                  ))}
+                </AnimatePresence>
+
+                {events.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center py-16"
+                  >
+                    <FaCalendarAlt className="text-purple-300 text-6xl mx-auto mb-6" />
+                    <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                      No community events yet
+                    </h3>
+                    <p className="text-gray-600 mb-8">
+                      Be the first to organize a divine gathering!
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );
