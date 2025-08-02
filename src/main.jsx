@@ -25,6 +25,8 @@ import MyOrders from "./pages/MyOrders.jsx";
 import { CartProvider } from "./Context/CartContext.jsx";
 import CheckoutPage from "./components/CheckOut.jsx";
 import OrderManagement from "./components/Dashboard/OrderManagment.jsx";
+import BlogPost from "./components/Community/BlogPost.jsx";
+import KrishnaKeychainCustomize from "./pages/KrishnaKeychainCustomize.jsx";
 
 const router = createBrowserRouter(
   [
@@ -100,8 +102,17 @@ const router = createBrowserRouter(
       element: <CommunityBlog />,
     },
     {
+      path: "/blog/:id",
+      element: <BlogPost />,
+    },
+
+    {
       path: "/checkout",
       element: <CheckoutPage />,
+    },
+    {
+      path: "/customize-krishna",
+      element: <KrishnaKeychainCustomize />,
     },
   ],
   {

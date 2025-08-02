@@ -41,7 +41,7 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios.post(
-        import.meta.env.VITE_API_URL + "/auth/login",
+        import.meta.env.VITE_API_URL + "/auth/login", // Fixed API path
         formData
       );
       const { token, ...userData } = response.data;
@@ -61,7 +61,19 @@ export default function Login() {
     }
   };
 
-  // ... Google login (same as before)
+  // Handle Google login success
+  const handleGoogleLoginSuccess = (result) => {
+    if (result.isAdmin) {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/profile"); // or navigate("/") for home page
+    }
+  };
+
+  // Handle Google login error
+  const handleGoogleLoginError = (msg) => {
+    setErrors({ general: msg || "Google login failed" });
+  };
 
   return (
     <GoogleOAuthProvider
@@ -71,7 +83,6 @@ export default function Login() {
     >
       <Navigation />
       <div className="min-h-screen bg-gradient-to-br from-[#f9fbfd] via-[#eec6d3]/20 to-[#01abfd]/10 flex items-center justify-center px-4">
-        {/* ...Background decorations... */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,6 +114,7 @@ export default function Login() {
                   {errors.general}
                 </motion.div>
               )}
+
               {/* Identifier Field */}
               <div>
                 <label className="block text-sm font-medium text-[#0f1f2e] mb-2">
@@ -131,6 +143,7 @@ export default function Login() {
                   </p>
                 )}
               </div>
+
               {/* Password Field */}
               <div>
                 <label className="block text-sm font-medium text-[#0f1f2e] mb-2">
@@ -164,6 +177,7 @@ export default function Login() {
                   <p className="mt-1 text-sm text-red-500">{errors.password}</p>
                 )}
               </div>
+
               {/* Submit Button */}
               <motion.button
                 type="submit"
@@ -199,7 +213,8 @@ export default function Login() {
                   "Sign In"
                 )}
               </motion.button>
-              {/* Divider & Google Login (same as before) */}
+
+              {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-[#d1ccc0]"></div>
@@ -210,14 +225,16 @@ export default function Login() {
                   </span>
                 </div>
               </div>
+
+              {/* Google Login - FIXED: Now properly passing the handlers */}
               <div className="flex justify-center">
                 <GoogleAuth
-                  onSuccess={() => {}}
-                  onError={(msg) =>
-                    setErrors({ general: msg || "Google login failed" })
-                  }
+                  onSuccess={handleGoogleLoginSuccess}
+                  onError={handleGoogleLoginError}
+                  preventRedirect={false}
                 />
               </div>
+
               <p className="text-center text-sm text-[#0f1f2e]">
                 Don't have an account?{" "}
                 <Link
@@ -229,7 +246,6 @@ export default function Login() {
               </p>
             </form>
           </div>
-          {/* Decorative elements... */}
         </motion.div>
       </div>
     </GoogleOAuthProvider>

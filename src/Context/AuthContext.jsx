@@ -1,3 +1,5 @@
+// src/Context/AuthContext.jsx
+
 import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 
@@ -17,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [authContext, setAuthContext] = useState(null);
 
   // Save user data to localStorage
   const saveUserToStorage = (userData) => {
@@ -47,8 +50,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userUsername");
     localStorage.removeItem("userAvatar");
+    localStorage.removeItem("token");
+    localStorage.removeItem("authContext");
   };
 
+  // Initialize user on app load
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedUser = loadUserFromStorage();
@@ -65,6 +71,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // Fetch current user from API
   const fetchUser = async () => {
     try {
       const response = await axios.get(`${API_URL}/auth/me`);
@@ -81,6 +88,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Login function
   const login = async (identifier, password) => {
     try {
       setError(null);
@@ -104,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Signup function
   const signup = async (formData) => {
     try {
       setError(null);
@@ -129,7 +138,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Google authentication
-  const googleLogin = async (googleUser) => {
+  const googleLogin = async (googleUser, context = null) => {
     try {
       setError(null);
 
@@ -150,7 +159,16 @@ export const AuthProvider = ({ children }) => {
       setUser(userInfo);
       saveUserToStorage(userInfo);
 
-      return { success: true, isAdmin: userInfo.role === "admin" };
+      // Store the context to know where the user came from
+      if (context) {
+        localStorage.setItem("authContext", context);
+      }
+
+      return {
+        success: true,
+        isAdmin: userInfo.role === "admin",
+        context: context,
+      };
     } catch (error) {
       console.error("Google login error:", error);
       const errorMessage =
@@ -160,30 +178,59 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Auth context helper functions
+  const setAuthContextValue = (context) => {
+    setAuthContext(context);
+    if (context) {
+      localStorage.setItem("authContext", context);
+    } else {
+      localStorage.removeItem("authContext");
+    }
+  };
+
+  const getAuthContext = () => {
+    return localStorage.getItem("authContext");
+  };
+
+  const clearAuthContext = () => {
+    setAuthContext(null);
+    localStorage.removeItem("authContext");
+  };
+
+  // Update user
   const updateUser = (updatedUserData) => {
     setUser(updatedUserData);
     saveUserToStorage(updatedUserData);
   };
 
+  // Logout function
   const logout = () => {
     localStorage.removeItem("token");
     clearUserFromStorage();
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
     setError(null);
+    setAuthContext(null);
   };
 
+  // Context value object
   const value = {
     user,
     setUser: updateUser,
     loading,
     error,
-    login,
-    signup,
-    googleLogin, // Add Google login function
+    login, // ✅ Now defined
+    signup, // ✅ Now defined
+    googleLogin, // ✅ Now defined
     logout,
     isAdmin: user?.role === "admin",
+    setAuthContext: setAuthContextValue,
+    getAuthContext,
+    clearAuthContext,
+    authContext,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthProvider;

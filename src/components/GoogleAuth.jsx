@@ -1,53 +1,45 @@
-import React from "react";
+// components/GoogleAuth.jsx
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode"; // <-- fixed!
+import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
 
-const GoogleAuth = ({ onSuccess, onError }) => {
+export default function GoogleAuth({
+  onSuccess,
+  onError,
+  preventRedirect = false,
+}) {
   const { googleLogin } = useAuth();
-  const navigate = useNavigate();
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      if (!credentialResponse.credential) {
-        throw new Error("No credential returned from Google");
-      }
-      // Decode the JWT token from Google
       const decoded = jwtDecode(credentialResponse.credential);
-      // console.log("Decoded Google user:", decoded);
-
       const result = await googleLogin(decoded);
 
       if (result.success) {
-        if (onSuccess) onSuccess(result);
-        navigate(result.isAdmin ? "/admin/dashboard" : "/profile");
+        // Call the custom onSuccess handler instead of automatic redirect
+        onSuccess(result);
       } else {
-        if (onError) onError(result.error);
+        onError(result.error || "Google authentication failed");
       }
     } catch (error) {
       console.error("Google login error:", error);
-      if (onError) onError("Google authentication failed");
+      onError("Google authentication failed");
     }
   };
 
   const handleGoogleError = () => {
-    if (onError) onError("Google login failed");
+    onError("Google authentication failed");
   };
 
   return (
-    <div className="w-full flex justify-center">
-      <GoogleLogin
-        onSuccess={handleGoogleSuccess}
-        onError={handleGoogleError}
-        theme="outline"
-        size="large"
-        text="continue_with"
-        shape="pill"
-      />
-    </div>
+    <GoogleLogin
+      onSuccess={handleGoogleSuccess}
+      onError={handleGoogleError}
+      useOneTap={false}
+      theme="outline"
+      size="large"
+      text="continue_with"
+      shape="rectangular"
+    />
   );
-};
-
-export default GoogleAuth;
+}
