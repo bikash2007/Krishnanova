@@ -43,7 +43,7 @@ const KrishnaNames = () => {
   ];
 
   return (
-    <section className="section py-24 ">
+    <section className="section py-24  bg-[#1D3485] z-10">
       <div className="container max-w-7xl mx-auto px-8">
         <SectionTitle>Sacred Krishna Names & Meanings</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">

@@ -24,6 +24,7 @@ module.exports = {
         "particle-float": "float 6s ease-in-out infinite",
         "energy-flow": "energyFlow 4s ease-in-out infinite",
         "product-float": "productFloat 4s ease-in-out infinite",
+        "spin-reverse": "spin 1s linear infinite reverse",
       },
     },
   },

@@ -26,6 +26,7 @@ import {
 } from "./components/UI/Svg";
 import { useLocation } from "react-router-dom";
 import WisdomPortalPath from "./components/WisdomPortal/WisdomPortalPath";
+import CarouselSlider from "./components/Products/CarouselSlider";
 
 const App = () => {
   useScrollAnimation();
@@ -91,9 +92,10 @@ const App = () => {
       <div id="home">
         <Hero />
       </div>
-      <div className="min-h-screen bg-gradient-to-br from-[#01abfd] via-[#a78bfa] to-[#60a5fa] relative pb-12  overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-[#1D3485] via-[#390ebb] to-[#60a5fa] relative pb-12  overflow-hidden">
         <div id="products">
-          <Products />
+          {/* <Products /> */}
+          <CarouselSlider />
         </div>
 
         <div id="mission">
@@ -142,9 +144,7 @@ const App = () => {
             <LotusSVG className="absolute w-32 opacity-8 bottom-2 left-1/4 animate-float-slow" />
             <Meditation />
           </div>
-          <div id="contact">
-            <Contact />
-          </div>
+          <div id="contact">{/* <Contact /> */}</div>
           <Footer />
         </div>
       </div>

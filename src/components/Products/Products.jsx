@@ -5,6 +5,7 @@ import { useApi } from "../../Context/baseUrl";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import CarouselSlider from "./CarouselSlider";
 
 // If you want to ensure all backgrounds are always under the content,
 // use z-negative for backgrounds and z-positive for foregrounds.
@@ -112,7 +113,8 @@ const Products = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-5xl mx-auto">
           {products.map((product, index) => (
-            <ProductCard key={product._id} product={product} index={index} />
+            <CarouselSlider key={product._id} product={product} index={index} />
+            // <ProductCard key={product._id} product={product} index={index} />
           ))}
         </div>
 

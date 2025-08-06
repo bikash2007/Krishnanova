@@ -6,7 +6,11 @@ import {
   FaYoutube,
   FaWhatsapp,
   FaPaperPlane,
+  FaCheckCircle,
+  FaExclamationTriangle,
 } from "react-icons/fa";
+import { useAuth } from "../../Context/AuthContext";
+import { useApi } from "../../Context/baseUrl";
 
 const Footer = () => {
   const footerRef = useRef(null);
@@ -14,6 +18,19 @@ const Footer = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [emailStatus, setEmailStatus] = useState(null);
+  const [statusMessage, setStatusMessage] = useState("");
+
+  const { user } = useAuth();
+  const baseUrl = useApi();
+
+  // Pre-fill email if user is logged in
+  useEffect(() => {
+    if (user?.email && !email) {
+      setEmail(user.email);
+    }
+  }, [user, email]);
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -29,7 +46,6 @@ const Footer = () => {
       const rect = footer.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-
       targetX = (x / rect.width) * 100;
       targetY = (y / rect.height) * 100;
     };
@@ -80,17 +96,80 @@ const Footer = () => {
     }
   };
 
-  const handleSendMessage = () => {
-    if (!email || !message) {
-      alert("Please fill in both email and message fields!");
+  const handleSendMessage = async () => {
+    if (!email?.trim() || !message?.trim()) {
+      setEmailStatus("error");
+      setStatusMessage("Please fill in both email and message fields!");
+      setTimeout(() => {
+        setEmailStatus(null);
+        setStatusMessage("");
+      }, 5000);
       return;
     }
 
-    alert(
-      `Thank you! Your message has been sent.\nEmail: ${email}\nMessage: ${message}`
-    );
-    setEmail("");
-    setMessage("");
+    if (message.trim().length < 10) {
+      setEmailStatus("error");
+      setStatusMessage("Message must be at least 10 characters long.");
+      setTimeout(() => {
+        setEmailStatus(null);
+        setStatusMessage("");
+      }, 5000);
+      return;
+    }
+
+    setIsLoading(true);
+    setEmailStatus(null);
+    setStatusMessage("");
+
+    try {
+      const response = await fetch(`${baseUrl}/api/contact/send-message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          message: message.trim(),
+          userName: user?.name || email.split("@")[0],
+          userInfo: user
+            ? `Logged in as: ${user.name} (${user.email}) - Role: ${
+                user.role || "user"
+              }`
+            : "Anonymous visitor",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setEmailStatus("success");
+        setStatusMessage(data.message);
+        setEmail("");
+        setMessage("");
+        setTimeout(() => {
+          setEmailStatus(null);
+          setStatusMessage("");
+        }, 8000);
+      } else {
+        setEmailStatus("error");
+        setStatusMessage(
+          data.message || "Failed to send message. Please try again."
+        );
+        setTimeout(() => {
+          setEmailStatus(null);
+          setStatusMessage("");
+        }, 6000);
+      }
+    } catch (error) {
+      setEmailStatus("error");
+      setStatusMessage(
+        "Network error. Please check your connection and try again."
+      );
+      setTimeout(() => {
+        setEmailStatus(null);
+        setStatusMessage("");
+      }, 6000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const socialLinks = [
@@ -129,27 +208,16 @@ const Footer = () => {
       <div
         className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-1000 blur-3xl pointer-events-none"
         style={{
-          background: `radial-gradient(800px circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(59, 130, 246, 0.2) 0%,
-            rgba(16, 185, 129, 0.15) 30%,
-            rgba(245, 158, 11, 0.1) 60%,
-            transparent 80%
-          )`,
+          background: `radial-gradient(800px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.2) 0%,rgba(16, 185, 129, 0.15) 30%,rgba(245, 158, 11, 0.1) 60%,transparent 80%)`,
         }}
       />
-
       {/* Secondary Glow */}
       <div
         className="absolute inset-0 opacity-0 hover:opacity-60 transition-opacity duration-700 blur-2xl pointer-events-none"
         style={{
-          background: `radial-gradient(600px circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(99, 102, 241, 0.15) 0%,
-            rgba(34, 197, 94, 0.1) 50%,
-            transparent 70%
-          )`,
+          background: `radial-gradient(600px circle at ${mousePosition.x}% ${mousePosition.y}%,rgba(99, 102, 241, 0.15) 0%,rgba(34, 197, 94, 0.1) 50%,transparent 70%)`,
         }}
       />
-
       {/* Light Animated Background Shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(5)].map((_, i) => (
@@ -161,10 +229,9 @@ const Footer = () => {
               height: `${150 + i * 50}px`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              background: `linear-gradient(${Math.random() * 360}deg, 
-                rgba(59, 130, 246, 0.2), 
-                rgba(16, 185, 129, 0.15), 
-                rgba(245, 158, 11, 0.1))`,
+              background: `linear-gradient(${
+                Math.random() * 360
+              }deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.15), rgba(245, 158, 11, 0.1))`,
             }}
             animate={{
               x: [0, 50, -50, 0],
@@ -181,7 +248,6 @@ const Footer = () => {
       </div>
 
       <div className="container max-w-7xl mx-auto px-8 relative z-10">
-        {/* Main Footer Content */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -189,16 +255,11 @@ const Footer = () => {
           transition={{ duration: 0.8 }}
           className="relative bg-white/70 backdrop-blur-xl rounded-3xl p-12 border border-gray-200/50 shadow-2xl overflow-hidden group"
         >
-          {/* Light Theme Cursor Glow Inside Footer */}
+          {/* Light Theme Cursor Glow */}
           <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
             style={{
-              background: `radial-gradient(400px circle at ${mousePosition.x}% ${mousePosition.y}%, 
-                rgba(59, 130, 246, 0.08) 0%,
-                rgba(16, 185, 129, 0.06) 40%,
-                rgba(245, 158, 11, 0.04) 60%,
-                transparent 80%
-              )`,
+              background: `radial-gradient(400px circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(59, 130, 246, 0.08) 0%,rgba(16, 185, 129, 0.06) 40%,rgba(245, 158, 11, 0.04) 60%,transparent 80%)`,
             }}
           />
 
@@ -252,7 +313,6 @@ const Footer = () => {
                   <span>Est. 2024 • Made with 💙 for spiritual seekers</span>
                 </div>
               </div>
-
               {/* Contact Info */}
               <div className="space-y-4">
                 <h5 className="text-lg font-semibold text-blue-700">
@@ -279,7 +339,6 @@ const Footer = () => {
                   </div>
                 </div>
               </div>
-
               {/* Social Links */}
               <div>
                 <h5 className="text-lg font-semibold text-blue-700 mb-4">
@@ -325,21 +384,47 @@ const Footer = () => {
                 Have questions about our sacred products or spiritual
                 technology? We'd love to hear from you!
               </p>
-
+              {/* Status Messages */}
+              {emailStatus && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`p-4 rounded-xl border flex items-start gap-3 ${
+                    emailStatus === "success"
+                      ? "bg-green-50 border-green-200 text-green-700"
+                      : "bg-red-50 border-red-200 text-red-700"
+                  }`}
+                >
+                  {emailStatus === "success" ? (
+                    <FaCheckCircle className="text-green-500 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <FaExclamationTriangle className="text-red-500 mt-0.5 flex-shrink-0" />
+                  )}
+                  <div>
+                    <p className="font-medium">
+                      {emailStatus === "success" ? "Message Sent!" : "Oops!"}
+                    </p>
+                    <p className="text-sm">{statusMessage}</p>
+                  </div>
+                </motion.div>
+              )}
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Your Email
+                    Your Email{" "}
+                    {user && (
+                      <span className="text-blue-600">(from your account)</span>
+                    )}
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full px-4 py-3 bg-white/50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                    disabled={isLoading}
+                    className="w-full px-4 py-3 bg-white/50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Your Message
@@ -349,23 +434,42 @@ const Footer = () => {
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Tell us about your spiritual journey or ask any questions..."
                     rows={4}
-                    className="w-full px-4 py-3 bg-white/50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none"
+                    disabled={isLoading}
+                    maxLength={1000}
+                    className="w-full px-4 py-3 bg-white/50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   />
+                  <div className="text-right text-sm text-gray-500 mt-1">
+                    {message.length}/1000 characters
+                  </div>
                 </div>
-
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={!isLoading ? { scale: 1.02 } : {}}
+                  whileTap={!isLoading ? { scale: 0.98 } : {}}
                   onClick={handleSendMessage}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-400 hover:to-emerald-400 text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  disabled={isLoading}
+                  className={`w-full px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                    isLoading
+                      ? "bg-gray-400 cursor-not-allowed text-white"
+                      : "bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-400 hover:to-emerald-400 text-white"
+                  }`}
                   style={{
-                    boxShadow: isHovered
-                      ? `0 0 25px rgba(59, 130, 246, 0.3)`
-                      : undefined,
+                    boxShadow:
+                      isHovered && !isLoading
+                        ? `0 0 25px rgba(59, 130, 246, 0.3)`
+                        : undefined,
                   }}
                 >
-                  <FaPaperPlane size={16} />
-                  Send Message
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                      Sending Message...
+                    </>
+                  ) : (
+                    <>
+                      <FaPaperPlane size={16} />
+                      Send Message
+                    </>
+                  )}
                 </motion.button>
               </div>
             </motion.div>

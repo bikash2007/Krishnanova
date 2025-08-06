@@ -97,13 +97,14 @@ export default function Profile() {
                     <img
                       src={
                         user.isGoogleUser && user.avatar.startsWith("http")
-                          ? user.avatar
-                          : baseUrl + user.avatar
+                          ? user.avatar // This handles full URLs (e.g., Google avatars)
+                          : `${user.avatar}` // <--- IMPORTANT CHANGE HERE
                       }
                       alt={user.name}
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
+                    // Fallback if user.avatar is null/undefined/empty
                     user.name?.charAt(0).toUpperCase() || "U"
                   )}
                 </div>
