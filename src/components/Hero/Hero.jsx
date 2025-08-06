@@ -1,127 +1,107 @@
 import React, { useRef } from "react";
 import Button from "../UI/Button";
 import { handleSmoothScroll } from "../../utils/animations";
-import FloatingKrishna from "../FloatingKrishna";
-import overlay from "../../Media/overlay.mp4";
+import { Bell, Sparkles } from "lucide-react";
 import bell from "../../Media/bell.png";
 import bellSound from "../../Audio/bell.mp3";
+import overlay from "../../Media/overlay.mp4";
 
 const Hero = () => {
   const audioRef = useRef(null);
 
   const handleBellClick = () => {
-    const bell = document.querySelector(".pendulum");
-    bell.classList.add("swing");
-
     // Play sound
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
     }
 
-    // Remove animation after it ends
-    setTimeout(() => {
-      bell.classList.remove("swing");
-    }, 2000);
+    // Add swing animation to the bell
+    const bellElement = document.querySelector(".bell-container");
+    if (bellElement) {
+      bellElement.classList.add("swing");
+      setTimeout(() => {
+        bellElement.classList.remove("swing");
+      }, 2000);
+    }
   };
 
   return (
     <section
       id="home"
-      className="hero min-h-screen flex items-center justify-center text-center relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center text-center relative overflow-hidden"
     >
-      {/* bell */}
-      <div className="pendulum-container absolute top-16 left-1/2 transform -translate-x-1/2 w-20 h-20 z-10">
-        <div className="pendulum w-20 h-20 rounded-full bg-gradient-to-br  relative flex items-center justify-center shadow-lg shadow-yellow-400/50">
-          <img
-            src={bell}
-            onClick={handleBellClick}
-            className="bell w-20  cursor-pointer"
-            alt="bell"
-          />
-        </div>
-        <audio ref={audioRef} src={bellSound} />
-      </div>
+      {/* Background Video */}
       <video
         src={overlay}
         autoPlay
         muted
         loop
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover "
-      ></video>
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      />
 
-      <FloatingKrishna />
-      <div className="parallax-bg absolute top-0 left-0 w-full h-full opacity-30"></div>
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-indigo-900/40"></div>
 
-      {/* Particles */}
-      <div className="particles absolute w-full h-full overflow-hidden">
-        {[...Array(9)].map((_, i) => (
-          <div
-            key={i}
-            className="particle absolute w-1 h-1 bg-yellow-400 rounded-full opacity-70"
-            style={{
-              left: `${(i + 1) * 10}%`,
-              animationDelay: `${-i * 0.5}s`,
-            }}
+      {/* Bell Icon with Sound */}
+      <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10">
+        <div 
+          className="bell-container w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg cursor-pointer hover:bg-white/30 transition-all duration-300 border border-white/30 divine-glow"
+          onClick={handleBellClick}
+        >
+          <img
+            src={bell}
+            alt="bell"
+            className="w-10 h-10 object-contain"
           />
-        ))}
-      </div>
-      <div className="particles absolute w-full h-full overflow-hidden">
-        {[...Array(9)].map((_, i) => (
-          <div
-            key={i}
-            className="particle absolute w-1 h-1 bg-yellow-400 rounded-full opacity-70"
-            style={{
-              left: `${(i + 1) * 10}%`,
-              animationDelay: `${-i * 0.5}s`,
-            }}
-          />
-        ))}
-      </div>
-      <div className="particles absolute w-full h-full overflow-hidden">
-        {[...Array(9)].map((_, i) => (
-          <div
-            key={i}
-            className="particle absolute w-1 h-1 bg-red-400 rounded-full opacity-70"
-            style={{
-              left: `${(i + 1) * 10}%`,
-              animationDelay: `${-i * 0.5}s`,
-            }}
-          />
-        ))}
+        </div>
+        <audio ref={audioRef} src={bellSound} />
       </div>
 
       {/* Hero Content */}
-      <div className="hero-content max-w-4xl z-10 text-gray-100 ">
-        <h1 className="   text-6xl md:text-7xl font-bold mb-5   ">
-          Welcome to{" "}
-          <span className="font-playfair  font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent z-10">
-            Krishnova
-          </span>
+      <div className="container mx-auto px-6 z-10 relative">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Sparkles className="w-6 h-6 text-yellow-300 divine-sparkle" />
+          <span className="text-yellow-300 font-medium">Welcome to</span>
+          <Sparkles className="w-6 h-6 text-yellow-300 divine-sparkle" />
+        </div>
+        
+        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-lg peaceful-breath">
+          Krishnova
         </h1>
-        <p className=" text-2xl mb-10 text-white font font-semibold">
-          A Journey of faith, where all things bloosom
+        
+        <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-2xl mx-auto drop-shadow-md">
+          A journey of faith, where all things blossom
         </p>
+        
         <Button
           onClick={(e) => handleSmoothScroll(e, "#products")}
-          className=""
+          variant="primary"
+          size="lg"
+          className="shadow-lg hover:shadow-xl divine-hover"
         >
           Begin Your Sacred Journey
         </Button>
       </div>
 
-      {/* Energy Flows */}
-      {[...Array(5)].map((_, i) => (
-        <div
-          key={i}
-          className="energy-flow absolute w-0.5 h-24 bg-gradient-to-b from-transparent via-cyan-400 to-transparent"
-          style={{
-            left: `${(i + 1) * 20}%`,
-            animationDelay: `${-i * 2}s`,
-          }}
-        />
-      ))}
+      {/* Decorative Elements */}
+      <div className="absolute bottom-10 left-10 opacity-30 gentle-float">
+        <div className="w-32 h-32 border-2 border-yellow-300 rounded-full"></div>
+      </div>
+      
+      <div className="absolute top-20 right-10 opacity-30 gentle-float" style={{ animationDelay: '1s' }}>
+        <div className="w-24 h-24 border-2 border-yellow-300 rounded-full"></div>
+      </div>
+
+      {/* Additional subtle decorative elements */}
+      <div className="absolute top-1/3 left-1/4 opacity-20 gentle-float" style={{ animationDelay: '2s' }}>
+        <div className="w-16 h-16 border border-yellow-300 rounded-full"></div>
+      </div>
+      
+      <div className="absolute bottom-1/3 right-1/4 opacity-20 gentle-float" style={{ animationDelay: '3s' }}>
+        <div className="w-12 h-12 border border-yellow-300 rounded-full"></div>
+      </div>
     </section>
   );
 };

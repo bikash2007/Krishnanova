@@ -161,13 +161,13 @@ const Festival = () => {
           }}
         >
           <h2 className="text-4xl text-center mb-8 font-semibold text-gray-800">
-            📅 Festival Calendar
+Festival Calendar
           </h2>
 
           {closestEvent && (
             <div className="mb-6 text-center">
               <h3 className="text-2xl text-blue-600 font-bold mb-2 bg-white/40 backdrop-blur-3xl rounded-xl py-2 ">
-                🎉 Next: {closestEvent.name}
+Upcoming Event: {closestEvent.name}
               </h3>
               <p className="text-gray-500">
                 {closestEvent.description} —{" "}

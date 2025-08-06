@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import kpng from "../Media/krishna.png";
 import laugh from "../Audio/laugh.mp3";
+import { Sparkles, X, Heart } from "lucide-react";
+
 const lessons = [
-  "Do your duty, but don’t concern yourself with the results.",
+  "Do your duty, but don't concern yourself with the results.",
   "Calmness, gentleness, silence, self-restraint — these are virtues.",
   "Change is the law of the universe.",
   "A person is made by their faith.",
@@ -12,12 +14,12 @@ const lessons = [
 ];
 
 const teases = [
-  "😏 Too slow!",
-  "🌀 You thought you had me?",
-  "😂 Try harder, mortal!",
-  "🚀 Missed again!",
-  "🪷 Catch me if you can!",
-  "😎 Not today!",
+  "Too slow!",
+  "You thought you had me?",
+  "Try harder, mortal!",
+  "Missed again!",
+  "Catch me if you can!",
+  "Not today!",
 ];
 
 const LuckyKrishna = () => {
@@ -34,14 +36,13 @@ const LuckyKrishna = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(moveKrishna, 2000);
+    const interval = setInterval(moveKrishna, 3000);
     return () => clearInterval(interval);
   }, []);
 
   const playAudio = () => {
     if (!audioRef.current) return;
 
-    // only play if not already playing
     if (audioRef.current.paused) {
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch((err) => {
@@ -57,10 +58,10 @@ const LuckyKrishna = () => {
       const randomLesson = lessons[Math.floor(Math.random() * lessons.length)];
       setMessage(
         Math.random() < 0.5
-          ? "✨ You’re lucky today! ✨"
-          : `🪷 Krishna says: “${randomLesson}”`
+          ? "You're lucky today!"
+          : `Krishna says: "${randomLesson}"`
       );
-      setTease("😮 How did you catch me?!");
+      setTease("How did you catch me?!");
     } else {
       setTease(teases[Math.floor(Math.random() * teases.length)]);
       moveKrishna();
@@ -80,30 +81,47 @@ const LuckyKrishna = () => {
       {/* Krishna */}
       <div
         onMouseEnter={handleHover}
-        className="fixed transition-all duration-300 cursor-pointer z-50 text-center"
+        className="fixed transition-all duration-300 cursor-pointer z-50 text-center group"
         style={{
           top: position.top,
           left: position.left,
         }}
       >
-        <img src={kpng} alt="Lord Krishna" className="w-24 mx-auto" />
-        <div className="text-white font-bold mt-1 drop-shadow-lg animate-pulse">
+        <div className="relative">
+          <img 
+            src={kpng} 
+            alt="Lord Krishna" 
+            className="w-16 h-16 object-contain mx-auto drop-shadow-lg group-hover:scale-110 transition-transform duration-200" 
+          />
+          <div className="absolute -top-2 -right-2">
+            <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
+          </div>
+        </div>
+        <div className="text-sm font-medium text-gray-700 mt-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
           {tease}
         </div>
       </div>
 
       {/* Popup */}
       {message && (
-        <div
-          onClick={closeMessage}
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
-          bg-gradient-to-br from-yellow-50 to-white shadow-2xl p-6 rounded-xl z-50 max-w-sm text-center animate-bounce space-y-4 border-4 border-yellow-300"
-        >
-          <div className="text-3xl text-yellow-600">🪷</div>
-          <p className="text-lg font-medium text-gray-800">{message}</p>
-          <button className="mt-2 bg-yellow-400 text-white px-4 py-2 rounded-full shadow-md hover:bg-yellow-500 transition">
-            🙏 Close
-          </button>
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center animate-fade-in">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Heart className="w-6 h-6 text-red-500" />
+              <span className="text-lg font-semibold text-gray-900">Divine Message</span>
+              <Heart className="w-6 h-6 text-red-500" />
+            </div>
+            
+            <p className="text-gray-700 mb-6 leading-relaxed">{message}</p>
+            
+            <button 
+              onClick={closeMessage}
+              className="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              <X className="w-4 h-4" />
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -138,6 +138,7 @@ const FloatingSacredElements = () => {
                            radial-gradient(circle at 25% 75%, #ec4899 0%, transparent 50%)`,
         }}
       />
+
     </div>
   );
 };
@@ -225,6 +226,505 @@ const Avatar = ({ user, size = "w-10 h-10", baseUrl, artistic = false }) => {
   );
 };
 
+// Event Card Component
+const EventCard = ({ event, user, onJoin, onLeave, baseUrl, index }) => {
+  const [showDetails, setShowDetails] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
+
+  const isJoined =
+    user && event.participants.some((p) => p.user._id === user._id);
+  const isOrganizer = user && event.organizer._id === user._id;
+  const isFull =
+    event.maxParticipants && event.participants.length >= event.maxParticipants;
+  const isPast = new Date(event.dateTime) < new Date();
+
+  const formatDateTime = (date) => {
+    return new Date(date).toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const formatDuration = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+  };
+
+  const getEventTypeColor = (type) => {
+    const colors = {
+      meditation: "bg-green-500",
+      prayer: "bg-blue-500",
+      discourse: "bg-purple-500",
+      festival: "bg-yellow-500",
+      community_service: "bg-red-500",
+      other: "bg-gray-500",
+    };
+    return colors[type] || colors.other;
+  };
+
+  const getEventTypeIcon = (type) => {
+    const icons = {
+      meditation: "🧘",
+      prayer: "🙏",
+      discourse: "📖",
+      festival: "🎉",
+      community_service: "🤝",
+      other: "📅",
+    };
+    return icons[type] || icons.other;
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300"
+    >
+      {/* Event Header */}
+      <div className="relative">
+        {event.image && (
+          <img
+            src={
+              event.image.startsWith("http")
+                ? event.image
+                : baseUrl + event.image
+            }
+            alt="Event"
+            className="w-full h-48 object-cover"
+          />
+        )}
+        <div
+          className={`absolute top-4 left-4 px-3 py-1 ${getEventTypeColor(
+            event.eventType
+          )} text-white text-sm font-bold rounded-full flex items-center space-x-1`}
+        >
+          <span>{getEventTypeIcon(event.eventType)}</span>
+          <span>{event.eventType.replace("_", " ").toUpperCase()}</span>
+        </div>
+        {isFull && (
+          <div className="absolute top-4 right-4 px-3 py-1 bg-red-500 text-white text-sm font-bold rounded-full">
+            FULL
+          </div>
+        )}
+        {isPast && (
+          <div className="absolute top-4 right-4 px-3 py-1 bg-gray-500 text-white text-sm font-bold rounded-full">
+            PAST
+          </div>
+        )}
+      </div>
+
+      {/* Event Content */}
+      <div className="p-6">
+        {/* Organizer Info */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-3">
+            <Avatar user={event.organizer} baseUrl={baseUrl} />
+            <div>
+              <div className="flex items-center space-x-2">
+                <h4 className="font-bold text-gray-900">
+                  {event.organizer.name}
+                </h4>
+                <UserBadge user={event.organizer} />
+              </div>
+              <p className="text-gray-500 text-sm">Event Organizer</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Event Details */}
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">{event.title}</h2>
+
+        <div className="space-y-3 mb-4">
+          <div className="flex items-center space-x-3 text-gray-600">
+            <Calendar className="text-blue-500" />
+            <span className="font-medium">
+              {formatDateTime(event.dateTime)}
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-3 text-gray-600">
+            <Clock className="text-green-500" />
+            <span>{formatDuration(event.duration)}</span>
+          </div>
+
+          <div className="flex items-center space-x-3 text-gray-600">
+            <MapPin className="text-red-500" />
+            <span>
+              {event.location.address}, {event.location.city}
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-3 text-gray-600">
+            <Users className="text-purple-500" />
+            <span>
+              {event.participants.length} joined
+              {event.maxParticipants && ` / ${event.maxParticipants} max`}
+            </span>
+          </div>
+        </div>
+
+        <p className="text-gray-700 mb-6 leading-relaxed">
+          {showDetails
+            ? event.description
+            : `${event.description.substring(0, 150)}...`}
+          {event.description.length > 150 && (
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="text-blue-600 hover:text-blue-800 font-medium ml-2"
+            >
+              {showDetails ? "Show less" : "Read more"}
+            </button>
+          )}
+        </p>
+
+        {/* Requirements */}
+        {event.requirements && event.requirements.length > 0 && (
+          <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+            <h4 className="font-semibold text-yellow-800 mb-2">
+              Requirements:
+            </h4>
+            <ul className="text-yellow-700 text-sm space-y-1">
+              {event.requirements.map((req, idx) => (
+                <li key={idx}>• {req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Participants Preview */}
+        {event.participants.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-semibold text-gray-800">Participants</h4>
+              <button
+                onClick={() => setShowParticipants(!showParticipants)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                {showParticipants ? "Hide" : "View all"}
+              </button>
+            </div>
+
+            <div className="flex -space-x-2">
+              {event.participants.slice(0, 5).map((participant, idx) => (
+                <Avatar
+                  key={idx}
+                  user={participant.user}
+                  size="w-8 h-8"
+                  baseUrl={baseUrl}
+                />
+              ))}
+              {event.participants.length > 5 && (
+                <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold text-gray-600">
+                  +{event.participants.length - 5}
+                </div>
+              )}
+            </div>
+
+            {showParticipants && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-3 space-y-2 max-h-40 overflow-y-auto"
+              >
+                {event.participants.map((participant, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg"
+                  >
+                    <Avatar
+                      user={participant.user}
+                      size="w-6 h-6"
+                      baseUrl={baseUrl}
+                    />
+                    <span className="text-sm font-medium">
+                      {participant.user.name}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      Joined{" "}
+                      {new Date(participant.joinedAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        )}
+
+        {/* Contact Information */}
+        {event.contactDetails &&
+          Object.keys(event.contactDetails).length > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-800 mb-2">
+                Contact Organizer:
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {event.contactDetails.phone && (
+                  <a
+                    href={`tel:${event.contactDetails.phone}`}
+                    className="flex items-center space-x-1 px-2 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600"
+                  >
+                    <Phone className="w-2.5 h-2.5" />
+                    <span>Call</span>
+                  </a>
+                )}
+                {event.contactDetails.email && (
+                  <a
+                    href={`mailto:${event.contactDetails.email}`}
+                    className="flex items-center space-x-1 px-2 py-1 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
+                  >
+                    <Mail className="w-2.5 h-2.5" />
+                    <span>Email</span>
+                  </a>
+                )}
+                {event.contactDetails.telegram && (
+                  <a
+                    href={`https://t.me/${event.contactDetails.telegram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 px-2 py-1 bg-blue-400 text-white text-xs rounded-full hover:bg-blue-500"
+                  >
+                    <Send className="w-2.5 h-2.5" />
+                    <span>Telegram</span>
+                  </a>
+                )}
+                {event.contactDetails.whatsapp && (
+                  <a
+                    href={`https://wa.me/${event.contactDetails.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 px-2 py-1 bg-green-600 text-white text-xs rounded-full hover:bg-green-700"
+                  >
+                    <MessageSquare className="w-2.5 h-2.5" />
+                    <span>WhatsApp</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+        {/* Action Buttons */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex items-center space-x-3">
+            {!isPast && !isOrganizer && user && (
+              <>
+                {isJoined ? (
+                  <button
+                    onClick={() => onLeave(event._id)}
+                    className="px-6 py-2 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition-colors duration-200"
+                  >
+                    Leave Event
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onJoin(event._id)}
+                    disabled={isFull}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-full font-semibold hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  >
+                    {isFull ? "Event Full" : "Join Event"}
+                  </button>
+                )}
+              </>
+            )}
+
+            {isOrganizer && (
+              <span className="px-4 py-2 bg-green-100 text-green-800 rounded-full font-semibold text-sm">
+                Your Event
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <button className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all duration-200">
+              <Share2 size={16} />
+            </button>
+            <button className="p-2 text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 rounded-full transition-all duration-200">
+              <Bookmark size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Enhanced Post Card with Badge
+const PostCard = ({
+  post,
+  user,
+  onLike,
+  onShare,
+  onEdit,
+  onDelete,
+  baseUrl,
+  index,
+}) => {
+  const [showFullContent, setShowFullContent] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const isLiked = user && post.likes.includes(user._id);
+  const isOwner = user && post.author._id === user._id;
+
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const postDate = new Date(date);
+    const diffInHours = Math.floor((now - postDate) / (1000 * 60 * 60));
+
+    if (diffInHours < 1) return "Just now";
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
+    return postDate.toLocaleDateString();
+  };
+
+  const shouldTruncate = post.content.length > 200;
+  const displayContent =
+    shouldTruncate && !showFullContent
+      ? post.content.substring(0, 200) + "..."
+      : post.content;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 group"
+    >
+      {/* Post Header */}
+      <div className="p-6 pb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Avatar user={post.author} baseUrl={baseUrl} />
+            <div>
+              <div className="flex items-center space-x-2 mb-1">
+                <h3 className="font-bold text-gray-900 hover:text-blue-600 cursor-pointer">
+                  {post.author.name}
+                </h3>
+                <UserBadge user={post.author} />
+              </div>
+              <div className="flex items-center space-x-2 text-gray-500 text-sm">
+                <span>{formatTimeAgo(post.createdAt)}</span>
+                <span>•</span>
+                <Globe size={12} />
+              </div>
+            </div>
+          </div>
+
+          {/* Action Menu */}
+          <div className="flex items-center space-x-2">
+            {isOwner && (
+              <>
+                <button
+                  onClick={() => onEdit(post)}
+                  className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-full transition-all duration-200"
+                  title="Edit post"
+                >
+                  <Edit size={14} />
+                </button>
+                <button
+                  onClick={() => onDelete(post)}
+                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all duration-200"
+                  title="Delete post"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => setIsBookmarked(!isBookmarked)}
+              className="p-2 text-gray-400 hover:text-yellow-500 hover:bg-yellow-50 rounded-full transition-all duration-200"
+              title="Bookmark"
+            >
+              {isBookmarked ? (
+                <Bookmark size={14} />
+              ) : (
+                <Bookmark size={14} className="fill-none" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Post Content */}
+      <div className="px-6 pb-4">
+        <h2 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+          {post.title}
+        </h2>
+
+        <div className="text-gray-700 leading-relaxed">
+          <p className="whitespace-pre-wrap">{displayContent}</p>
+          {shouldTruncate && (
+            <button
+              onClick={() => setShowFullContent(!showFullContent)}
+              className="text-blue-600 hover:text-blue-800 font-medium text-sm mt-2 transition-colors duration-200"
+            >
+              {showFullContent ? "Show less" : "Read more"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Post Image */}
+      {post.image && (
+        <div className="relative overflow-hidden">
+          <img
+            src={
+              post.image.startsWith("http") ? post.image : baseUrl + post.image
+            }
+            alt="Post content"
+            className="w-full max-h-96 object-cover hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      )}
+
+      {/* Post Actions */}
+      <div className="p-6 pt-4 border-t border-gray-50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <motion.button
+              onClick={() => onLike(post._id)}
+              disabled={!user}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-200 ${
+                isLiked
+                  ? "text-red-500 bg-red-50 hover:bg-red-100"
+                  : "text-gray-600 hover:text-red-500 hover:bg-red-50"
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+                transition={{ duration: 0.3 }}
+              >
+                {isLiked ? <Heart size={18} className="fill-current" /> : <Heart size={18} />}
+              </motion.div>
+              <span className="font-semibold">{post.likes.length}</span>
+            </motion.button>
+
+            <button className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-blue-500 hover:bg-blue-50 transition-all duration-200">
+              <MessageCircle size={16} />
+              <span className="font-semibold">0</span>
+            </button>
+
+            <button
+              onClick={() => onShare(post)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-600 hover:text-green-500 hover:bg-green-50 transition-all duration-200"
+            >
+              <Share2 size={16} />
+              <span className="font-semibold text-sm">Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+
+  );
+};
+
 // Ultra Cool Tab Navigation Component
 const TabNavigation = ({ activeTab, setActiveTab }) => {
   const tabs = [
@@ -299,43 +799,6 @@ const TabNavigation = ({ activeTab, setActiveTab }) => {
                     <Icon size={20} />
                   </motion.div>
                   <span className="text-sm md:text-base">{tab.label}</span>
-
-                  {/* Active Indicator Dot */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeDot"
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full shadow-lg"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 500 }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Decorative Elements */}
-      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-        <motion.div
-          animate={{
-            y: [0, -10, 0],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="text-4xl"
-        >
-          {activeTab === "posts" ? "✍️" : "🎉"}
-        </motion.div>
-      </div>
-    </div>
-  );
 };
 
 // Comment Component with Enhanced Features
@@ -1611,6 +2074,7 @@ const EventCard = React.memo(
                   >
                     <FaTrash size={14} />
                   </motion.button>
+
                 </div>
               )}
             </div>
@@ -2261,6 +2725,7 @@ const CreateEvent = ({ user, onSubmit, baseUrl }) => {
                   <label className="flex items-center space-x-2 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-full cursor-pointer transition-colors duration-200 w-fit">
                     <FaImage size={16} />
                     <span className="font-medium">Choose Image</span>
+
                     <input
                       type="file"
                       accept="image/*"

@@ -4,6 +4,18 @@ import { motion } from "framer-motion";
 import Navigation from "../Navigation/Navigation";
 import { useApi } from "../../Context/baseUrl";
 import axios from "axios";
+import { 
+  Package, 
+  Truck, 
+  Shield, 
+  Star, 
+  ShoppingCart, 
+  Eye,
+  Sparkles,
+  Heart,
+  CheckCircle,
+  ArrowRight
+} from "lucide-react";
 
 // If you want a placeholder image when no image is found:
 import placeholderImg from "../../Media/placeholder.png";
@@ -27,8 +39,6 @@ export default function ProductPage() {
 
   // Helper for building full media URLs
   const getMediaUrl = (mediaPath) => {
-    // If using Vite dev, mediaPath is like "/uploads/products/filename.jpg"
-    // So, baseUrl might be "http://localhost:5000/api" – remove "/api"
     if (!mediaPath) return placeholderImg;
     return `${baseUrl.replace("/api", "")}${mediaPath}`;
   };
@@ -38,18 +48,22 @@ export default function ProductPage() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#01abfd]/5 to-[#2e8b57]/5 py-16">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="bg-gray-50 pt-32 pb-20">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto">
-            <motion.h1
-              className="text-5xl md:text-6xl font-bold text-[#0f1f2e] mb-6"
+            <motion.div
+              className="flex items-center justify-center gap-3 mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              Divine Krishna Collection
-            </motion.h1>
+              <Package className="w-8 h-8 text-blue-500" />
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Divine Krishna Collection
+              </h1>
+            </motion.div>
+            
             <motion.p
-              className="text-xl text-[#0189d1] mb-8"
+              className="text-xl text-gray-600 mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -63,148 +77,130 @@ export default function ProductPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                ✨ Blessed Items
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                🚚 Free Shipping $50+
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                🔒 Secure Checkout
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                ⭐ 4.8/5 Rating
-              </span>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
+                <Sparkles className="w-4 h-4 text-blue-500" />
+                <span>Blessed Items</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
+                <Truck className="w-4 h-4 text-green-500" />
+                <span>Free Shipping $50+</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
+                <Shield className="w-4 h-4 text-blue-500" />
+                <span>Secure Checkout</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
+                <Star className="w-4 h-4 text-yellow-500" />
+                <span>4.8/5 Rating</span>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Products Grid */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product, index) => (
               <motion.div
                 key={product._id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+                transition={{ delay: index * 0.1 }}
                 onHoverStart={() => setHoveredProduct(product._id)}
                 onHoverEnd={() => setHoveredProduct(null)}
+                className="group"
               >
                 <Link to={`/product/${product._id}`}>
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
-                    <div className="relative">
-                      {/* Product Image Container */}
-                      <div className="aspect-[4/3] bg-gradient-to-br from-[#f9fbfd] to-[#eec6d3]/10 p-8 relative overflow-hidden">
-                        {/* Discount Badge: you can calculate or store discount on backend */}
-                        {product.originalPrice && product.price && (
-                          <div className="absolute top-4 left-4 bg-[#2e8b57] text-white px-3 py-1 rounded-full text-sm font-bold">
-                            -
-                            {Math.round(
-                              100 * (1 - product.price / product.originalPrice)
-                            )}
-                            %
-                          </div>
-                        )}
+                  <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+                    {/* Product Image Container */}
+                    <div className="relative aspect-square bg-gray-50 p-6">
+                      {/* Discount Badge */}
+                      {product.originalPrice && product.price && (
+                        <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                          -
+                          {Math.round(
+                            100 * (1 - product.price / product.originalPrice)
+                          )}
+                          %
+                        </div>
+                      )}
 
-                        {/* Product Badge (optional, e.g., if bestseller) */}
-                        {product.badge && (
-                          <div className="absolute top-4 right-4 bg-[#f4c430] text-[#0f1f2e] px-3 py-1 rounded-full text-xs font-bold uppercase">
-                            {product.badge}
-                          </div>
-                        )}
+                      {/* Product Badge */}
+                      {product.badge && (
+                        <div className="absolute top-4 right-4 bg-yellow-500 text-gray-900 px-2 py-1 rounded-full text-xs font-medium">
+                          {product.badge}
+                        </div>
+                      )}
 
-                        {/* Product Image or Video */}
-                        {/* If video exists, show play icon overlay */}
-                        {product.images && product.images.length > 0 ? (
-                          <motion.img
-                            src={getMediaUrl(product.images[0])}
-                            alt={product.title}
-                            className="w-full h-full object-contain"
-                            animate={{
-                              scale: hoveredProduct === product._id ? 1.1 : 1,
-                              rotate: hoveredProduct === product._id ? 5 : 0,
-                            }}
-                            transition={{ duration: 0.5 }}
-                          />
-                        ) : product.videos && product.videos.length > 0 ? (
-                          <div className="relative w-full h-full flex items-center justify-center">
-                            <video
-                              src={getMediaUrl(product.videos[0])}
-                              className="w-full h-full object-contain"
-                              autoPlay={false}
-                              controls={false}
-                              muted
-                              loop
-                            />
-                            <span className="absolute inset-0 flex items-center justify-center text-4xl text-white opacity-80">
-                              ▶️
-                            </span>
-                          </div>
-                        ) : (
-                          <img
-                            src={placeholderImg}
-                            alt="placeholder"
-                            className="w-full h-full object-contain"
-                          />
-                        )}
+                      {/* Product Image */}
+                      {product.images && product.images.length > 0 ? (
+                        <motion.img
+                          src={getMediaUrl(product.images[0])}
+                          alt={product.title}
+                          className="w-full h-full object-contain"
+                          animate={{
+                            scale: hoveredProduct === product._id ? 1.05 : 1,
+                          }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      ) : (
+                        <img
+                          src={placeholderImg}
+                          alt="placeholder"
+                          className="w-full h-full object-contain"
+                        />
+                      )}
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="p-6">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">
+                          {product.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm line-clamp-2">
+                          {product.desc}
+                        </p>
                       </div>
 
-                      {/* Product Info */}
-                      <div className="p-6">
-                        <div className="mb-4">
-                          <h3 className="text-xl font-bold text-[#0f1f2e] mb-2 line-clamp-1">
-                            {product.title}
-                          </h3>
-                          <p className="text-[#0189d1] text-sm line-clamp-2">
-                            {product.desc}
-                          </p>
+                      {/* Rating */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : ''}`}
+                            />
+                          ))}
                         </div>
+                        <span className="text-sm text-gray-500">
+                          ({product.numReviews || product.reviews?.length || 0})
+                        </span>
+                      </div>
 
-                        {/* Rating */}
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <span
-                                key={i}
-                                className={`text-sm ${
-                                  i < Math.floor(product.rating)
-                                    ? "text-[#f4c430]"
-                                    : "text-gray-300"
-                                }`}
-                              >
-                                ★
-                              </span>
-                            ))}
-                          </div>
-                          <span className="text-sm text-gray-500">
-                            (
-                            {product.numReviews || product.reviews?.length || 0}
-                            )
+                      {/* Price and Action */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl font-bold text-gray-900">
+                            ${product.price}
                           </span>
-                        </div>
-
-                        {/* Price and Action */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl font-bold text-[#2e8b57]">
-                              ${product.price}
-                            </span>
+                          {product.originalPrice && product.originalPrice !== product.price && (
                             <span className="text-sm text-gray-400 line-through">
                               ${product.originalPrice}
                             </span>
-                          </div>
-
-                          <motion.button
-                            className="bg-[#01abfd] text-white px-6 py-3 rounded-full font-medium hover:bg-[#0189d1] transition-colors"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            View Details
-                          </motion.button>
+                          )}
                         </div>
+
+                        <motion.button
+                          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors text-sm"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Eye className="w-4 h-4" />
+                          <span>View Details</span>
+                        </motion.button>
                       </div>
                     </div>
                   </div>
@@ -216,50 +212,55 @@ export default function ProductPage() {
       </section>
 
       {/* Features Section */}
-      <section className="bg-[#f9fbfd] py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
+      <section className="bg-gray-50 py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: "🚚",
+                icon: Truck,
                 title: "Free Shipping",
                 desc: "Orders over $50",
-                color: "from-[#01abfd]/10 to-[#0189d1]/10",
+                color: "text-blue-500",
               },
               {
-                icon: "📞",
+                icon: Shield,
                 title: "Support 24/7",
                 desc: "Contact us anytime",
-                color: "from-[#2e8b57]/10 to-[#2e8b57]/20",
+                color: "text-green-500",
               },
               {
-                icon: "🔄",
+                icon: CheckCircle,
                 title: "30 Days Return",
                 desc: "Money back guarantee",
-                color: "from-[#f4c430]/10 to-[#f4c430]/20",
+                color: "text-yellow-500",
               },
               {
-                icon: "🔒",
+                icon: Heart,
                 title: "Payment Secure",
                 desc: "100% secure payment",
-                color: "from-[#eec6d3]/20 to-[#eec6d3]/30",
+                color: "text-red-500",
               },
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                className={`bg-gradient-to-br ${feature.color} p-8 rounded-2xl`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-bold text-[#0f1f2e] mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-gray-600">{feature.desc}</p>
-              </motion.div>
-            ))}
+            ].map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <motion.div
+                  key={index}
+                  className="bg-white p-8 rounded-lg border border-gray-200 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className={`w-12 h-12 mx-auto mb-4 ${feature.color}`}>
+                    <IconComponent className="w-full h-full" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">{feature.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

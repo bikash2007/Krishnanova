@@ -131,6 +131,7 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
+      console.error("Signup error:", error);
       const errorMessage = error.response?.data?.message || "Signup failed";
       setError(errorMessage);
       return { success: false, error: errorMessage };

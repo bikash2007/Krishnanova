@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { User, Lock, Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext";
 import Navigation from "../components/Navigation/Navigation";
@@ -74,7 +75,6 @@ export default function Login() {
   const handleGoogleLoginError = (msg) => {
     setErrors({ general: msg || "Google login failed" });
   };
-
   return (
     <GoogleOAuthProvider
       clientId={
@@ -87,37 +87,38 @@ export default function Login() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative w-full max-w-md"
+          className="w-full max-w-sm"
         >
-          <div className="bg-white/80 backdrop-blur-lg mt-20 rounded-3xl shadow-2xl border border-[#01abfd]/20 overflow-hidden">
-            <div className="bg-gradient-to-r from-[#01abfd] via-[#0189d1] to-[#2e8b57] p-8 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="text-5xl mb-4"
-              >
-                🕉️
-              </motion.div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+          {/* Login Card */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-blue-600 px-6 py-8 text-center">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-xl">ॐ</span>
+              </div>
+              <h1 className="text-2xl font-bold text-white mb-1">
                 Welcome Back
               </h1>
-              <p className="text-white/90">Sign in to your divine journey</p>
+              <p className="text-white/90 text-sm">
+                Sign in to your divine journey
+              </p>
             </div>
-            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
               {errors.general && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm"
+                  className="bg-red-50 border border-red-200 text-red-600 px-3 py-2 rounded-lg text-sm"
                 >
                   {errors.general}
                 </motion.div>
               )}
 
-              {/* Identifier Field */}
+              {/* Email/Username Field */}
               <div>
-                <label className="block text-sm font-medium text-[#0f1f2e] mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Username or Email
                 </label>
                 <div className="relative">
@@ -126,16 +127,14 @@ export default function Login() {
                     name="identifier"
                     value={formData.identifier}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 pl-12 rounded-xl border-2 transition-all duration-300 ${
+                    className={`w-full px-3 py-2 pl-10 rounded-lg border transition-all duration-200 ${
                       errors.identifier
                         ? "border-red-300 focus:border-red-500"
-                        : "border-[#d1ccc0] focus:border-[#01abfd]"
-                    } focus:outline-none focus:ring-2 focus:ring-[#01abfd]/20`}
+                        : "border-gray-300 focus:border-blue-500"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                     placeholder="Enter your username or email"
                   />
-                  <span className="absolute left-4 top-3.5 text-[#0189d1]">
-                    👤
-                  </span>
+                  <User className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                 </div>
                 {errors.identifier && (
                   <p className="mt-1 text-sm text-red-500">
@@ -146,7 +145,7 @@ export default function Login() {
 
               {/* Password Field */}
               <div>
-                <label className="block text-sm font-medium text-[#0f1f2e] mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -155,22 +154,24 @@ export default function Login() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 pl-12 pr-12 rounded-xl border-2 transition-all duration-300 ${
+                    className={`w-full px-3 py-2 pl-10 pr-10 rounded-lg border transition-all duration-200 ${
                       errors.password
                         ? "border-red-300 focus:border-red-500"
-                        : "border-[#d1ccc0] focus:border-[#01abfd]"
-                    } focus:outline-none focus:ring-2 focus:ring-[#01abfd]/20`}
+                        : "border-gray-300 focus:border-blue-500"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                     placeholder="Enter your password"
                   />
-                  <span className="absolute left-4 top-3.5 text-[#0189d1]">
-                    🔒
-                  </span>
+                  <Lock className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-3.5 text-[#0189d1] hover:text-[#01abfd]"
+                    className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showPassword ? "👁️" : "👁️‍🗨️"}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
                 {errors.password && (
@@ -184,12 +185,12 @@ export default function Login() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-[#01abfd] to-[#2e8b57] text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
                     <svg
-                      className="animate-spin h-5 w-5 mr-3"
+                      className="animate-spin h-4 w-4 mr-2"
                       viewBox="0 0 24 24"
                     >
                       <circle
@@ -217,16 +218,16 @@ export default function Login() {
               {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#d1ccc0]"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-[#0f1f2e]">
+                  <span className="px-4 bg-white text-gray-500">
                     Or continue with
                   </span>
                 </div>
               </div>
 
-              {/* Google Login - FIXED: Now properly passing the handlers */}
+              {/* Google Login */}
               <div className="flex justify-center">
                 <GoogleAuth
                   onSuccess={handleGoogleLoginSuccess}
@@ -235,11 +236,12 @@ export default function Login() {
                 />
               </div>
 
-              <p className="text-center text-sm text-[#0f1f2e]">
+              {/* Sign Up Link */}
+              <p className="text-center text-sm text-gray-600">
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-[#01abfd] hover:text-[#0189d1] font-semibold transition-colors"
+                  className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
                 >
                   Sign up
                 </Link>

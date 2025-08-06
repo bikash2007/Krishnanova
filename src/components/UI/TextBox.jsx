@@ -45,11 +45,7 @@ const TextBox = ({
       ref={cardRef}
       className={`text-3d-box font-semibold backdrop-blur-xl ${variants[variant]} ${scrollAnimation} ${baseClasses} ${className}`}
       style={{
-        background: `radial-gradient(
-          960px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-          rgba(59, 248, 251, 0.3),
-          transparent 40%
-        )`,
+        background: `rgba(30, 58, 138, 0.1)`,
       }}
       {...props}
     >

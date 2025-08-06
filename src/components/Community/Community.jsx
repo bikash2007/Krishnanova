@@ -70,13 +70,8 @@ const InteractiveBox = ({ children, className }) => {
       ref={boxRef}
       className={className}
       style={{
-        background: `radial-gradient(
-          1200px circle at ${mousePosition.x}% ${mousePosition.y}%,
-          rgba(139, 69, 255, 0.15),
-          rgba(59, 130, 246, 0.1) 30%,
-          rgba(236, 72, 153, 0.08) 60%,
-          transparent 80%
-        )`,
+        background: "linear-gradient(135deg, #FBBF24 0%, #3B82F6 100%)",
+        opacity: 0.1
       }}
     >
       {children}
@@ -203,167 +198,14 @@ const UserBadge = ({ user, size = "sm" }) => {
     >
       <FaPray size={size === "sm" ? 8 : 10} />
       <span>DEVOTEE</span>
-    </motion.div>
+    </div>
   );
 };
 
-// Artistic Event Card Component
-const EventCard = ({ event, baseUrl, index }) => {
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getEventTypeColor = (type) => {
-    const colors = {
-      meditation: "from-green-400 via-emerald-500 to-teal-600",
-      prayer: "from-blue-400 via-indigo-500 to-purple-600",
-      discourse: "from-purple-400 via-pink-500 to-rose-600",
-      festival: "from-yellow-400 via-orange-500 to-red-600",
-      community_service: "from-red-400 via-pink-500 to-purple-600",
-      other: "from-gray-400 via-slate-500 to-gray-600",
-    };
-    return colors[type] || colors.other;
-  };
-
-  const getEventIcon = (type) => {
-    const icons = {
-      meditation: "🧘‍♀️",
-      prayer: "🙏",
-      discourse: "📿",
-      festival: "🎊",
-      community_service: "🤝",
-      other: "✨",
-    };
-    return icons[type] || icons.other;
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50, rotateX: -15 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{
-        delay: index * 0.2,
-        duration: 0.8,
-        type: "spring",
-        stiffness: 100,
-      }}
-      whileHover={{
-        y: -10,
-        rotateX: 5,
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-      }}
-      className="group relative"
-    >
-      {/* Artistic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/60 to-white/40 backdrop-blur-xl rounded-3xl"></div>
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${getEventTypeColor(
-          event.eventType
-        )} opacity-10 rounded-3xl group-hover:opacity-20 transition-opacity duration-300`}
-      ></div>
-
-      {/* Floating Elements */}
-      <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
-      <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full opacity-40 group-hover:opacity-80 transition-opacity duration-300"></div>
-
-      <div className="relative p-6 border border-white/30 rounded-3xl shadow-xl backdrop-blur-sm">
-        {/* Event Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className={`w-12 h-12 bg-gradient-to-br ${getEventTypeColor(
-                event.eventType
-              )} rounded-2xl flex items-center justify-center text-2xl shadow-lg`}
-            >
-              {getEventIcon(event.eventType)}
-            </motion.div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h4 className="font-bold text-gray-900 text-sm">
-                  {event.organizer?.name}
-                </h4>
-                <UserBadge user={event.organizer} size="sm" />
-              </div>
-              <p className="text-gray-500 text-xs">Event Organizer</p>
-            </div>
-          </div>
-
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="px-2 py-1 bg-gradient-to-r from-emerald-400 to-cyan-500 text-white text-xs font-bold rounded-full shadow-lg"
-          >
-            LIVE
-          </motion.div>
-        </div>
-
-        {/* Event Title */}
-        <h3 className="font-bold text-lg text-gray-900 mb-3 leading-tight group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-pink-600 group-hover:bg-clip-text transition-all duration-300">
-          {event.title}
-        </h3>
-
-        {/* Event Details */}
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center space-x-2 text-gray-600 text-sm">
-            <FaCalendarAlt className="text-blue-500" />
-            <span>{formatDate(event.dateTime)}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-gray-600 text-sm">
-            <FaMapMarkerAlt className="text-red-500" />
-            <span className="truncate">{event.location?.city}</span>
-          </div>
-          <div className="flex items-center space-x-2 text-gray-600 text-sm">
-            <FaUsers className="text-green-500" />
-            <span>{event.participants?.length || 0} joined</span>
-          </div>
-        </div>
-
-        {/* Event Image Preview */}
-        {event.image && (
-          <div className="relative mb-4 overflow-hidden rounded-2xl group/image">
-            <img
-              src={
-                event.image.startsWith("http")
-                  ? event.image
-                  : baseUrl + event.image
-              }
-              alt="Event"
-              className="w-full h-32 object-cover group-hover/image:scale-110 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
-          </div>
-        )}
-
-        {/* Join Event Button */}
-        <Link to="/communityblog">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`w-full py-3 bg-gradient-to-r ${getEventTypeColor(
-              event.eventType
-            )} text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2`}
-          >
-            <FaTicketAlt />
-            <span>Join Event</span>
-            <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
-          </motion.button>
-        </Link>
-      </div>
-    </motion.div>
-  );
-};
-
-// Artistic Social Post Card
-const ArtisticSocialPostCard = ({ post, baseUrl, index }) => {
-  const [isLiked, setIsLiked] = useState(false);
+// Instagram/Facebook Style Post Card
+const SocialPostCard = ({ post, baseUrl, index }) => {
   const [showFullText, setShowFullText] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   const formatTimeAgo = (date) => {
     const now = new Date();
@@ -592,83 +434,100 @@ const ArtisticSocialPostCard = ({ post, baseUrl, index }) => {
             </div>
           </div>
 
-          {/* Enhanced Call to Action */}
-          <Link to={`/blog/${post._id}`}>
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              className="p-4 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl border border-gradient-to-r border-blue-200/50 hover:border-purple-300/50 transition-all duration-300 cursor-pointer group/cta"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-10 h-10 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center shadow-lg"
-                  >
-                    <FaInfinity className="text-white text-sm" />
-                  </motion.div>
-                  <div>
-                    <div className="text-sm font-bold text-gray-900 group-hover/cta:text-purple-700 transition-colors duration-200">
-                      Dive Deeper into Wisdom
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Explore the full spiritual journey
-                    </div>
+        {/* Call to Action */}
+        <Link to="/communityblog">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:border-blue-200 transition-all duration-200 cursor-pointer"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <FaBlog className="text-white text-sm" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-gray-900">
+                    Read Full Discussion
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Join the conversation in our community
                   </div>
                 </div>
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <FaChevronRight
-                    className="text-gray-400 group-hover/cta:text-purple-500 transition-colors duration-200"
-                    size={16}
-                  />
-                </motion.div>
               </div>
-            </motion.div>
-          </Link>
-        </div>
+              <FaChevronRight className="text-gray-400" size={14} />
+            </div>
+          </motion.div>
+        </Link>
       </div>
     </motion.div>
   );
 };
 
-// Enhanced Stats Card
-const ArtisticStatsCard = ({ icon, value, label, color, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8, rotateY: -15 }}
-    whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.8, type: "spring" }}
-    whileHover={{
-      scale: 1.05,
-      y: -10,
-      rotateY: 5,
-      boxShadow: "0 20px 40px -12px rgba(0, 0, 0, 0.25)",
-    }}
-    className="relative group cursor-pointer"
-  >
-    {/* Artistic Background */}
-    <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/60 to-white/40 backdrop-blur-xl rounded-3xl"></div>
-    <div
-      className={`absolute inset-0 bg-gradient-to-br ${color} opacity-10 rounded-3xl group-hover:opacity-20 transition-opacity duration-300`}
-    ></div>
-
-    {/* Floating Elements */}
+// Story-style Preview Cards
+const StoryCard = ({ post, baseUrl, index }) => {
+  return (
     <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      className="absolute -top-2 -right-2 w-4 h-4 text-pink-400 opacity-60"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.1 }}
+      className="relative w-32 h-48 rounded-2xl overflow-hidden cursor-pointer group"
     >
-      <FaMagic />
+      <Link to="/communityblog">
+        {post.image ? (
+          <img
+            src={
+              post.image.startsWith("http") ? post.image : baseUrl + post.image
+            }
+            alt={post.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500"></div>
+        )}
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
+
+        {/* Author Avatar */}
+        <div className="absolute top-3 left-3">
+          <Avatar user={post.author} baseUrl={baseUrl} size="w-8 h-8" />
+        </div>
+
+        {/* Title */}
+        <div className="absolute bottom-3 left-3 right-3">
+          <h4 className="text-white text-sm font-bold leading-tight line-clamp-2">
+            {post.title}
+          </h4>
+          <div className="flex items-center space-x-1 mt-1">
+            <FaHeart className="text-red-400" size={10} />
+            <span className="text-white text-xs">
+              {post.likes?.length || 0}
+            </span>
+          </div>
+        </div>
+
+        {/* Play Button Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+            <FaPlay className="text-gray-800 ml-1" size={16} />
+          </div>
+        </div>
+      </Link>
     </motion.div>
 
-    <div className="relative text-center p-6 border border-white/30 rounded-3xl shadow-xl backdrop-blur-sm">
-      <motion.div
-        whileHover={{ rotate: 360, scale: 1.1 }}
-        transition={{ duration: 0.5 }}
-        className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center shadow-2xl`}
+// Enhanced Stats Card Component
+const StatsCard = ({ icon, value, label, color, delay }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.8 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    whileHover={{ scale: 1.05, y: -5 }}
+    className="relative group"
+  >
+    <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div
+        className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center shadow-lg`}
       >
         {icon}
       </motion.div>
@@ -738,32 +597,10 @@ const Community = () => {
 
   return (
     <section id="community" className="section py-24 relative overflow-hidden">
-      {/* Enhanced Artistic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/60 via-purple-50/40 to-pink-50/60"></div>
-
-      {/* Floating Particles */}
-      <FloatingParticles />
-
-      {/* Dynamic Background Elements */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          rotate: [0, 180, 360],
-          opacity: [0.1, 0.3, 0.1],
-        }}
-        transition={{ duration: 20, repeat: Infinity }}
-        className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-3xl"
-      />
-
-      <motion.div
-        animate={{
-          scale: [1.2, 1, 1.2],
-          rotate: [360, 180, 0],
-          opacity: [0.2, 0.4, 0.2],
-        }}
-        transition={{ duration: 25, repeat: Infinity }}
-        className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-blue-500/20 rounded-full blur-3xl"
-      />
+      {/* Enhanced Background */}
+      <div className="absolute inset-0 bg-slate-50"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
 
       <div className="container max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         {/* Artistic Section Header */}
@@ -774,28 +611,14 @@ const Community = () => {
           transition={{ duration: 1 }}
           className="text-center mb-20"
         >
-          <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            whileInView={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-            className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-100/80 via-purple-100/80 to-pink-100/80 backdrop-blur-sm rounded-full mb-8 border border-white/50 shadow-xl"
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            >
-              <FaUserFriends className="text-blue-600 text-xl" />
-            </motion.div>
-            <span className="text-blue-800 font-bold text-lg">
-              Sacred Community Hub
-            </span>
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <FaSun className="text-purple-600" />
-            </motion.div>
-          </motion.div>
+          <h2 className="section-title font-playfair text-4xl md:text-6xl mb-6 text-slate-800">
+            Krishna Community Hub
+          </h2>
+          <p className="text-slate-600 text-lg md:text-xl max-w-4xl mx-auto leading-relaxed">
+            Connect, share wisdom, and grow together in our vibrant spiritual
+            community
+          </p>
+        </motion.div>
 
           <motion.h2
             whileHover={{ scale: 1.05 }}
