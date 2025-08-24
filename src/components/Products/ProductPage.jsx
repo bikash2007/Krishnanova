@@ -1,266 +1,605 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "../Navigation/Navigation";
-import { useApi } from "../../Context/baseUrl";
 import axios from "axios";
-
-// If you want a placeholder image when no image is found:
 import placeholderImg from "../../Media/placeholder.png";
+
+const BRAND = {
+  primary: "#1e40af", // Royal Blue
+  secondary: "#2563eb", // Bright Blue
+  accent: "#3b82f6", // Light Blue
+  dark: "#1e3a8a", // Dark Blue
+  light: "#dbeafe", // Very Light Blue
+  white: "#FFFFFF",
+  gray: "#64748b", // Slate Gray
+  lightGray: "#f8fafc", // Almost White
+};
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
-  const [hoveredProduct, setHoveredProduct] = useState(null);
-  const baseUrl = import.meta.env.VITE_API_URL;
+  const [hovered, setHovered] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("featured");
+  const [wishlist, setWishlist] = useState(() => new Set());
+  const [showFilters, setShowFilters] = useState(false);
+
+  const navigate = useNavigate();
+  const baseApi = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/products`);
-        setProducts(response.data);
+        const { data } = await axios.get(`${baseApi}/products`);
+        setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
         console.log("Fetch error:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProduct();
-  }, [baseUrl]);
+  }, [baseApi]);
 
-  // Helper for building full media URLs
-  const getMediaUrl = (mediaPath) => {
-    // If using Vite dev, mediaPath is like "/uploads/products/filename.jpg"
-    // So, baseUrl might be "http://localhost:5000/api" – remove "/api"
-    if (!mediaPath) return placeholderImg;
-    return `${baseUrl.replace("/api", "")}${mediaPath}`;
+  const addToWishlist = (id) => {
+    setWishlist((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
+
+  const getMediaUrl = (mediaPath) => {
+    if (!mediaPath) return placeholderImg;
+    return `${baseApi.replace("/api", "")}${mediaPath}`;
+  };
+
+  const firstImage = (p) => {
+    if (Array.isArray(p.images) && p.images.length) return p.images[0];
+    if (typeof p.images === "string") return p.images;
+    return null;
+  };
+
+  const calcDiscount = (p) => {
+    const op = Number(p?.originalPrice);
+    const pr = Number(p?.price);
+    if (!op || !pr || op <= pr) return 0;
+    return Math.round(100 * (1 - pr / op));
+  };
+
+  const formatPrice = (n, currency = "INR") => {
+    try {
+      return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0,
+      }).format(n);
+    } catch {
+      return `₹${n}`;
+    }
+  };
+
+  const availableFilters = useMemo(() => {
+    const set = new Set(["all", "bestseller", "new", "deals"]);
+    products.forEach((p) => {
+      if (p.badge) set.add(String(p.badge).toLowerCase());
+      (p.tags || []).forEach((t) => set.add(String(t).toLowerCase()));
+    });
+    return [...set];
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    let list = [...products];
+    if (activeFilter !== "all") {
+      list = list.filter((p) => {
+        const tags = (p.tags || []).map((t) => String(t).toLowerCase());
+        const badge = String(p.badge || "").toLowerCase();
+        if (activeFilter === "deals") return calcDiscount(p) >= 20;
+        return tags.includes(activeFilter) || badge === activeFilter;
+      });
+    }
+    switch (sortBy) {
+      case "priceLow":
+        list.sort((a, b) => (a.price || 0) - (b.price || 0));
+        break;
+      case "priceHigh":
+        list.sort((a, b) => (b.price || 0) - (a.price || 0));
+        break;
+      case "rating":
+        list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case "new":
+        list.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+        break;
+      default:
+        break;
+    }
+    return list;
+  }, [products, activeFilter, sortBy]);
+
+  const Skeleton = () => (
+    <div
+      className="rounded-2xl border p-6 animate-pulse bg-white shadow-sm"
+      style={{
+        borderColor: BRAND.light,
+      }}
+    >
+      <div className="h-56 rounded-xl bg-gray-200 mb-5" />
+      <div className="h-5 rounded bg-gray-200 mb-3 w-3/4" />
+      <div className="h-4 rounded bg-gray-100 mb-6 w-5/6" />
+      <div className="h-10 rounded-xl bg-gray-100" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#01abfd]/5 to-[#2e8b57]/5 py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto">
+      {/* Clean Hero Section */}
+      <section className="pt-20 pb-10 bg-gradient-to-br from-blue-50 to-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-4xl mx-auto">
             <motion.h1
-              className="text-5xl md:text-6xl font-bold text-[#0f1f2e] mb-6"
-              initial={{ opacity: 0, y: 20 }}
+              className="font-bold text-5xl lg:text-6xl mb-6"
+              style={{ color: BRAND.dark }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
             >
               Divine Krishna Collection
             </motion.h1>
+
             <motion.p
-              className="text-xl text-[#0189d1] mb-8"
+              className="text-lg lg:text-xl leading-relaxed mb-8"
+              style={{ color: BRAND.gray }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
             >
-              Discover sacred items blessed with divine energy
+              Discover premium spiritual items blessed with{" "}
+              <span className="font-semibold" style={{ color: BRAND.primary }}>
+                sacred energy
+              </span>{" "}
+              to deepen your devotion.
             </motion.p>
 
+            {/* Clean Trust Badges */}
             <motion.div
-              className="flex flex-wrap justify-center gap-4"
+              className="flex flex-wrap justify-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                ✨ Blessed Items
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                🚚 Free Shipping $50+
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                🔒 Secure Checkout
-              </span>
-              <span className="bg-white px-6 py-3 rounded-full text-sm font-medium text-[#0f1f2e] shadow-sm">
-                ⭐ 4.8/5 Rating
-              </span>
+              {[
+                "🕉️ Blessed & Authentic",
+                "🚚 Free Shipping ₹999+",
+                "🔒 Secure Checkout",
+                "⭐ Loved by Devotees",
+              ].map((t, i) => (
+                <motion.span
+                  key={i}
+                  className="px-4 py-2 rounded-full border text-sm font-medium bg-white shadow-sm"
+                  style={{
+                    borderColor: BRAND.light,
+                    color: BRAND.dark,
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    y: -2,
+                    boxShadow: "0 4px 12px rgba(30, 64, 175, 0.15)",
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + i * 0.1 }}
+                >
+                  {t}
+                </motion.span>
+              ))}
             </motion.div>
           </div>
+
+          {/* Clean Filter Bar */}
+          <motion.div
+            className="mt-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <div className="sticky top-16 z-20">
+              {/* Mobile Filter Toggle */}
+              <div className="md:hidden mb-4">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl border bg-white shadow-sm"
+                  style={{
+                    borderColor: BRAND.light,
+                    color: BRAND.dark,
+                  }}
+                >
+                  <span className="font-semibold">Filters & Sort</span>
+                  <motion.span
+                    animate={{ rotate: showFilters ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    ↓
+                  </motion.span>
+                </button>
+              </div>
+
+              {/* Filter Content */}
+              <AnimatePresence>
+                {(showFilters || window.innerWidth >= 768) && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-xl border bg-white shadow-sm px-6 py-4"
+                      style={{
+                        borderColor: BRAND.light,
+                      }}
+                    >
+                      {/* Filters */}
+                      <div className="flex flex-wrap gap-2">
+                        {availableFilters.map((f) => {
+                          const active = activeFilter === f;
+                          return (
+                            <motion.button
+                              key={f}
+                              onClick={() => setActiveFilter(f)}
+                              className="px-4 py-2 rounded-full text-sm font-semibold transition-all border"
+                              style={{
+                                background: active ? BRAND.primary : "white",
+                                color: active ? "white" : BRAND.dark,
+                                borderColor: active
+                                  ? BRAND.primary
+                                  : BRAND.light,
+                              }}
+                              whileHover={{
+                                scale: 1.05,
+                                backgroundColor: active
+                                  ? BRAND.dark
+                                  : BRAND.lightGray,
+                              }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              {f === "all"
+                                ? "All"
+                                : f
+                                    .replace(/_/g, " ")
+                                    .replace(/\b\w/g, (m) => m.toUpperCase())}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Sort */}
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="text-sm font-medium"
+                          style={{ color: BRAND.gray }}
+                        >
+                          Sort:
+                        </span>
+                        <select
+                          value={sortBy}
+                          onChange={(e) => setSortBy(e.target.value)}
+                          className="border text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:border-transparent bg-white"
+                          style={{
+                            minWidth: "140px",
+                            borderColor: BRAND.light,
+                            color: BRAND.dark,
+                            focusRingColor: BRAND.primary,
+                          }}
+                        >
+                          <option value="featured">Featured</option>
+                          <option value="new">New Arrivals</option>
+                          <option value="rating">Top Rated</option>
+                          <option value="priceLow">Price: Low to High</option>
+                          <option value="priceHigh">Price: High to Low</option>
+                        </select>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section className="py-20 px-4">
+      {/* Clean Products Grid */}
+      <section className="pb-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {products.map((product, index) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                onHoverStart={() => setHoveredProduct(product._id)}
-                onHoverEnd={() => setHoveredProduct(null)}
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <Skeleton key={i} />
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <motion.div
+              className="text-center py-20"
+              style={{ color: BRAND.gray }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div className="text-6xl mb-4">🔍</div>
+              <h3
+                className="text-2xl font-bold mb-2"
+                style={{ color: BRAND.dark }}
               >
-                <Link to={`/product/${product._id}`}>
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
-                    <div className="relative">
-                      {/* Product Image Container */}
-                      <div className="aspect-[4/3] bg-gradient-to-br from-[#f9fbfd] to-[#eec6d3]/10 p-8 relative overflow-hidden">
-                        {/* Discount Badge: you can calculate or store discount on backend */}
-                        {product.originalPrice && product.price && (
-                          <div className="absolute top-4 left-4 bg-[#2e8b57] text-white px-3 py-1 rounded-full text-sm font-bold">
-                            -
-                            {Math.round(
-                              100 * (1 - product.price / product.originalPrice)
-                            )}
-                            %
-                          </div>
-                        )}
-
-                        {/* Product Badge (optional, e.g., if bestseller) */}
-                        {product.badge && (
-                          <div className="absolute top-4 right-4 bg-[#f4c430] text-[#0f1f2e] px-3 py-1 rounded-full text-xs font-bold uppercase">
-                            {product.badge}
-                          </div>
-                        )}
-
-                        {/* Product Image or Video */}
-                        {/* If video exists, show play icon overlay */}
-                        {product.images && product.images.length > 0 ? (
-                          <motion.img
-                            src={getMediaUrl(product.images[0])}
-                            alt={product.title}
-                            className="w-full h-full object-contain"
-                            animate={{
-                              scale: hoveredProduct === product._id ? 1.1 : 1,
-                              rotate: hoveredProduct === product._id ? 5 : 0,
+                No products found
+              </h3>
+              <p>Try adjusting your filters or check back soon!</p>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((p, index) => {
+                const discount = calcDiscount(p);
+                const inWishlist = wishlist.has(p._id);
+                return (
+                  <motion.div
+                    key={p._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ delay: index * 0.1, duration: 0.6 }}
+                    onHoverStart={() => setHovered(p._id)}
+                    onHoverEnd={() => setHovered(null)}
+                    className="rounded-2xl overflow-hidden border bg-white group cursor-pointer shadow-sm hover:shadow-lg transition-all duration-300"
+                    style={{
+                      borderColor: BRAND.light,
+                    }}
+                    whileHover={{
+                      y: -8,
+                      scale: 1.02,
+                    }}
+                  >
+                    {/* Clean Image Area */}
+                    <div className="relative aspect-[4/3] p-6 bg-gray-50">
+                      {/* Badges */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+                        {discount > 0 && (
+                          <motion.span
+                            className="px-3 py-1 rounded-full text-xs font-bold text-white"
+                            style={{
+                              backgroundColor: BRAND.primary,
                             }}
-                            transition={{ duration: 0.5 }}
-                          />
-                        ) : product.videos && product.videos.length > 0 ? (
-                          <div className="relative w-full h-full flex items-center justify-center">
-                            <video
-                              src={getMediaUrl(product.videos[0])}
-                              className="w-full h-full object-contain"
-                              autoPlay={false}
-                              controls={false}
-                              muted
-                              loop
-                            />
-                            <span className="absolute inset-0 flex items-center justify-center text-4xl text-white opacity-80">
-                              ▶️
-                            </span>
-                          </div>
-                        ) : (
-                          <img
-                            src={placeholderImg}
-                            alt="placeholder"
-                            className="w-full h-full object-contain"
-                          />
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: index * 0.1 + 0.3 }}
+                          >
+                            -{discount}%
+                          </motion.span>
+                        )}
+                        {p.badge && (
+                          <span
+                            className="px-3 py-1 rounded-full text-xs font-bold uppercase border bg-white"
+                            style={{
+                              borderColor: BRAND.light,
+                              color: BRAND.dark,
+                            }}
+                          >
+                            {p.badge}
+                          </span>
                         )}
                       </div>
 
-                      {/* Product Info */}
-                      <div className="p-6">
-                        <div className="mb-4">
-                          <h3 className="text-xl font-bold text-[#0f1f2e] mb-2 line-clamp-1">
-                            {product.title}
-                          </h3>
-                          <p className="text-[#0189d1] text-sm line-clamp-2">
-                            {product.desc}
-                          </p>
-                        </div>
+                      {/* Clean Wishlist Button */}
+                      <motion.button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToWishlist(p._id);
+                        }}
+                        className="absolute top-4 right-4 w-10 h-10 rounded-full border flex items-center justify-center bg-white z-10"
+                        style={{
+                          borderColor: BRAND.light,
+                          color: inWishlist ? BRAND.primary : BRAND.gray,
+                        }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <motion.span
+                          animate={{ scale: inWishlist ? [1, 1.3, 1] : 1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {inWishlist ? "♥" : "♡"}
+                        </motion.span>
+                      </motion.button>
 
-                        {/* Rating */}
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <span
-                                key={i}
-                                className={`text-sm ${
-                                  i < Math.floor(product.rating)
-                                    ? "text-[#f4c430]"
-                                    : "text-gray-300"
-                                }`}
-                              >
-                                ★
-                              </span>
-                            ))}
-                          </div>
-                          <span className="text-sm text-gray-500">
-                            (
-                            {product.numReviews || product.reviews?.length || 0}
-                            )
-                          </span>
-                        </div>
+                      {/* Product Image */}
+                      <motion.img
+                        src={
+                          firstImage(p)
+                            ? getMediaUrl(firstImage(p))
+                            : placeholderImg
+                        }
+                        alt={p.title}
+                        className="w-full h-full object-contain"
+                        animate={{
+                          scale: hovered === p._id ? 1.05 : 1,
+                        }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        loading="lazy"
+                      />
+                    </div>
 
-                        {/* Price and Action */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl font-bold text-[#2e8b57]">
-                              ${product.price}
+                    {/* Clean Product Info */}
+                    <div className="px-6 pb-6">
+                      <h3
+                        className="text-xl font-bold mb-1 line-clamp-1"
+                        style={{ color: BRAND.dark }}
+                      >
+                        {p.title}
+                      </h3>
+                      <p
+                        className="text-sm line-clamp-2 mb-3 leading-relaxed"
+                        style={{ color: BRAND.gray }}
+                      >
+                        {p.desc}
+                      </p>
+
+                      {/* Clean Rating */}
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="flex">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              className={`text-base ${
+                                i < Math.round(p.rating || 0)
+                                  ? "text-amber-400"
+                                  : "text-gray-200"
+                              }`}
+                            >
+                              ★
                             </span>
-                            <span className="text-sm text-gray-400 line-through">
-                              ${product.originalPrice}
-                            </span>
-                          </div>
+                          ))}
+                        </div>
+                        <span className="text-xs" style={{ color: BRAND.gray }}>
+                          ({p.numReviews || p.reviews?.length || 0})
+                        </span>
+                      </div>
 
-                          <motion.button
-                            className="bg-[#01abfd] text-white px-6 py-3 rounded-full font-medium hover:bg-[#0189d1] transition-colors"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                      {/* Clean Price & CTAs */}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-baseline gap-2">
+                          <span
+                            className="text-2xl font-bold"
+                            style={{ color: BRAND.primary }}
                           >
-                            View Details
+                            {formatPrice(p.price)}
+                          </span>
+                          {p.originalPrice && (
+                            <span
+                              className="text-sm line-through"
+                              style={{ color: BRAND.gray }}
+                            >
+                              {formatPrice(p.originalPrice)}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <motion.button
+                            className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold text-white"
+                            style={{
+                              backgroundColor: BRAND.primary,
+                            }}
+                            whileHover={{
+                              scale: 1.02,
+                              backgroundColor: BRAND.dark,
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/product/${p._id}?buy=1`);
+                            }}
+                          >
+                            Buy Now
+                          </motion.button>
+                          <motion.button
+                            className="flex-1 px-3 py-2 rounded-lg text-sm font-semibold border bg-white"
+                            style={{
+                              borderColor: BRAND.light,
+                              color: BRAND.dark,
+                            }}
+                            whileHover={{
+                              scale: 1.02,
+                              backgroundColor: BRAND.lightGray,
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/product/${p._id}`);
+                            }}
+                          >
+                            View
                           </motion.button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="bg-[#f9fbfd] py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
+      {/* Clean Assurance Section */}
+      <section className="pb-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             {[
               {
                 icon: "🚚",
                 title: "Free Shipping",
-                desc: "Orders over $50",
-                color: "from-[#01abfd]/10 to-[#0189d1]/10",
+                desc: "Across India on ₹999+",
               },
               {
-                icon: "📞",
-                title: "Support 24/7",
-                desc: "Contact us anytime",
-                color: "from-[#2e8b57]/10 to-[#2e8b57]/20",
+                icon: "🪔",
+                title: "Blessed & Authentic",
+                desc: "Spiritually energized",
               },
-              {
-                icon: "🔄",
-                title: "30 Days Return",
-                desc: "Money back guarantee",
-                color: "from-[#f4c430]/10 to-[#f4c430]/20",
-              },
+              { icon: "🔄", title: "Easy Returns", desc: "30‑day policy" },
               {
                 icon: "🔒",
-                title: "Payment Secure",
-                desc: "100% secure payment",
-                color: "from-[#eec6d3]/20 to-[#eec6d3]/30",
+                title: "Secure Payments",
+                desc: "UPI / Cards / Netbanking",
               },
-            ].map((feature, index) => (
+            ].map((f, i) => (
               <motion.div
-                key={index}
-                className={`bg-gradient-to-br ${feature.color} p-8 rounded-2xl`}
+                key={i}
+                className="rounded-xl p-6 text-center border bg-white group"
+                style={{
+                  borderColor: BRAND.light,
+                }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                whileHover={{
+                  scale: 1.05,
+                  y: -5,
+                  boxShadow: "0 4px 12px rgba(30, 64, 175, 0.15)",
+                }}
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="font-bold text-[#0f1f2e] mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-gray-600">{feature.desc}</p>
+                <motion.div
+                  className="text-3xl mb-2"
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {f.icon}
+                </motion.div>
+                <div
+                  className="font-bold text-base mb-1"
+                  style={{ color: BRAND.dark }}
+                >
+                  {f.title}
+                </div>
+                <div
+                  className="text-sm leading-relaxed"
+                  style={{ color: BRAND.gray }}
+                >
+                  {f.desc}
+                </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

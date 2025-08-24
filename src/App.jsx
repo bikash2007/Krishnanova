@@ -6,9 +6,9 @@ import useScrollAnimation from "./hooks/useScrollAnimation";
 // Utils
 import { createParticle } from "./utils/animations";
 import Navigation from "./components/Navigation/Navigation";
-import Hero from "./components/Hero/Hero";
+
 import Mission from "./components/Mission/Mission";
-import Products from "./components/Products/Products";
+
 import KrishnaNames from "./components/KrishnaNames/KrishnaNames";
 
 import Community from "./components/Community/Community";
@@ -27,6 +27,8 @@ import {
 import { useLocation } from "react-router-dom";
 import WisdomPortalPath from "./components/WisdomPortal/WisdomPortalPath";
 import CarouselSlider from "./components/Products/CarouselSlider";
+import HeroLegacy from "./components/Hero/HeroLegacy";
+import LuckyKrishna from "./components/FloatingKrishna";
 
 const App = () => {
   useScrollAnimation();
@@ -84,15 +86,17 @@ const App = () => {
 
   return (
     <div className="app">
-      <ScrollToHash />
+      {/* <ScrollToHash /> */}
       <MusicPlayer />
       <Navigation />
+      <LuckyKrishna />
 
       {/* Add the correct IDs below 👇 */}
       <div id="home">
-        <Hero />
+        <HeroLegacy />
       </div>
-      <div className="min-h-screen bg-gradient-to-br from-[#1D3485] via-[#390ebb] to-[#60a5fa] relative pb-12  overflow-hidden">
+      <div className=" main min-h-screen bg-white relative   overflow-hidden">
+        <div id="blurry "></div>
         <div id="products">
           {/* <Products /> */}
           <CarouselSlider />
@@ -128,7 +132,7 @@ const App = () => {
         </div>
 
         {/* 🌟 Main Content */}
-        <div id="wisdom" className="relative z-10 space-y-20">
+        <div id="wisdom" className="relative z-10 ">
           <LotusSVG className="absolute w-32 opacity-8 bottom-15 left-1/4 animate-float-slow" />
           <WisdomPortalPath />
           <div id="community">

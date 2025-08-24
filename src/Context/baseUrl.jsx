@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 const ApiContext = createContext(null); // <-- No default value
 
 export const ApiProvider = ({ children }) => {
-  const base_url = "http://localhost:5000";
+  const base_url = "https://krishnanova-backend.onrender.com";
   return <ApiContext.Provider value={base_url}>{children}</ApiContext.Provider>;
 };
 

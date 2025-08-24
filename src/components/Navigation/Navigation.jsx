@@ -6,6 +6,8 @@ import { FaShoppingBag, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useApi } from "../../Context/baseUrl";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../../Context/CartContext";
+import logo from "../../../public/logo.png";
+import Krishnova from "../../../public/krishnova.png";
 
 // Section nav items (scroll)
 const sectionNavItems = [
@@ -13,6 +15,7 @@ const sectionNavItems = [
   { id: "products", label: "Products" },
   { id: "wisdom", label: "Wisdom Portal" },
   { id: "community", label: "Community" },
+  { id: "festival", label: "Festivals" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -31,6 +34,8 @@ export default function Navigation() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [isHovered, setIsHovered] = useState(false);
+  const [buyButtonHovered, setBuyButtonHovered] = useState(false);
+  const [cartButtonHovered, setCartButtonHovered] = useState(false);
   const avatarRef = useRef(null);
   const navRef = useRef(null);
   const navigate = useNavigate();
@@ -152,14 +157,15 @@ export default function Navigation() {
         />
 
         <div className="mx-auto flex justify-between items-center px-4 sm:px-6 md:px-12 relative z-10">
-          {/* Logo */}
           <motion.button
             onClick={() => scrollToSection("home")}
-            className="font-playfair text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#f5d26c] to-[#ee6aa7] bg-clip-text text-transparent relative flex-shrink-0"
+            className="font-playfair text-xl flex gap-3 sm:text-2xl items-center justify-center md:text-3xl font-bold bg-gradient-to-r from-[#f5d26c] to-[#ee6aa7] bg-clip-text text-transparent relative flex-shrink-0"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Krishnova
+            {/* <img src={logo} className="h-9" alt="" /> */}
+            <img src={Krishnova} className="h-6" alt="" />
+            {/* Krishnova */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#f5d26c] to-[#ee6aa7] opacity-0 hover:opacity-20 blur-lg transition-opacity duration-300 -z-10 hidden md:block" />
           </motion.button>
 
@@ -186,43 +192,83 @@ export default function Navigation() {
 
           {/* Right Side: Cart + BUY + Auth/avatar */}
           <div className="flex gap-2 sm:gap-3 md:gap-4 items-center">
-            {/* Cart Icon */}
-            <Link to="/cart" className="relative group p-2 md:p-0">
-              <FaShoppingCart className="text-[#01abfd] text-xl md:text-2xl transition-transform duration-200 group-hover:scale-110" />
+            {/* Cart Icon - Enhanced with hero button style */}
+            {/* Cart Icon - Enhanced with hero button style */}
+            <Link
+              to="/cart"
+              className="
+    hero-enhanced-button interactive
+    relative p-2 md:p-3 rounded-full
+    transition-all duration-300 hover:-translate-y-1 hover:scale-110
+    overflow-hidden
+  "
+              onMouseEnter={() => setCartButtonHovered(true)}
+              onMouseLeave={() => setCartButtonHovered(false)}
+            >
+              {/* Shimmer sweep */}
+              <span className="pointer-events-none absolute inset-0 -translate-x-[120%] skew-x-[-20deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent)] animate-shimmer" />
+
+              {/* Ripple effect on hover */}
+              {cartButtonHovered && (
+                <span
+                  className="
+      absolute inset-0 rounded-full
+      bg-gradient-to-r from-transparent via-white to-transparent
+      opacity-20 animate-ping
+    "
+                />
+              )}
+
+              <FaShoppingCart className="relative z-10 text-white text-xl md:text-sm" />
               {cart.length > 0 && (
-                <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-[#f4c430] text-[#0f1f2e] text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center leading-none">
+                <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-[#f4c430] text-[#0f1f2e] text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[18px] text-center leading-none z-20">
                   {cart.reduce((sum, i) => sum + i.quantity, 0)}
                 </span>
               )}
             </Link>
 
-            {/* BUY Button - Fixed hover issue */}
-            <motion.div className="relative">
-              <Link
-                to="/productpage"
-                className="relative px-3 sm:px-4 md:px-6 py-2 rounded-full bg-gradient-to-r from-[#01abfd] to-[#2e8b57] text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-1 sm:gap-2 font-semibold text-sm md:text-base group/buylink overflow-hidden"
+            {/* BUY Button - Enhanced with hero button style */}
+            <Link
+              to="/productpage"
+              className="
+    hero-enhanced-button interactive
+    relative px-3 sm:px-4 md:px-6 py-2 rounded-full
+    text-white shadow-xl transition-all duration-300
+    hover:-translate-y-1 hover:scale-105
+    flex items-center gap-1 sm:gap-2 font-semibold text-sm md:text-base
+    overflow-hidden
+  "
+              onMouseEnter={() => setBuyButtonHovered(true)}
+              onMouseLeave={() => setBuyButtonHovered(false)}
+            >
+              {/* Shimmer sweep */}
+              <span className="pointer-events-none absolute inset-0 -translate-x-[120%] skew-x-[-20deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent)] animate-shimmer" />
+
+              {/* Ripple effect on hover */}
+              {buyButtonHovered && (
+                <span
+                  className="
+      absolute inset-0 rounded-full
+      bg-gradient-to-r from-transparent via-white to-transparent
+      opacity-20 animate-ping
+    "
+                />
+              )}
+
+              {/* Icon with hover animation */}
+              <motion.div
+                whileHover={{ rotate: 15, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="flex-shrink-0 relative z-10"
               >
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 -top-10 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 opacity-0 group-hover/buylink:opacity-100 group-hover/buylink:animate-pulse transition-opacity duration-300" />
+                <FaShoppingBag size={14} className="md:w-4 md:h-4" />
+              </motion.div>
 
-                {/* Icon with hover animation */}
-                <motion.div
-                  whileHover={{ rotate: 15, scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="flex-shrink-0"
-                >
-                  <FaShoppingBag size={14} className="md:w-4 md:h-4" />
-                </motion.div>
+              {/* Text */}
+              <span className="relative z-10 whitespace-nowrap">BUY</span>
+            </Link>
 
-                {/* Text */}
-                <span className="relative z-10 whitespace-nowrap">BUY</span>
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0189d1] to-[#2e8b57] opacity-0 group-hover/buylink:opacity-100 transition-opacity duration-300 rounded-full" />
-              </Link>
-            </motion.div>
-
-            {/* Login Button */}
+            {/* Login Button - Keep original style */}
             {!loading && !user && (
               <motion.div className="relative">
                 <Link
@@ -234,7 +280,7 @@ export default function Navigation() {
               </motion.div>
             )}
 
-            {/* User Avatar/Dropdown */}
+            {/* User Avatar/Dropdown - Keep original style */}
             {!loading && user && (
               <div className="relative">
                 <motion.button
@@ -343,7 +389,7 @@ export default function Navigation() {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Keep original style */}
             <motion.button
               onClick={() => setMenuOpen((v) => !v)}
               className="lg:hidden text-[#01abfd] focus:outline-none relative group/mobile p-2"
@@ -379,7 +425,7 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Keep original style */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
