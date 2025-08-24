@@ -197,7 +197,7 @@ export default function Signup() {
       case 2:
         return "bg-yellow-500";
       case 3:
-        return "bg-blue-500";
+        return "bg-indigo-500";
       case 4:
         return "bg-green-500";
       default:

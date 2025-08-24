@@ -28,9 +28,9 @@ const statusConfig = {
     icon: FaClock,
   },
   shipped: {
-    color: "from-blue-400 to-blue-600",
-    bgColor: "bg-blue-50 border-blue-200",
-    textColor: "text-blue-700",
+    color: "from-indigo-400 to-indigo-600",
+    bgColor: "bg-indigo-50 border-indigo-200",
+    textColor: "text-indigo-700",
     icon: FaTruck,
   },
   delivered: {
@@ -122,9 +122,9 @@ const OrderDetailModal = ({ order, isOpen, onClose }) => {
           <div className="p-8">
             {/* Order Summary */}
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200">
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-6 border border-indigo-200">
                 <div className="flex items-center mb-3">
-                  <FaCalendarAlt className="text-blue-600 mr-3" />
+                  <FaCalendarAlt className="text-indigo-600 mr-3" />
                   <h3 className="font-semibold text-gray-900">Order Date</h3>
                 </div>
                 <p className="text-gray-700 font-medium">
@@ -259,8 +259,8 @@ const OrderCard = ({ order, index, onViewDetails }) => {
         {/* Order Summary */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
-            <div className="bg-blue-100 p-3 rounded-full">
-              <FaShoppingBag className="text-blue-600" size={20} />
+            <div className="bg-indigo-100 p-3 rounded-full">
+              <FaShoppingBag className="text-indigo-600" size={20} />
             </div>
             <div>
               <p className="text-gray-600 text-sm">Total Amount</p>
@@ -328,7 +328,7 @@ const OrderCard = ({ order, index, onViewDetails }) => {
         <div className="flex space-x-3">
           <button
             onClick={() => onViewDetails(order)}
-            className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center space-x-2 group"
+            className="flex-1 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 flex items-center justify-center space-x-2 group"
           >
             <FaEye className="group-hover:scale-110 transition-transform duration-200" />
             <span>View Details</span>
@@ -361,7 +361,7 @@ const EmptyState = () => (
     </p>
     <motion.a
       href="/productpage"
-      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-2xl font-semibold hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -422,7 +422,7 @@ export default function MyOrders() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mx-auto mb-4"></div>
           <p className="text-gray-600 text-lg">Loading your orders...</p>
         </div>
       </div>
@@ -461,7 +461,7 @@ export default function MyOrders() {
                     placeholder="Search orders or items..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200"
                   />
                 </div>
                 <div className="relative">
@@ -469,7 +469,7 @@ export default function MyOrders() {
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="pl-12 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 bg-white"
+                    className="pl-12 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all duration-200 bg-white"
                   >
                     <option value="all">All Status</option>
                     <option value="processing">Processing</option>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 // Hooks
-import useScrollAnimation from "./hooks/useScrollAnimation";
+import useSmoothScroll from "./hooks/useSmoothScroll";
 
 // Utils
 import Navigation from "./components/Navigation/Navigation";
@@ -21,7 +21,7 @@ import WisdomPortalPath from "./components/WisdomPortal/WisdomPortalPath";
 import FloatingKrishna from "./components/FloatingKrishna";
 
 const App = () => {
-  useScrollAnimation();
+  useSmoothScroll();
 
   const location = useLocation();
 

@@ -27,8 +27,8 @@ const WisdomPortalPath = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Brain className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+              <Brain className="w-5 h-5 text-indigo-600" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               Sacred Wisdom Coming Soon
@@ -36,9 +36,9 @@ const WisdomPortalPath = () => {
           </div>
           
           <p className="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed">
-            Our <span className="text-blue-600 font-semibold">GPT Gita</span> integration launches in{" "}
+            Our <span className="text-indigo-600 font-semibold">GPT Gita</span> integration launches in{" "}
             <span className="text-orange-600 font-bold">2 days!</span> Ask Krishna any question & receive personalized wisdom from the{" "}
-            <span className="text-blue-600 font-semibold">Bhagavad Gita</span>.
+            <span className="text-indigo-600 font-semibold">Bhagavad Gita</span>.
           </p>
           
           <div className="flex items-center justify-center gap-2 mt-3">
@@ -55,9 +55,9 @@ const WisdomPortalPath = () => {
               icon: Brain,
               title: "AI-Powered",
               description: "Advanced GPT technology for personalized responses",
-              bgColor: "bg-blue-50",
-              iconColor: "text-blue-600",
-              borderColor: "border-blue-200"
+              bgColor: "bg-indigo-50",
+              iconColor: "text-indigo-600",
+              borderColor: "border-indigo-200"
             },
             {
               icon: Clock,
@@ -99,14 +99,14 @@ const WisdomPortalPath = () => {
         {/* Additional Features */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <motion.div
-            className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-200"
+            className="bg-gradient-to-r from-indigo-50 to-indigo-50 rounded-xl p-5 border border-indigo-200"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-3 mb-3">
-              <Zap className="w-5 h-5 text-blue-600" />
+              <Zap className="w-5 h-5 text-indigo-600" />
               <h4 className="text-lg font-semibold text-gray-900">Instant Wisdom</h4>
             </div>
             <p className="text-gray-600 leading-relaxed">
@@ -141,7 +141,7 @@ const WisdomPortalPath = () => {
         >
           <Link to="/wishdomportal">
             <motion.button
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

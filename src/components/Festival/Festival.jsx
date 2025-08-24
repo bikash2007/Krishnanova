@@ -97,7 +97,7 @@ const Festival = () => {
             onClick={() => eventForDay && setModalEvent(eventForDay)}
             className={`flex items-center justify-center h-14 cursor-pointer text-sm font-medium rounded-md transition
               ${!isCurrentMonth ? "text-gray-400" : ""}
-              ${isToday ? "bg-blue-500 text-white" : ""}
+              ${isToday ? "bg-indigo-500 text-white" : ""}
               ${
                 eventForDay && !isToday
                   ? "bg-green-200 text-green-900 hover:bg-green-300"
@@ -144,7 +144,7 @@ const Festival = () => {
       <div className="absolute inset-0 bg-[url('/dots.svg')] opacity-10 z-0"></div>
 
       {/* animated blobs */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse z-0"></div>
+      <div className="absolute -top-20 -left-20 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse z-0"></div>
       <div className="absolute top-20 right-0 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-ping z-0"></div>
 
       <div className="relative z-10 max-w-xl mx-auto overflow-hidden bg-white/50 backdrop-blur-2xl rounded-lg ">
@@ -166,14 +166,14 @@ Festival Calendar
 
           {closestEvent && (
             <div className="mb-6 text-center">
-              <h3 className="text-2xl text-blue-600 font-bold mb-2 bg-white/40 backdrop-blur-3xl rounded-xl py-2 ">
+              <h3 className="text-2xl text-indigo-600 font-bold mb-2 bg-white/40 backdrop-blur-3xl rounded-xl py-2 ">
 Upcoming Event: {closestEvent.name}
               </h3>
               <p className="text-gray-500">
                 {closestEvent.description} —{" "}
                 {format(parseISO(closestEvent.date), "MMMM do")}
               </p>
-              <div className="text-3xl mt-1 text-blue-600 font-bold ">
+              <div className="text-3xl mt-1 text-indigo-600 font-bold ">
                 {countdown}
               </div>
             </div>
@@ -228,13 +228,13 @@ Upcoming Event: {closestEvent.name}
             onClick={(e) => e.stopPropagation()}
             className="bg-white text-gray-700 p-6 rounded-xl max-w-md w-full shadow-lg animate-scale-up"
           >
-            <h3 className="text-2xl text-blue-600">{modalEvent.name}</h3>
+            <h3 className="text-2xl text-indigo-600">{modalEvent.name}</h3>
             <p className="mt-2">{modalEvent.description}</p>
             <p className="mt-1 text-gray-500">
               {format(parseISO(modalEvent.date), "MMMM do yyyy")}
             </p>
             <button
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600"
               onClick={() => setModalEvent(null)}
             >
               Close

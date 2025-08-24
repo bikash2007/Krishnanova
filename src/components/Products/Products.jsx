@@ -32,7 +32,7 @@ const Products = () => {
       <section className="py-8">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex justify-center items-center h-32">
-            <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin"></div>
           </div>
         </div>
       </section>
@@ -50,7 +50,7 @@ const Products = () => {
           className="text-center mb-8"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Package className="w-6 h-6 text-blue-500" />
+            <Package className="w-6 h-6 text-indigo-500" />
             <SectionTitle>Sacred Products</SectionTitle>
           </div>
           
@@ -82,7 +82,7 @@ const Products = () => {
         >
           <Link 
             to="/productpage" 
-            className="inline-flex items-center gap-3 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+            className="inline-flex items-center gap-3 px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors font-medium"
           >
             <span>Explore All Sacred Items</span>
             <ArrowRight className="w-5 h-5" />

@@ -17,8 +17,8 @@ const Meditation = () => {
         {/* Main Meditation Card */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Heart className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <Heart className="w-5 h-5 text-indigo-600" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800">
               Daily Krishna Meditation
@@ -32,12 +32,12 @@ const Meditation = () => {
           </p>
 
           {/* Prayer Section */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+          <div className="bg-gradient-to-br from-indigo-50 to-indigo-50 rounded-xl p-4 border border-indigo-100">
             <div className="flex items-center gap-3 mb-3">
               <Sun className="w-4 h-4 text-yellow-500" />
               <h4 className="text-lg font-semibold text-gray-800">Morning Prayer</h4>
             </div>
-            <div className="bg-white rounded-lg p-3 border border-blue-200">
+            <div className="bg-white rounded-lg p-3 border border-indigo-200">
               <p className="text-gray-700 italic text-center leading-relaxed">
                 "Hare Krishna, Hare Krishna, Krishna Krishna, Hare Hare
                 <br />
@@ -78,7 +78,7 @@ const Meditation = () => {
 
         {/* Call to Action */}
         <div className="text-center mt-6">
-          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow">
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow">
             <Heart className="w-4 h-4" />
             <span className="font-medium">Begin Your Practice</span>
             <Heart className="w-4 h-4" />

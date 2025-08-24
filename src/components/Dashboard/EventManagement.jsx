@@ -43,7 +43,7 @@ const EventCard = memo(({ event, onEdit, onDelete, index }) => {
     >
       {/* Status Badge */}
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
           {event.name}
         </h3>
         <span
@@ -60,7 +60,7 @@ const EventCard = memo(({ event, onEdit, onDelete, index }) => {
       {/* Event Details */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center text-gray-600">
-          <FaCalendarAlt className="w-4 h-4 mr-3 text-blue-500" />
+          <FaCalendarAlt className="w-4 h-4 mr-3 text-indigo-500" />
           <span className="text-sm">{formatEventDate(event.date)}</span>
         </div>
 
@@ -86,7 +86,7 @@ const EventCard = memo(({ event, onEdit, onDelete, index }) => {
       <div className="flex justify-end space-x-2">
         <button
           onClick={() => onEdit(event)}
-          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
           title="Edit event"
         >
           <FaEdit size={14} />
@@ -106,7 +106,7 @@ const EventCard = memo(({ event, onEdit, onDelete, index }) => {
 // **Performance Optimization: Memoized Loading Component**
 const LoadingSpinner = memo(() => (
   <div className="flex justify-center items-center py-12">
-    <FaSpinner className="animate-spin text-blue-500 text-2xl mr-3" />
+    <FaSpinner className="animate-spin text-indigo-500 text-2xl mr-3" />
     <span className="text-gray-600">Loading events...</span>
   </div>
 ));
@@ -114,8 +114,8 @@ const LoadingSpinner = memo(() => (
 // **Performance Optimization: Memoized Empty State**
 const EmptyState = memo(({ onAddEvent }) => (
   <div className="text-center py-16">
-    <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
-      <FaCalendarAlt className="text-blue-500" size={32} />
+    <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
+      <FaCalendarAlt className="text-indigo-500" size={32} />
     </div>
     <h3 className="text-xl font-bold text-gray-900 mb-2">No Events Yet</h3>
     <p className="text-gray-600 mb-6">
@@ -123,7 +123,7 @@ const EmptyState = memo(({ onAddEvent }) => (
     </p>
     <button
       onClick={onAddEvent}
-      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
+      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200"
     >
       <FaPlus className="mr-2" />
       Create First Event
@@ -279,7 +279,7 @@ export default function EventManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -296,7 +296,7 @@ export default function EventManagement() {
 
           <button
             onClick={openAddModal}
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <FaPlus className="mr-2" />
             Add New Event
@@ -360,7 +360,7 @@ export default function EventManagement() {
                       name="name"
                       value={formData.name}
                       onChange={handleFormChange}
-                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                       required
                     />
                   </div>
@@ -374,7 +374,7 @@ export default function EventManagement() {
                       name="date"
                       value={formData.date}
                       onChange={handleFormChange}
-                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                       required
                     />
                   </div>
@@ -388,7 +388,7 @@ export default function EventManagement() {
                       name="location"
                       value={formData.location}
                       onChange={handleFormChange}
-                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
                     />
                   </div>
 
@@ -401,7 +401,7 @@ export default function EventManagement() {
                       value={formData.description}
                       onChange={handleFormChange}
                       rows={4}
-                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                      className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
                       required
                     />
                   </div>
@@ -417,7 +417,7 @@ export default function EventManagement() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold disabled:opacity-50"
+                      className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold disabled:opacity-50"
                     >
                       {submitting
                         ? "Saving..."

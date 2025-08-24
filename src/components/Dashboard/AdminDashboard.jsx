@@ -310,7 +310,7 @@ export default function AdminDashboard() {
                 />
               </svg>
             }
-            color="from-blue-400 to-cyan-500"
+            color="from-indigo-400 to-cyan-500"
             delay={200}
           />
           <StatCard
@@ -469,7 +469,7 @@ export default function AdminDashboard() {
                 <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707L16 7.586A1 1 0 0015.414 7H14z" />
               </svg>
             }
-            color="from-blue-400 to-indigo-500"
+            color="from-indigo-400 to-indigo-500"
             delay={200}
           />
           <StatCard

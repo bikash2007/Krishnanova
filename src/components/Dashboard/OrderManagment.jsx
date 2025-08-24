@@ -10,7 +10,7 @@ const StatusBadge = ({ status }) => {
       icon: "⏳",
     },
     shipped: {
-      color: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+      color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
       icon: "🚚",
     },
     delivered: {
@@ -120,7 +120,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose, onStatusUpdate }) => {
             <div className="bg-gray-800/50 rounded-xl p-5">
               <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                 <svg
-                  className="w-5 h-5 mr-2 text-blue-400"
+                  className="w-5 h-5 mr-2 text-indigo-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -141,7 +141,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose, onStatusUpdate }) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Email:</span>
-                  <span className="text-blue-400">
+                  <span className="text-indigo-400">
                     {order.user?.email || "N/A"}
                   </span>
                 </div>
@@ -204,7 +204,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose, onStatusUpdate }) => {
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-400 focus:outline-none"
+                  className="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-indigo-400 focus:outline-none"
                 >
                   <option value="processing">Processing</option>
                   <option value="shipped">Shipped</option>
@@ -213,7 +213,7 @@ const OrderDetailsModal = ({ order, isOpen, onClose, onStatusUpdate }) => {
                 </select>
                 <button
                   onClick={handleStatusUpdate}
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 font-medium"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 text-white py-2 px-4 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 font-medium"
                 >
                   Update Status
                 </button>
@@ -462,7 +462,7 @@ export default function OrderManagement() {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, search: e.target.value }))
                 }
-                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-400 focus:outline-none"
+                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-indigo-400 focus:outline-none"
               />
             </div>
             <div>
@@ -474,7 +474,7 @@ export default function OrderManagement() {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, status: e.target.value }))
                 }
-                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-400 focus:outline-none"
+                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-indigo-400 focus:outline-none"
               >
                 <option value="all">All Status</option>
                 <option value="processing">Processing</option>
@@ -492,7 +492,7 @@ export default function OrderManagement() {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, sortBy: e.target.value }))
                 }
-                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-400 focus:outline-none"
+                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-indigo-400 focus:outline-none"
               >
                 <option value="createdAt">Date</option>
                 <option value="total">Total</option>
@@ -508,7 +508,7 @@ export default function OrderManagement() {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, sortOrder: e.target.value }))
                 }
-                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-blue-400 focus:outline-none"
+                className="w-full bg-gray-700/50 text-white rounded-lg px-3 py-2 border border-gray-600 focus:border-indigo-400 focus:outline-none"
               >
                 <option value="desc">Newest First</option>
                 <option value="asc">Oldest First</option>
@@ -543,7 +543,7 @@ export default function OrderManagement() {
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <td className="p-4">
-                      <span className="font-mono text-blue-400 font-semibold">
+                      <span className="font-mono text-indigo-400 font-semibold">
                         #{order._id.slice(-8).toUpperCase()}
                       </span>
                     </td>
@@ -608,7 +608,7 @@ export default function OrderManagement() {
                           setSelectedOrder(order);
                           setShowModal(true);
                         }}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 text-sm font-medium"
+                        className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-4 py-2 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 text-sm font-medium"
                       >
                         View Details
                       </button>

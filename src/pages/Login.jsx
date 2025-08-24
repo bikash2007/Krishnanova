@@ -92,7 +92,7 @@ export default function Login() {
           {/* Login Card */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             {/* Header */}
-            <div className="bg-blue-600 px-6 py-8 text-center">
+            <div className="bg-indigo-600 px-6 py-8 text-center">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-xl">ॐ</span>
               </div>
@@ -130,8 +130,8 @@ export default function Login() {
                     className={`w-full px-3 py-2 pl-10 rounded-lg border transition-all duration-200 ${
                       errors.identifier
                         ? "border-red-300 focus:border-red-500"
-                        : "border-gray-300 focus:border-blue-500"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        : "border-gray-300 focus:border-indigo-500"
+                    } focus:outline-none focus:ring-2 focus:ring-indigo-500/20`}
                     placeholder="Enter your username or email"
                   />
                   <User className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
@@ -157,8 +157,8 @@ export default function Login() {
                     className={`w-full px-3 py-2 pl-10 pr-10 rounded-lg border transition-all duration-200 ${
                       errors.password
                         ? "border-red-300 focus:border-red-500"
-                        : "border-gray-300 focus:border-blue-500"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        : "border-gray-300 focus:border-indigo-500"
+                    } focus:outline-none focus:ring-2 focus:ring-indigo-500/20`}
                     placeholder="Enter your password"
                   />
                   <Lock className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
@@ -185,7 +185,7 @@ export default function Login() {
                 disabled={loading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
@@ -241,7 +241,7 @@ export default function Login() {
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
                 >
                   Sign up
                 </Link>

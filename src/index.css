@@ -8,7 +8,7 @@
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
+  --primary: 225 73% 57%;
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
@@ -20,7 +20,7 @@
   --destructive-foreground: 210 40% 98%;
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --ring: 225 73% 57%;
   --radius: 0.5rem;
 }
 
@@ -52,29 +52,29 @@
 /* Divine Animations */
 @keyframes divineGlow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 20px rgba(65, 105, 225, 0.1);
   }
   50% {
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 30px rgba(65, 105, 225, 0.2);
   }
 }
 
 @keyframes gentleFloat {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translate3d(0, 0px, 0);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translate3d(0, -8px, 0);
   }
 }
 
 @keyframes sacredPulse {
   0%, 100% {
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.05);
+    transform: scale3d(1.05, 1.05, 1);
     opacity: 0.8;
   }
 }
@@ -94,31 +94,31 @@
 @keyframes divineSparkle {
   0%, 100% {
     opacity: 0.3;
-    transform: scale(1) rotate(0deg);
+    transform: scale3d(1, 1, 1) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.2) rotate(180deg);
+    transform: scale3d(1.2, 1.2, 1) rotate(180deg);
   }
 }
 
 @keyframes peacefulBreath {
   0%, 100% {
-    transform: scale(1);
+    transform: scale3d(1, 1, 1);
   }
   50% {
-    transform: scale(1.02);
+    transform: scale3d(1.02, 1.02, 1);
   }
 }
 
 @keyframes sacredRise {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -129,12 +129,78 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
   font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Performance Optimizations */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+/* Smooth GPU acceleration for animations */
+.divine-glow,
+.gentle-float,
+.sacred-pulse,
+.divine-sparkle,
+.peaceful-breath {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimized transitions */
+.card,
+.btn,
+.input {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .divine-glow,
+  .gentle-float,
+  .sacred-pulse,
+  .divine-sparkle,
+  .peaceful-breath {
+    animation: none !important;
+  }
+}
+
+/* Optimized image loading */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Optimized video performance */
+video {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* Divine Animation Classes */
@@ -151,7 +217,7 @@ body {
 }
 
 .wisdom-flow {
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #f59e0b, #3b82f6);
+  background: linear-gradient(45deg, #4169E1, #8b5cf6, #f59e0b, #4169E1);
   background-size: 400% 400%;
   animation: wisdomFlow 6s ease infinite;
 }
@@ -417,11 +483,11 @@ a:hover,
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 20px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -433,11 +499,11 @@ a:hover,
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translate3d(-30px, 0, 0);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -454,13 +520,14 @@ a:hover,
 /* Scroll Reveal */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
+  transform: translate3d(0, 30px, 0);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, opacity;
 }
 
 .scroll-reveal.revealed {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 /* Responsive Design */

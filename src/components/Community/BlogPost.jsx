@@ -43,7 +43,7 @@ const FloatingParticles = () => {
       {[...Array(15)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-30"
+          className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full opacity-30"
           animate={{
             x: [0, Math.random() * 50 - 25],
             y: [0, Math.random() * 50 - 25],
@@ -78,7 +78,7 @@ const Avatar = ({ user, size = "w-16 h-16", baseUrl, artistic = true }) => {
         whileHover={{ scale: 1.1, rotate: artistic ? 5 : 0 }}
         className={`${
           artistic
-            ? "p-1 bg-gradient-to-tr from-pink-400 via-purple-500 to-blue-500 rounded-full"
+            ? "p-1 bg-gradient-to-tr from-pink-400 via-purple-500 to-indigo-500 rounded-full"
             : ""
         }`}
       >
@@ -139,7 +139,7 @@ const UserBadge = ({ user, size = "md" }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.1 }}
-      className={`flex items-center space-x-2 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
+      className={`flex items-center space-x-2 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
     >
       <FaPray size={size === "sm" ? 10 : size === "md" ? 12 : 14} />
       <span>DEVOTEE</span>
@@ -235,7 +235,7 @@ const CommentItem = ({
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setIsEditing(true)}
-                className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
+                className="text-gray-400 hover:text-indigo-500 transition-colors duration-200"
               >
                 <FaEdit size={12} />
               </button>
@@ -256,13 +256,13 @@ const CommentItem = ({
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
                 rows="3"
               />
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handleEdit}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
+                  className="px-4 py-2 bg-indigo-500 text-white rounded-lg font-medium hover:bg-indigo-600 transition-colors duration-200"
                 >
                   Save
                 </button>
@@ -302,7 +302,7 @@ const CommentItem = ({
             {canReply && user && (
               <button
                 onClick={() => setShowReplyForm(!showReplyForm)}
-                className="flex items-center space-x-1 text-sm text-gray-500 hover:text-blue-500 transition-colors duration-200"
+                className="flex items-center space-x-1 text-sm text-gray-500 hover:text-indigo-500 transition-colors duration-200"
               >
                 <FaReply size={12} />
                 <span>Reply</span>
@@ -330,7 +330,7 @@ const CommentItem = ({
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
                   placeholder="Write a reply..."
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
                   rows="2"
                 />
                 <div className="flex items-center justify-end space-x-2 mt-2">
@@ -343,7 +343,7 @@ const CommentItem = ({
                   <button
                     onClick={handleReply}
                     disabled={!replyContent.trim()}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center space-x-2"
+                    className="px-4 py-2 bg-indigo-500 text-white rounded-lg font-medium hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center space-x-2"
                   >
                     <FaPaperPlane size={12} />
                     <span>Reply</span>
@@ -400,7 +400,7 @@ const CommentForm = ({ user, baseUrl, onSubmit }) => {
         </p>
         <Link
           to="/login"
-          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
+          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200"
         >
           <span>Sign In</span>
         </Link>
@@ -427,7 +427,7 @@ const CommentForm = ({ user, baseUrl, onSubmit }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Share your thoughts on this spiritual wisdom..."
-            className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+            className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none"
             rows="4"
           />
           <div className="flex items-center justify-between mt-4">
@@ -437,7 +437,7 @@ const CommentForm = ({ user, baseUrl, onSubmit }) => {
             <button
               type="submit"
               disabled={!content.trim() || isSubmitting}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
+              className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center space-x-2"
             >
               {isSubmitting ? (
                 <motion.div
@@ -523,7 +523,7 @@ const RelatedPost = ({ post, baseUrl, index }) => {
                 <FaHeart size={10} />
                 <span className="text-xs">{post.likes?.length || 0}</span>
               </div>
-              <span className="text-xs text-blue-600 font-medium">
+              <span className="text-xs text-indigo-600 font-medium">
                 Read more →
               </span>
             </div>
@@ -755,7 +755,7 @@ const BlogPost = () => {
             </h2>
             <Link
               to="/communityblog"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
               ← Back to Community
             </Link>
@@ -780,7 +780,7 @@ const BlogPost = () => {
           opacity: [0.1, 0.3, 0.1],
         }}
         transition={{ duration: 20, repeat: Infinity }}
-        className="fixed top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-3xl -z-10"
+        className="fixed top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-500/20 rounded-full blur-3xl -z-10"
       />
 
       <div className="container max-w-4xl mx-auto px-6 pt-24 pb-16 relative z-10">
@@ -810,7 +810,7 @@ const BlogPost = () => {
         >
           {/* Artistic Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/50 backdrop-blur-xl rounded-3xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-pink-500/10 rounded-3xl"></div>
 
           {/* Floating Decorative Elements */}
           <motion.div
@@ -824,7 +824,7 @@ const BlogPost = () => {
           <motion.div
             animate={{ rotate: -360, y: [0, -10, 0] }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-4 -left-4 w-6 h-6 text-blue-400 opacity-40"
+            className="absolute -bottom-4 -left-4 w-6 h-6 text-indigo-400 opacity-40"
           >
             <FaFeatherAlt />
           </motion.div>
@@ -894,7 +894,7 @@ const BlogPost = () => {
                           i === 0
                             ? "bg-gradient-to-r from-red-400 to-pink-500"
                             : i === 1
-                            ? "bg-gradient-to-r from-blue-400 to-purple-500"
+                            ? "bg-gradient-to-r from-indigo-400 to-purple-500"
                             : "bg-gradient-to-r from-green-400 to-teal-500"
                         }`}
                       />
@@ -948,7 +948,7 @@ const BlogPost = () => {
                 transition={{ delay: 0.4 }}
                 className="relative"
               >
-                <FaQuoteLeft className="absolute -top-4 -left-4 text-blue-200/50 text-3xl" />
+                <FaQuoteLeft className="absolute -top-4 -left-4 text-indigo-200/50 text-3xl" />
                 <div className="text-gray-700 text-lg leading-relaxed pl-8 pr-4">
                   <p className="whitespace-pre-wrap font-light">
                     {post.content}
@@ -986,7 +986,7 @@ const BlogPost = () => {
                     <span className="font-semibold">{likesCount}</span>
                   </motion.button>
 
-                  <button className="flex items-center space-x-2 px-4 py-2 rounded-full text-gray-600 hover:text-blue-500 hover:bg-blue-50 transition-all duration-300">
+                  <button className="flex items-center space-x-2 px-4 py-2 rounded-full text-gray-600 hover:text-indigo-500 hover:bg-indigo-50 transition-all duration-300">
                     <FaComment size={18} />
                     <span className="font-semibold">{comments.length}</span>
                   </button>
@@ -1030,11 +1030,11 @@ const BlogPost = () => {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center"
+              className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center"
             >
               <FaComment className="text-white text-sm" />
             </motion.div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Community Discussion ({comments.length})
             </h3>
           </div>
@@ -1055,7 +1055,7 @@ const BlogPost = () => {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto"
+                  className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full mx-auto"
                 />
               </div>
             ) : comments.length === 0 ? (
@@ -1130,7 +1130,7 @@ const BlogPost = () => {
         >
           <Link
             to="/communityblog"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 group"
+            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 group"
           >
             <FaUserFriends className="mr-3 text-xl" />
             <span>Explore More Wisdom</span>

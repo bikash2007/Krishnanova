@@ -77,7 +77,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, index }) => {
             alt={item.title}
             className="w-24 h-24 rounded-xl object-cover border-2 border-gray-100"
           />
-          <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+          <div className="absolute -top-2 -right-2 bg-indigo-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
             {item.quantity}
           </div>
         </div>
@@ -144,7 +144,7 @@ const EmptyCart = () => (
     <div className="max-w-md w-full text-center">
       <div className="bg-white rounded-3xl shadow-2xl p-12 border border-gray-100">
         {/* Empty Cart Icon */}
-        <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+        <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
           <svg
             className="w-16 h-16 text-gray-400"
             fill="none"
@@ -171,7 +171,7 @@ const EmptyCart = () => (
         <div className="space-y-4">
           <Link
             to="/productpage"
-            className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+            className="block w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
           >
             Start Shopping
           </Link>
@@ -237,7 +237,7 @@ export default function Cart() {
             <nav className="hidden md:flex items-center space-x-2 text-sm">
               <Link
                 to="/"
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-indigo-600 hover:text-indigo-800 font-medium"
               >
                 Home
               </Link>
@@ -256,7 +256,7 @@ export default function Cart() {
               </svg>
               <Link
                 to="/productpage"
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-indigo-600 hover:text-indigo-800 font-medium"
               >
                 Products
               </Link>
@@ -281,7 +281,7 @@ export default function Cart() {
           <div className="md:hidden flex items-center space-x-4">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center text-blue-600 hover:text-blue-800 font-medium"
+              className="flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
             >
               <svg
                 className="w-4 h-4 mr-1"
@@ -300,7 +300,7 @@ export default function Cart() {
             </button>
             <Link
               to="/productpage"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-indigo-600 hover:text-indigo-800 font-medium"
             >
               Continue Shopping
             </Link>
@@ -366,7 +366,7 @@ export default function Cart() {
 
               <button
                 onClick={() => navigate("/checkout")}
-                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+                className="px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
               >
                 Proceed to Checkout
               </button>
@@ -378,7 +378,7 @@ export default function Cart() {
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
               <Link
                 to="/productpage"
-                className="flex items-center justify-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
+                className="flex items-center justify-center text-indigo-600 hover:text-indigo-800 font-medium transition-colors duration-200"
               >
                 <svg
                   className="w-4 h-4 mr-2"
@@ -442,9 +442,9 @@ export default function Cart() {
             </div>
 
             <div className="flex items-center justify-center space-x-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
                 <svg
-                  className="w-5 h-5 text-blue-600"
+                  className="w-5 h-5 text-indigo-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

@@ -28,7 +28,7 @@ import celebration from "../Audio/celebration.mp3";
 import bgm from "../Audio/bgm.mp3";
 import water from "../Audio/water.mp3";
 import steptransition from "../Audio/step-transition.mp3";
-import vedicFire from "../Media/VedicFire.mp4";
+import vedicFire from "../Media/vedicFire.mp4";
 
 // Krishna Names Data
 const krishnaNames = [
@@ -949,7 +949,7 @@ export default function KrishnaKeychainCustomize() {
             exit="exit"
             className="text-center space-y-8"
           >
-            <h2 className="text-5xl font-bold text-blue-200 drop-shadow-lg">
+            <h2 className="text-5xl font-bold text-indigo-200 drop-shadow-lg">
               Sacred Purification
             </h2>
 
@@ -982,18 +982,18 @@ export default function KrishnaKeychainCustomize() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex items-center justify-center gap-2 text-blue-300"
+                className="flex items-center justify-center gap-2 text-indigo-300"
               >
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="w-2 h-2 bg-blue-400 rounded-full"
+                  className="w-2 h-2 bg-indigo-400 rounded-full"
                 />
                 <span className="text-sm">Sacred water flowing</span>
               </motion.div>
             )}
 
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto backdrop-blur-sm bg-black/30 p-6 rounded-2xl border border-blue-900/30">
+            <p className="text-xl text-indigo-100 max-w-3xl mx-auto backdrop-blur-sm bg-black/30 p-6 rounded-2xl border border-indigo-900/30">
               We purify our intentions and prepare our hearts to welcome the
               divine Krishna.
             </p>
@@ -1003,7 +1003,7 @@ export default function KrishnaKeychainCustomize() {
                 <motion.button
                   onClick={() => playMantra("purification")}
                   whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-4 rounded-xl font-semibold shadow-lg flex items-center justify-center mx-auto gap-3"
+                  className="bg-gradient-to-r from-indigo-600 to-indigo-600 text-white px-10 py-4 rounded-xl font-semibold shadow-lg flex items-center justify-center mx-auto gap-3"
                 >
                   <span className="text-2xl">🎵</span>
                   <span>Chant Purification Mantra</span>
@@ -1017,27 +1017,27 @@ export default function KrishnaKeychainCustomize() {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: -20 }}
                     transition={{ duration: 0.5 }}
-                    className="backdrop-blur-lg bg-blue-950/50 p-8 rounded-2xl border border-blue-800/30 max-w-2xl mx-auto"
+                    className="backdrop-blur-lg bg-blue-950/50 p-8 rounded-2xl border border-indigo-800/30 max-w-2xl mx-auto"
                   >
                     <motion.p
                       animate={{ scale: [1, 1.02, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="text-blue-200 font-bold text-3xl mb-3"
+                      className="text-indigo-200 font-bold text-3xl mb-3"
                     >
                       {MANTRAS.purification.sanskrit}
                     </motion.p>
-                    <p className="text-blue-300 text-xl italic mb-2">
+                    <p className="text-indigo-300 text-xl italic mb-2">
                       {MANTRAS.purification.english}
                     </p>
-                    <p className="text-blue-400 text-lg">
+                    <p className="text-indigo-400 text-lg">
                       {MANTRAS.purification.meaning}
                     </p>
-                    <motion.div className="mt-4 h-1 bg-blue-800/30 rounded-full overflow-hidden">
+                    <motion.div className="mt-4 h-1 bg-indigo-800/30 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
                         transition={{ duration: 10, ease: "linear" }}
-                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500"
+                        className="h-full bg-gradient-to-r from-indigo-500 to-indigo-500"
                       />
                     </motion.div>
                   </motion.div>
@@ -1049,14 +1049,14 @@ export default function KrishnaKeychainCustomize() {
               <motion.button
                 onClick={prevCeremonyStep}
                 whileHover={{ scale: 1.05 }}
-                className="bg-black/40 backdrop-blur-sm text-blue-200 px-6 py-3 rounded-xl border border-blue-800/30"
+                className="bg-black/40 backdrop-blur-sm text-indigo-200 px-6 py-3 rounded-xl border border-indigo-800/30"
               >
                 ← Back
               </motion.button>
               <motion.button
                 onClick={nextCeremonyStep}
                 whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg"
+                className="bg-gradient-to-r from-indigo-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold shadow-lg"
               >
                 Complete Purification →
               </motion.button>
@@ -1936,11 +1936,11 @@ export default function KrishnaKeychainCustomize() {
                   </div>
                 </div>
 
-                <blockquote className="backdrop-blur-lg bg-blue-950/40 p-6 rounded-2xl border border-blue-800/30">
-                  <p className="text-blue-200 font-bold text-xl italic mb-2">
+                <blockquote className="backdrop-blur-lg bg-blue-950/40 p-6 rounded-2xl border border-indigo-800/30">
+                  <p className="text-indigo-200 font-bold text-xl italic mb-2">
                     "नामकरणं दशमे पक्षे द्वादशे वा शुभे तिथौ।"
                   </p>
-                  <p className="text-blue-300">
+                  <p className="text-indigo-300">
                     - The naming ceremony should be performed on an auspicious
                     day with pure intentions
                   </p>

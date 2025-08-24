@@ -56,7 +56,7 @@ export default function ProductPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <Package className="w-8 h-8 text-blue-500" />
+              <Package className="w-8 h-8 text-indigo-500" />
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
                 Divine Krishna Collection
               </h1>
@@ -78,7 +78,7 @@ export default function ProductPage() {
               transition={{ delay: 0.2 }}
             >
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
-                <Sparkles className="w-4 h-4 text-blue-500" />
+                <Sparkles className="w-4 h-4 text-indigo-500" />
                 <span>Blessed Items</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
@@ -86,7 +86,7 @@ export default function ProductPage() {
                 <span>Free Shipping $50+</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
-                <Shield className="w-4 h-4 text-blue-500" />
+                <Shield className="w-4 h-4 text-indigo-500" />
                 <span>Secure Checkout</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-700 shadow-sm border border-gray-200">
@@ -194,7 +194,7 @@ export default function ProductPage() {
                         </div>
 
                         <motion.button
-                          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors text-sm"
+                          className="flex items-center gap-2 bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-600 transition-colors text-sm"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -220,7 +220,7 @@ export default function ProductPage() {
                 icon: Truck,
                 title: "Free Shipping",
                 desc: "Orders over $50",
-                color: "text-blue-500",
+                color: "text-indigo-500",
               },
               {
                 icon: Shield,

@@ -42,7 +42,7 @@ const Hero = () => {
       />
 
       {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-indigo-900/40"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-violet-900/40"></div>
 
       {/* Bell Icon with Sound */}
       <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10">

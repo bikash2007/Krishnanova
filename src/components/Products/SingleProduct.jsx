@@ -136,7 +136,7 @@ export default function SingleProduct() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-2 border-gray-300 border-t-indigo-500 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -150,7 +150,7 @@ export default function SingleProduct() {
           </h2>
           <button
             onClick={() => navigate(-1)}
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+            className="bg-indigo-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-600 transition-colors"
           >
             Go Back
           </button>
@@ -168,7 +168,7 @@ export default function SingleProduct() {
         <div className="max-w-7xl mx-auto">
           <motion.button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-3 text-blue-500 hover:text-blue-600 font-medium transition-colors bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm"
+            className="flex items-center gap-3 text-indigo-500 hover:text-indigo-600 font-medium transition-colors bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: -4 }}
@@ -230,8 +230,8 @@ export default function SingleProduct() {
                           key={index}
                           className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                             activeMediaIndex === index
-                              ? "border-blue-500 scale-110"
-                              : "border-gray-200 hover:border-blue-300"
+                              ? "border-indigo-500 scale-110"
+                              : "border-gray-200 hover:border-indigo-300"
                           }`}
                           onClick={() => setActiveMediaIndex(index)}
                           whileHover={{
@@ -285,8 +285,8 @@ export default function SingleProduct() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <Package className="w-5 h-5 text-blue-500" />
-                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+                  <Package className="w-5 h-5 text-indigo-500" />
+                  <span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-sm font-medium">
                     {product.category}
                   </span>
                 </motion.div>
@@ -307,7 +307,7 @@ export default function SingleProduct() {
                   transition={{ delay: 0.4 }}
                 >
                   <StarRating rating={product.rating} size="w-5 h-5" />
-                  <span className="text-blue-600">
+                  <span className="text-indigo-600">
                     ({product.numReviews || product.reviews?.length || 0} reviews)
                   </span>
                   <div className="h-4 w-px bg-gray-300"></div>
@@ -378,7 +378,7 @@ export default function SingleProduct() {
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
-                  <span className="text-sm text-blue-600">
+                  <span className="text-sm text-indigo-600">
                     Total: ${(product.price * quantity).toFixed(2)}
                   </span>
                 </div>
@@ -386,7 +386,7 @@ export default function SingleProduct() {
                 <div className="flex gap-4">
                   <motion.button
                     onClick={handleBuyNow}
-                    className="flex-1 bg-blue-500 text-white py-4 px-8 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-indigo-500 text-white py-4 px-8 rounded-lg font-medium hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -478,7 +478,7 @@ export default function SingleProduct() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-blue-500 rounded-lg p-8 text-white">
+              <div className="bg-indigo-500 rounded-lg p-8 text-white">
                 <h3 className="text-2xl font-bold mb-6">
                   Benefits You'll Experience:
                 </h3>
@@ -507,7 +507,7 @@ export default function SingleProduct() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-3xl mx-auto px-6">
           <div className="flex items-center gap-3 mb-8">
-            <MessageCircle className="w-6 h-6 text-blue-500" />
+            <MessageCircle className="w-6 h-6 text-indigo-500" />
             <h3 className="text-2xl font-bold text-gray-900">
               Product Reviews
             </h3>
@@ -559,14 +559,14 @@ export default function SingleProduct() {
               <textarea
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                 placeholder="Your thoughts..."
                 required
                 rows={4}
               />
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="bg-indigo-500 text-white px-6 py-3 rounded-lg font-medium shadow-sm hover:bg-indigo-600 transition-colors flex items-center gap-2"
                 disabled={reviewSubmitting || !reviewRating}
               >
                 <Send className="w-4 h-4" />
@@ -584,7 +584,7 @@ export default function SingleProduct() {
               )}
             </form>
           ) : (
-            <div className="text-blue-600 text-center mb-10">
+            <div className="text-indigo-600 text-center mb-10">
               Please login to leave a review.
             </div>
           )}

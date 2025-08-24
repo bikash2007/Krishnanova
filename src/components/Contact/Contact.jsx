@@ -3,12 +3,12 @@ import { Mail, MessageCircle, Bell, Users, Heart, Sparkles } from "lucide-react"
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-8 bg-gradient-to-br from-gray-50 to-blue-50">
+    <section id="contact" className="py-8 bg-gradient-to-br from-gray-50 to-indigo-50">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Users className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+              <Users className="w-5 h-5 text-indigo-600" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900">
               Connect with Our Sacred Circle
@@ -36,7 +36,7 @@ const Contact = () => {
 
           {/* Contact Options */}
           <div className="space-y-3 max-w-md mx-auto">
-            <button className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <button className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               <Mail className="w-5 h-5" />
               Email Us
             </button>

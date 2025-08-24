@@ -1,203 +1,119 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useApi } from "../../Context/baseUrl";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import {
   FaHeart,
-  FaRegHeart,
-  FaUsers,
-  FaGlobe,
-  FaBlog,
-  FaArrowRight,
   FaComment,
-  FaShareAlt,
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaCrown,
-  FaPray,
+  FaShare,
   FaEye,
-  FaBookOpen,
-  FaQuoteLeft,
-  FaStar,
-  FaFire,
-  FaChartLine, // Replace FaTrendingUp
-  FaUserFriends,
-  FaLightbulb,
-  FaChevronRight,
-  FaDotCircle,
-  FaTicketAlt,
-  FaMagic,
-  FaGem,
-  FaFeatherAlt,
-  FaInfinity,
-  FaSun, // Replace FaSparkles
-  FaPlay,
-  FaCircle,
+  FaPray,
+  FaCalendarAlt,
+  FaUsers,
+  FaMapMarkerAlt,
   FaClock,
-  FaHands,
-  FaBookmark,
-  FaRegBookmark,
-  FaAward,
-  FaCertificate,
-  FaMedal,
+  FaBlog,
+  FaChevronRight,
+  FaQuoteLeft,
+  FaFeatherAlt,
 } from "react-icons/fa";
 
-const InteractiveBox = ({ children, className }) => {
-  const boxRef = useRef(null);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+const API = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    const box = boxRef.current;
-    if (!box) return;
-
-    const hasHoverSupport = window.matchMedia("(hover: hover)").matches;
-    if (!hasHoverSupport) return;
-
-    const handleMouseMove = (e) => {
-      const rect = box.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      setMousePosition({ x, y });
-    };
-
-    box.addEventListener("mousemove", handleMouseMove);
-    return () => box.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
+// Floating Sacred Elements
+const FloatingSacredElements = () => {
+  const symbols = ["🕉️", "🪷", "🦚", "⭐", "💫", "🌙"];
+  
   return (
-    <div
-      ref={boxRef}
-      className={className}
-      style={{
-        background: "linear-gradient(135deg, #FBBF24 0%, #3B82F6 100%)",
-        opacity: 0.1
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-// Floating Particles Component
-const FloatingParticles = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      {symbols.map((symbol, index) => (
         <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-20"
+          key={index}
+          className="absolute text-4xl opacity-10"
+          initial={{
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+          }}
           animate={{
-            x: [0, Math.random() * 100 - 50],
-            y: [0, Math.random() * 100 - 50],
-            scale: [1, Math.random() * 0.5 + 0.5, 1],
+            x: [null, Math.random() * window.innerWidth],
+            y: [null, Math.random() * window.innerHeight],
+            rotate: [0, 360],
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: Math.random() * 20 + 20,
             repeat: Infinity,
-            repeatType: "reverse",
+            ease: "linear",
           }}
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-        />
+        >
+          {symbol}
+        </motion.div>
       ))}
     </div>
   );
 };
 
-// Enhanced Avatar Component
-const Avatar = ({
-  user,
-  size = "w-12 h-12",
-  baseUrl,
-  showOnline = false,
-  artistic = false,
-}) => {
-  const getAvatarUrl = () => {
-    if (!user?.avatar) return "/user-avatar.png";
-    if (user.avatar.startsWith("http")) return user.avatar;
-    return baseUrl + user.avatar;
-  };
-
-  return (
-    <div className="relative">
-      <motion.div
-        whileHover={{ scale: 1.1, rotate: artistic ? 5 : 0 }}
-        className={`${
-          artistic
-            ? "p-1 bg-gradient-to-tr from-pink-400 via-purple-500 to-blue-500 rounded-full"
-            : ""
-        }`}
-      >
-        <img
-          src={getAvatarUrl()}
-          alt={user?.name || "User"}
-          className={`${size} rounded-full object-cover border-3 ${
-            artistic
-              ? "border-white shadow-2xl ring-4 ring-purple-200/50"
-              : "border-white/50 shadow-lg ring-2 ring-blue-100"
-          }`}
-          onError={(e) => {
-            e.target.src = "/user-avatar.png";
-          }}
-        />
-      </motion.div>
-      {showOnline && (
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 border-2 border-white rounded-full shadow-lg"
-        />
-      )}
-      {artistic && (
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400"
-        >
-          <FaSun />
-        </motion.div>
-      )}
-    </div>
-  );
-};
-
-// Artistic User Badge Component
-const UserBadge = ({ user, size = "sm" }) => {
+// Enhanced User Badge
+const UserBadge = ({ user, size = "md" }) => {
   const sizeClasses = {
-    sm: "px-2 py-0.5 text-xs",
-    md: "px-3 py-1 text-sm",
+    sm: "px-2 py-1 text-xs",
+    md: "px-3 py-1.5 text-sm",
+    lg: "px-4 py-2 text-base",
   };
 
-  if (user?.role === "admin") {
-    return (
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        animate={{
-          boxShadow: [
-            "0 0 20px rgba(251, 191, 36, 0.5)",
-            "0 0 30px rgba(251, 191, 36, 0.8)",
-            "0 0 20px rgba(251, 191, 36, 0.5)",
-          ],
-        }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className={`flex items-center space-x-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
-      >
-        <FaCrown size={size === "sm" ? 8 : 10} />
-        <span>ADMIN</span>
-      </motion.div>
-    );
+  if (!user || user.role !== "devotee") {
+    return null;
   }
 
   return (
     <motion.div
       whileHover={{ scale: 1.1 }}
-      className={`flex items-center space-x-1 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
+      className={`flex items-center space-x-1 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 text-white font-bold rounded-full shadow-lg ${sizeClasses[size]}`}
     >
       <FaPray size={size === "sm" ? 8 : 10} />
       <span>DEVOTEE</span>
+    </motion.div>
+  );
+};
+
+// Artistic Avatar Component
+const Avatar = ({ user, size = "w-10 h-10", baseUrl, artistic = false }) => {
+  const avatarUrl = user?.avatar?.startsWith("http")
+    ? user.avatar
+    : user?.avatar
+    ? `${baseUrl}${user.avatar}`
+    : "/default-avatar.png";
+
+  if (artistic) {
+    return (
+      <div className="relative">
+        <motion.div
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          className={`${size} rounded-full overflow-hidden border-3 border-gradient-to-r from-orange-400 via-purple-500 to-pink-500 p-1`}
+        >
+          <img
+            src={avatarUrl}
+            alt={user?.name || "User"}
+            className="w-full h-full object-cover rounded-full"
+            onError={(e) => {
+              e.target.src = "/default-avatar.png";
+            }}
+          />
+        </motion.div>
+        <UserBadge user={user} size="sm" />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`${size} rounded-full overflow-hidden border-2 border-white shadow-lg`}>
+      <img
+        src={avatarUrl}
+        alt={user?.name || "User"}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          e.target.src = "/default-avatar.png";
+        }}
+      />
     </div>
   );
 };
@@ -247,116 +163,80 @@ const SocialPostCard = ({ post, baseUrl, index }) => {
     >
       {/* Artistic Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/70 to-white/50 backdrop-blur-xl rounded-3xl"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 rounded-3xl group-hover:from-blue-500/20 group-hover:via-purple-500/15 group-hover:to-pink-500/20 transition-all duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-100/40 via-purple-100/30 to-pink-100/40 rounded-3xl opacity-60"></div>
 
-      {/* Floating Decorative Elements */}
-      <motion.div
-        animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute -top-2 -right-2 w-6 h-6 text-pink-400 opacity-60"
-      >
-        <FaGem />
-      </motion.div>
-
-      <motion.div
-        animate={{ rotate: -360, y: [0, -5, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        className="absolute -bottom-2 -left-2 w-5 h-5 text-blue-400 opacity-40"
-      >
-        <FaFeatherAlt />
-      </motion.div>
-
-      <div className="relative border border-white/40 rounded-3xl shadow-2xl backdrop-blur-sm overflow-hidden">
-        {/* Post Header */}
-        <div className="flex items-center justify-between p-6 pb-4">
-          <div className="flex items-center space-x-4">
-            <Avatar
-              user={post.author}
-              baseUrl={baseUrl}
-              size="w-12 h-12"
-              showOnline={Math.random() > 0.5}
-              artistic={true}
-            />
-            <div>
-              <div className="flex items-center space-x-2 mb-1">
-                <h4 className="font-bold text-gray-900 text-sm">
-                  {post.author?.name || "Anonymous"}
+      <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/60 overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100/80">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Avatar user={post.author} baseUrl={baseUrl} artistic={true} />
+              <div>
+                <h4 className="font-bold text-gray-900 flex items-center space-x-2">
+                  <span>{post.author?.name || "Anonymous Devotee"}</span>
+                  <UserBadge user={post.author} size="sm" />
                 </h4>
-                <UserBadge user={post.author} size="sm" />
-              </div>
-              <div className="flex items-center space-x-2 text-gray-500 text-xs">
-                <span>{formatTimeAgo(post.createdAt)}</span>
-                <FaDotCircle size={3} />
-                <FaGlobe size={10} />
-                <span>Public</span>
+                <div className="flex items-center space-x-2 text-sm text-gray-500">
+                  <span>{formatTimeAgo(post.createdAt)}</span>
+                  <span>•</span>
+                  <FaEye size={12} />
+                  <span>{Math.floor(Math.random() * 200) + 50} views</span>
+                </div>
               </div>
             </div>
-          </div>
-
-          {engagement.likes > 30 && (
             <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="flex items-center space-x-1 px-3 py-1 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 text-white text-xs font-bold rounded-full shadow-lg"
+              whileHover={{ rotate: 15 }}
+              className="text-orange-400 opacity-60"
             >
-              <FaFire size={10} />
-              <span>TRENDING</span>
+              <FaFeatherAlt size={16} />
             </motion.div>
-          )}
+          </div>
         </div>
 
-        {/* Post Content */}
-        <div className="px-6 pb-4">
-          <Link to={`/blog/${post._id}`}>
-            <motion.h3
-              whileHover={{
-                scale: 1.02,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-              className="font-bold text-xl text-gray-900 mb-3 leading-tight cursor-pointer transition-all duration-300"
-            >
-              {post.title}
-            </motion.h3>
-          </Link>
-
-          <div className="relative">
-            <FaQuoteLeft className="absolute -top-2 -left-2 text-blue-200/50 text-xl" />
-            <div className="text-gray-700 text-sm leading-relaxed pl-6">
-              {showFullText ? (
-                <p>{post.content}</p>
-              ) : (
-                <p>{truncateText(post.content, 100)}</p>
-              )}
-
-              {post.content.length > 100 && (
+        {/* Content */}
+        <div className="p-6">
+          <div className="mb-4">
+            <p className="text-gray-800 leading-relaxed">
+              {showFullText ? post.content : truncateText(post.content)}
+              {post.content.length > 120 && (
                 <button
                   onClick={() => setShowFullText(!showFullText)}
-                  className="text-blue-600 hover:text-blue-800 font-medium text-sm ml-1 hover:underline"
+                  className="ml-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm"
                 >
                   {showFullText ? "Show less" : "Read more"}
                 </button>
               )}
-            </div>
+            </p>
           </div>
+
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {post.tags.slice(0, 3).map((tag, tagIndex) => (
+                <motion.span
+                  key={tagIndex}
+                  whileHover={{ scale: 1.05 }}
+                  className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 text-xs font-medium rounded-full"
+                >
+                  #{tag}
+                </motion.span>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Post Image */}
+        {/* Image */}
         {post.image && (
-          <div className="relative mx-6 mb-4 overflow-hidden rounded-2xl group/image">
+          <div className="relative group/image overflow-hidden">
             <Link to={`/blog/${post._id}`}>
-              <img
-                src={
-                  post.image.startsWith("http")
-                    ? post.image
-                    : baseUrl + post.image
-                }
-                alt="Post content"
-                className="w-full h-48 object-cover group-hover/image:scale-110 transition-transform duration-700 cursor-pointer"
+              <motion.img
+                whileHover={{ scale: 1.05 }}
+                src={post.image.startsWith("http") ? post.image : `${baseUrl}${post.image}`}
+                alt={post.title}
+                className="w-full h-80 object-cover transition-transform duration-500"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300"></div>
 
@@ -378,55 +258,30 @@ const SocialPostCard = ({ post, baseUrl, index }) => {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsLiked(!isLiked)}
-                className={`flex items-center space-x-1 transition-all duration-300 ${
-                  isLiked ? "text-red-500" : "text-gray-600 hover:text-red-500"
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                  isLiked
+                    ? "bg-red-50 text-red-600"
+                    : "bg-gray-50 text-gray-600 hover:bg-red-50 hover:text-red-600"
                 }`}
               >
                 <motion.div
                   animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
                   transition={{ duration: 0.3 }}
                 >
-                  {isLiked ? <FaHeart size={20} /> : <FaRegHeart size={20} />}
+                  <FaHeart size={16} className={isLiked ? "fill-current" : ""} />
                 </motion.div>
+                <span className="font-semibold">{engagement.likes}</span>
               </motion.button>
 
-              <button className="text-gray-600 hover:text-blue-500 transition-colors duration-200">
-                <FaComment size={18} />
-              </button>
-
-              <button className="text-gray-600 hover:text-green-500 transition-colors duration-200">
-                <FaShareAlt size={16} />
-              </button>
-            </div>
-
-            <button className="text-gray-600 hover:text-yellow-500 transition-colors duration-200">
-              <motion.div whileHover={{ rotate: 15 }}>
-                <FaStar size={18} />
-              </motion.div>
-            </button>
-          </div>
-
-          {/* Engagement Stats */}
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center space-x-2">
-              <div className="flex -space-x-1">
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.2, zIndex: 10 }}
-                    className={`w-6 h-6 rounded-full border-2 border-white shadow-lg ${
-                      i === 0
-                        ? "bg-gradient-to-r from-red-400 to-pink-500"
-                        : i === 1
-                        ? "bg-gradient-to-r from-blue-400 to-purple-500"
-                        : "bg-gradient-to-r from-green-400 to-teal-500"
-                    }`}
-                  />
-                ))}
+              <div className="flex items-center space-x-2 text-gray-600">
+                <FaComment size={16} />
+                <span className="font-semibold">{engagement.comments}</span>
               </div>
-              <span className="text-sm font-semibold text-gray-900">
-                {engagement.likes} likes
-              </span>
+
+              <div className="flex items-center space-x-2 text-gray-600">
+                <FaShare size={16} />
+                <span className="font-semibold">{engagement.shares}</span>
+              </div>
             </div>
 
             <div className="text-sm text-gray-500">
@@ -434,30 +289,31 @@ const SocialPostCard = ({ post, baseUrl, index }) => {
             </div>
           </div>
 
-        {/* Call to Action */}
-        <Link to="/communityblog">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100 hover:border-blue-200 transition-all duration-200 cursor-pointer"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <FaBlog className="text-white text-sm" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-gray-900">
-                    Read Full Discussion
+          {/* Call to Action */}
+          <Link to="/communityblog">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="mt-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100 hover:border-indigo-200 transition-all duration-200 cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <FaBlog className="text-white text-sm" />
                   </div>
-                  <div className="text-xs text-gray-500">
-                    Join the conversation in our community
+                  <div>
+                    <div className="text-sm font-semibold text-gray-900">
+                      Read Full Discussion
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Join the conversation in our community
+                    </div>
                   </div>
                 </div>
+                <FaChevronRight className="text-gray-400" size={14} />
               </div>
-              <FaChevronRight className="text-gray-400" size={14} />
-            </div>
-          </motion.div>
-        </Link>
+            </motion.div>
+          </Link>
+        </div>
       </div>
     </motion.div>
   );
@@ -472,242 +328,273 @@ const StoryCard = ({ post, baseUrl, index }) => {
       transition={{ delay: index * 0.1 }}
       className="relative w-32 h-48 rounded-2xl overflow-hidden cursor-pointer group"
     >
-      <Link to="/communityblog">
+      <Link to={`/blog/${post._id}`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
+        
         {post.image ? (
           <img
-            src={
-              post.image.startsWith("http") ? post.image : baseUrl + post.image
-            }
+            src={post.image.startsWith("http") ? post.image : `${baseUrl}${post.image}`}
             alt={post.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500"></div>
+          <div className="w-full h-full bg-gradient-to-br from-orange-400 via-purple-500 to-pink-600"></div>
         )}
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20"></div>
-
-        {/* Author Avatar */}
-        <div className="absolute top-3 left-3">
-          <Avatar user={post.author} baseUrl={baseUrl} size="w-8 h-8" />
-        </div>
-
-        {/* Title */}
-        <div className="absolute bottom-3 left-3 right-3">
-          <h4 className="text-white text-sm font-bold leading-tight line-clamp-2">
-            {post.title}
-          </h4>
-          <div className="flex items-center space-x-1 mt-1">
-            <FaHeart className="text-red-400" size={10} />
-            <span className="text-white text-xs">
-              {post.likes?.length || 0}
-            </span>
+        
+        <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
+          <div className="text-white text-sm font-medium leading-tight line-clamp-3">
+            {post.title || post.content.substring(0, 60) + "..."}
+          </div>
+          <div className="text-white/80 text-xs mt-1">
+            {post.author?.name || "Anonymous"}
           </div>
         </div>
-
-        {/* Play Button Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
-            <FaPlay className="text-gray-800 ml-1" size={16} />
-          </div>
-        </div>
+        
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          className="absolute top-3 right-3 w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center z-20"
+        >
+          <FaEye className="text-white text-xs" />
+        </motion.div>
       </Link>
     </motion.div>
+  );
+};
 
-// Enhanced Stats Card Component
-const StatsCard = ({ icon, value, label, color, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.8 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.5 }}
-    whileHover={{ scale: 1.05, y: -5 }}
-    className="relative group"
-  >
-    <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl border border-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
-      <div
-        className={`w-12 h-12 mx-auto mb-3 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center shadow-lg`}
-      >
-        {icon}
-      </motion.div>
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        className="text-3xl font-bold text-gray-900 mb-2"
-      >
-        {value}
-      </motion.div>
-      <div className="text-gray-600 text-sm font-medium">{label}</div>
-    </div>
-  </motion.div>
-);
+// Enhanced Event Card
+const EventCard = ({ event, baseUrl, index }) => {
+  const formatEventDate = (dateString) => {
+    const date = new Date(dateString);
+    return {
+      day: date.toLocaleDateString("en-US", { weekday: "short" }),
+      date: date.getDate(),
+      month: date.toLocaleDateString("en-US", { month: "short" }),
+      time: date.toLocaleTimeString("en-US", { 
+        hour: "2-digit", 
+        minute: "2-digit",
+        hour12: true 
+      }),
+    };
+  };
 
+  const eventDate = formatEventDate(event.dateTime);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.1 }}
+      className="group relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6 hover:shadow-xl transition-all duration-300"
+    >
+      {/* Event Type Badge */}
+      <div className="absolute top-4 right-4">
+        <span className="px-3 py-1 bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-bold rounded-full">
+          {event.type?.toUpperCase() || "EVENT"}
+        </span>
+      </div>
+
+      {/* Date Section */}
+      <div className="flex items-start space-x-4 mb-4">
+        <div className="flex-shrink-0 text-center">
+          <div className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl p-3 shadow-lg">
+            <div className="text-xs font-semibold opacity-90">{eventDate.day}</div>
+            <div className="text-2xl font-bold">{eventDate.date}</div>
+            <div className="text-xs font-semibold opacity-90">{eventDate.month}</div>
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+            {event.title}
+          </h3>
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+            {event.description}
+          </p>
+        </div>
+      </div>
+
+      {/* Event Details */}
+      <div className="space-y-2 mb-4">
+        <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <FaClock size={12} className="text-indigo-500" />
+          <span>{eventDate.time}</span>
+        </div>
+        
+        {event.location && (
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <FaMapMarkerAlt size={12} className="text-red-500" />
+            <span>{event.location.address}, {event.location.city}</span>
+          </div>
+        )}
+        
+        <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <FaUsers size={12} className="text-green-500" />
+          <span>{event.participants?.length || 0} participants</span>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <Link to="/communityblog">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg"
+        >
+          Learn More
+        </motion.button>
+      </Link>
+    </motion.div>
+  );
+};
+
+// Main Community Component
 const Community = () => {
   const [topPosts, setTopPosts] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    members: 0,
-    posts: 0,
-    cities: 0,
-    events: 0,
-  });
-  const navigate = useNavigate();
-  const baseUrl = useApi();
+  const baseUrl = import.meta.env.VITE_API_URL || "";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [postsRes, eventsRes] = await Promise.all([
-          axios.get(import.meta.env.VITE_API_URL + "/blog"),
-          axios
-            .get(import.meta.env.VITE_API_URL + "/community-events")
-            .catch(() => ({ data: [] })),
-        ]);
-
-        // Sort posts for main feed
-        const sorted = postsRes.data
-          .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
-          .slice(0, 4);
-
-        setTopPosts(sorted);
-        setEvents(eventsRes.data.slice(0, 3));
-
-        // Calculate stats
-        setStats({
-          members: postsRes.data.reduce((acc, post) => {
-            const authorId = post.author?._id;
-            return acc.includes(authorId) ? acc : [...acc, authorId];
-          }, []).length,
-          posts: postsRes.data.length,
-          cities: Math.floor(Math.random() * 30) + 25,
-          events: eventsRes.data.length || Math.floor(Math.random() * 20) + 15,
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setTopPosts([]);
-        setEvents([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+  const fetchCommunityData = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch posts
+      const postsResponse = await axios.get(`${API}/blog`);
+      setTopPosts(postsResponse.data.slice(0, 6));
+      
+      // Fetch events
+      const eventsResponse = await axios.get(`${API}/events`);
+      setEvents(eventsResponse.data.slice(0, 4));
+      
+    } catch (error) {
+      console.error("Error fetching community data:", error);
+      // Set mock data as fallback
+      setTopPosts([
+        {
+          _id: "1",
+          title: "The Path of Devotion",
+          content: "Discovering the eternal love through Krishna's teachings...",
+          author: { name: "Devotee Arjun", role: "devotee" },
+          createdAt: new Date(),
+          likes: [],
+          tags: ["devotion", "spirituality"]
+        }
+      ]);
+      setEvents([
+        {
+          _id: "1",
+          title: "Weekly Kirtan",
+          description: "Join us for an evening of devotional singing",
+          dateTime: new Date(Date.now() + 86400000),
+          type: "kirtan",
+          location: { address: "Temple Hall", city: "Sacred City" },
+          participants: []
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return (
-    <section id="community" className="section py-24 relative overflow-hidden">
-      {/* Enhanced Background */}
-      <div className="absolute inset-0 bg-slate-50"></div>
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+  useEffect(() => {
+    fetchCommunityData();
+  }, [fetchCommunityData]);
 
-      <div className="container max-w-7xl mx-auto px-6 md:px-8 relative z-10">
-        {/* Artistic Section Header */}
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, y: -50 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <section id="community" className="relative py-20 overflow-hidden">
+      <FloatingSacredElements />
+      
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-purple-50 to-pink-50"></div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
         >
-          <h2 className="section-title font-playfair text-4xl md:text-6xl mb-6 text-slate-800">
-            Krishna Community Hub
-          </h2>
-          <p className="text-slate-600 text-lg md:text-xl max-w-4xl mx-auto leading-relaxed">
-            Connect, share wisdom, and grow together in our vibrant spiritual
-            community
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            >
+              <FaUsers className="text-4xl text-indigo-500" />
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Sacred Community
+            </h2>
+          </div>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Connect with fellow devotees, share wisdom, and participate in divine events
           </p>
         </motion.div>
 
-          <motion.h2
-            whileHover={{ scale: 1.05 }}
-            className="section-title font-playfair text-5xl md:text-7xl mb-8 bg-gradient-to-r from-[#667eea] via-[#764ba2] to-[#f093fb] bg-clip-text text-transparent leading-tight"
-          >
-            Divine Community Experience
-          </motion.h2>
-
-          <motion.p
+        {/* Posts Section */}
+        {topPosts.length > 0 && (
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-gray-600 text-xl md:text-2xl max-w-5xl mx-auto leading-relaxed font-light"
-          >
-            Immerse yourself in a vibrant ecosystem of spiritual wisdom, sacred
-            gatherings, and meaningful connections that transcend the ordinary
-          </motion.p>
-        </motion.div>
-
-        {/* Artistic Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
-          <ArtisticStatsCard
-            icon={<FaUsers className="text-white text-2xl" />}
-            value={`${stats.members}+`}
-            label="Spiritual Souls"
-            color="from-blue-500 via-cyan-500 to-teal-500"
-            delay={0}
-          />
-          <ArtisticStatsCard
-            icon={<FaBlog className="text-white text-2xl" />}
-            value={`${stats.posts}+`}
-            label="Wisdom Shared"
-            color="from-purple-500 via-pink-500 to-rose-500"
-            delay={0.1}
-          />
-          <ArtisticStatsCard
-            icon={<FaMapMarkerAlt className="text-white text-2xl" />}
-            value={`${stats.cities}+`}
-            label="Sacred Cities"
-            color="from-green-500 via-emerald-500 to-teal-500"
-            delay={0.2}
-          />
-          <ArtisticStatsCard
-            icon={<FaCalendarAlt className="text-white text-2xl" />}
-            value={`${stats.events}+`}
-            label="Divine Gatherings"
-            color="from-orange-500 via-red-500 to-pink-500"
-            delay={0.3}
-          />
-        </div>
-
-        {/* Community Events Section */}
-        {events.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="mb-20"
           >
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <motion.h3
-                  whileHover={{ scale: 1.02 }}
-                  className="text-4xl font-bold bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent mb-3"
-                >
-                  Sacred Gatherings
-                </motion.h3>
-                <p className="text-gray-600 text-lg">
-                  Join upcoming spiritual events and community celebrations
-                </p>
-              </div>
-
-              <Link
-                to="/communityblog"
-                className="hidden md:flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white rounded-full font-bold hover:shadow-2xl transition-all duration-300 hover:scale-105 group"
-              >
-                <FaCalendarAlt />
-                <span>View All Events</span>
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <FaArrowRight />
-                </motion.div>
-              </Link>
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              Latest Sacred Discussions
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+              {topPosts.slice(0, 3).map((post, index) => (
+                <SocialPostCard
+                  key={post._id}
+                  post={post}
+                  baseUrl={baseUrl}
+                  index={index}
+                />
+              ))}
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Story-style cards for remaining posts */}
+            {topPosts.length > 3 && (
+              <div className="flex justify-center space-x-4 mb-8">
+                {topPosts.slice(3, 6).map((post, index) => (
+                  <StoryCard
+                    key={post._id}
+                    post={post}
+                    baseUrl={baseUrl}
+                    index={index}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* Events Section */}
+        {events.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              Upcoming Divine Events
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {events.map((event, index) => (
                 <EventCard
                   key={event._id}
@@ -720,155 +607,33 @@ const Community = () => {
           </motion.div>
         )}
 
-        {/* Community Posts Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <motion.h3
-                whileHover={{ scale: 1.02 }}
-                className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3"
-              >
-                Wisdom Chronicles
-              </motion.h3>
-              <p className="text-gray-600 text-lg">
-                Latest insights and spiritual discussions from our community
-              </p>
-            </div>
-
-            <Link
-              to="/communityblog"
-              className="hidden md:flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-full font-bold hover:shadow-2xl transition-all duration-300 hover:scale-105 group"
-            >
-              <FaBlog />
-              <span>Explore All Posts</span>
-              <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <FaArrowRight />
-              </motion.div>
-            </Link>
-          </div>
-
-          {/* Posts Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <AnimatePresence>
-              {loading ? (
-                [...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 animate-pulse"
-                  >
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                      <div className="space-y-2">
-                        <div className="h-4 bg-gray-200 rounded w-32"></div>
-                        <div className="h-3 bg-gray-200 rounded w-24"></div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="h-6 bg-gray-200 rounded"></div>
-                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                    </div>
-                    <div className="h-48 bg-gray-200 rounded-2xl mt-6"></div>
-                  </div>
-                ))
-              ) : topPosts.length === 0 ? (
-                <div className="col-span-full text-center py-20">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl"
-                  >
-                    <FaBlog className="text-gray-400 text-4xl" />
-                  </motion.div>
-                  <h4 className="text-3xl font-bold text-gray-700 mb-6">
-                    No wisdom shared yet
-                  </h4>
-                  <p className="text-gray-500 mb-10 text-xl">
-                    Be the first to illuminate our sacred community!
-                  </p>
-                  <Link
-                    to="/communityblog"
-                    className="inline-flex items-center px-10 py-5 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-full font-bold text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
-                  >
-                    <FaLightbulb className="mr-4 text-2xl" />
-                    Share Your Light
-                    <FaArrowRight className="ml-4" />
-                  </Link>
-                </div>
-              ) : (
-                topPosts.map((post, index) => (
-                  <ArtisticSocialPostCard
-                    key={post._id}
-                    post={post}
-                    baseUrl={baseUrl}
-                    index={index}
-                  />
-                ))
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Final Artistic Call to Action */}
-          {(topPosts.length > 0 || events.length > 0) && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <InteractiveBox className="inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500">
-                <Link
-                  to="/communityblog"
-                  className="inline-flex items-center px-12 py-6 bg-white rounded-full font-bold text-xl text-gray-800 hover:bg-gray-50 transition-all duration-300 hover:scale-105 group shadow-2xl"
+        {/* Final Call to Action */}
+        {(topPosts.length > 0 || events.length > 0) && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
+          >
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/60">
+              <FaQuoteLeft className="text-4xl text-indigo-400 mx-auto mb-4 opacity-60" />
+              <blockquote className="text-xl text-gray-700 italic mb-6 max-w-2xl mx-auto">
+                "In the company of devotees, the heart finds its true home, and the soul discovers its eternal song."
+              </blockquote>
+              <Link to="/communityblog">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="mr-4 text-3xl"
-                  >
-                    🕉️
-                  </motion.div>
-                  <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Enter Sacred Community
-                  </span>
-                  <motion.div
-                    animate={{ x: [0, 8, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="ml-4 text-2xl"
-                  >
-                    <FaArrowRight className="text-purple-600" />
-                  </motion.div>
-                </Link>
-              </InteractiveBox>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-6 text-gray-600 text-lg"
-              >
-                Join {stats.members}+ souls on a journey of spiritual awakening
-                and divine connection
-              </motion.p>
-            </motion.div>
-          )}
-        </motion.div>
+                  <FaBlog size={20} />
+                  <span>Join Our Sacred Community</span>
+                  <FaChevronRight size={16} />
+                </motion.button>
+              </Link>
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );
