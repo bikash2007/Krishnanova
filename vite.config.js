@@ -26,8 +26,16 @@ export default defineConfig({
     include: ["react", "react-dom", "react-router-dom", "framer-motion"],
   },
   server: {
+    host: true,
+    port: 5173,
     hmr: {
       overlay: false,
     },
+    allowedHosts: [
+      "5173-ip9uxkgyra19q1ya4cel2-6532622b.e2b.dev",
+      "localhost",
+      "127.0.0.1",
+      ".e2b.dev"
+    ],
   },
 });
